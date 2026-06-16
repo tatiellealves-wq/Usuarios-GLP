@@ -84,6 +84,9 @@ export default function App() {
 
   // Handle Checkout Process
   const triggerCheckout = () => {
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout');
+    }
     window.location.href = 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
   };
 
