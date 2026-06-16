@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const mockupImage = '/src/assets/images/glp1_guide_mockup_1781632222712.jpg';
+import mockupImage from './assets/images/glp1_guide_mockup_1781632222712.jpg';
 
 // Main Application Component
 export default function App() {
