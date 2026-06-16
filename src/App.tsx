@@ -1,0 +1,1575 @@
+import React, { useState } from 'react';
+import { 
+  ShieldCheck, 
+  Check, 
+  BookOpen, 
+  Utensils, 
+  ShoppingBag, 
+  ClipboardList, 
+  Star, 
+  Award, 
+  Activity, 
+  Flame, 
+  ShieldAlert, 
+  Lock, 
+  Sparkles, 
+  Download, 
+  ShoppingCart, 
+  FileText, 
+  ArrowRight, 
+  ChevronDown, 
+  ChevronUp, 
+  Scale, 
+  Clock, 
+  Heart,
+  CheckCircle2,
+  HelpCircle,
+  Copy,
+  Receipt,
+  User,
+  CreditCard,
+  Mail,
+  RefreshCw,
+  Plus
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+
+const mockupImage = '/src/assets/images/glp1_kit_mockup_1781627744691.jpg';
+
+// Main Application Component
+export default function App() {
+  // Get formatted date in Spanish
+  const getFormattedDate = () => {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    return today.toLocaleDateString('es-ES', options);
+  };
+
+  // --- States ---
+  // FAQ accordion active state
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  
+  // Checkout modal active states
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState<'details' | 'payment' | 'loading' | 'success'>('details');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [hasOrderBump, setHasOrderBump] = useState(false);
+  const [checkoutProgress, setCheckoutProgress] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
+
+  // Calculator states
+  const [calcWeight, setCalcWeight] = useState<number>(75);
+  const [calcWeightUnit, setCalcWeightUnit] = useState<'kg' | 'lb'>('kg');
+  const [calcMed, setCalcMed] = useState<string>('Ozempic');
+  const [calcCurrentProtein, setCalcCurrentProtein] = useState<string>('low'); // low limit (~40g), med (~65g), high (~90g)
+  const [isCalced, setIsCalced] = useState(false);
+
+  // Institution Modals
+  const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
+
+  // Toggle FAQ Accordion
+  const toggleFaq = (index: number) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  // Run Calculator Logic
+  const handleCalculator = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsCalced(true);
+  };
+
+  // Handle Checkout Process
+  const triggerCheckout = () => {
+    window.location.href = 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
+  };
+
+  const handleNextStep = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (checkoutStep === 'details') {
+      if (!fullName || !email) {
+        alert('Por favor, ingresa tu nombre completo y correo electrónico para enviar el acceso.');
+        return;
+      }
+      setCheckoutStep('payment');
+    } else if (checkoutStep === 'payment') {
+      if (!cardNumber || !cardExpiry || !cardCvv) {
+        alert('Por favor, ingresa los datos de tu tarjeta simulada.');
+        return;
+      }
+      setCheckoutStep('loading');
+      simulatePaymentProgress();
+    }
+  };
+
+  // Simulate Stripe-like security validation
+  const simulatePaymentProgress = () => {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      setCheckoutProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setCheckoutStep('success');
+      }
+    }, 150);
+  };
+
+  // Copy simulated download link
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  // Calculator Outputs
+  const weightInKg = calcWeightUnit === 'lb' ? Math.round(calcWeight * 0.453592) : calcWeight;
+  const recommendedProtein = Math.round(weightInKg * 1.8); // 1.8g of protein per kg under GLP-1 is scientific golden standard
+  const estimatedCurrent = calcCurrentProtein === 'low' ? 40 : calcCurrentProtein === 'med' ? 65 : 90;
+  const deficit = recommendedProtein - estimatedCurrent;
+  const muscleLossRisk = deficit > 40 ? 'Crítico' : deficit > 15 ? 'Moderado' : 'Seguro';
+
+  return (
+    <div className="min-h-screen bg-premium-wellness bg-smart-grid text-neutral-dark font-sans selection:bg-brand-green/10 selection:text-brand-green overflow-x-hidden antialiased">
+      
+      {/* 100% CLINICO EMERGENCY ANNOUNCEMENT TO BAR */}
+      <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
+        <ShieldCheck className="h-4 w-4 text-brand-gold animate-pulse text-rose-300" />
+        <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
+          Misión Científica: Evitar la sarcopenia y la flacidez cutánea por GLP-1
+        </span>
+      </div>
+
+      {/* HEADER NAV */}
+      <header className="border-b border-gray-100 py-4 px-6 sticky top-0 bg-white/95 backdrop-blur-md z-40">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="bg-brand-green text-white p-1.5 rounded-lg flex items-center justify-center">
+              <Activity className="h-5 w-5 text-brand-gold" />
+            </div>
+            <div>
+              <span className="font-bold tracking-tight text-lg text-neutral-dark">Guía GLP-1</span>
+              <span className="text-xs text-brand-green font-semibold block -mt-1">Inteligente</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="hidden md:inline-flex items-center gap-1.5 text-xs text-gray-500 font-medium bg-gray-50 px-2.5 py-1 rounded-full">
+              <span className="h-2 w-2 rounded-full bg-brand-green-vibrant animate-pulse"></span>
+              Ecosistema Autorizado
+            </span>
+            <button 
+              onClick={triggerCheckout}
+              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 animate-pulse-green"
+            >
+              Comprar Ahora
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* 1. SECTOR HERO (Dobra Principal) */}
+      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-white">
+        
+        {/* Full-width urgency banner at the top of Hero section */}
+        <div className="bg-red-50 border-b border-red-100 py-3.5 px-4 mb-8 -mx-6 text-center shadow-xs">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-red-800 text-xs md:text-sm font-bold tracking-wide">
+            <span className="h-2 w-2 rounded-full bg-red-650 bg-red-600 animate-pulse shrink-0" />
+            <span className="font-poppins-bold uppercase select-none">
+              OFERTA VALIDA SOMENTE HOJE ({getFormattedDate()})
+            </span>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Copy Column */}
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+              {/* Trust Badge */}
+              <div className="inline-flex items-center gap-2 bg-[#F3F6F2] border border-[#E1EADF] px-4 py-1.5 rounded-full mb-6">
+                <Award className="h-4 w-4 text-brand-gold" />
+                <span className="text-xs font-semibold tracking-wide text-brand-green uppercase">
+                  Sello de Validación Metábolica de Alta Conversión
+                </span>
+              </div>
+
+              {/* Huge Headline with exact #355E2D */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-sans text-brand-green tracking-tight leading-tight mb-6">
+                ¿Usas GLP-1? <span className="text-neutral-dark underline decoration-brand-gold decoration-4 decoration-skip-ink">Sácale el jugo</span> a tu tratamiento, protege tu músculo y acelera tus resultados.
+              </h1>
+
+              {/* Subheadline */}
+              <p className="text-lg md:text-xl text-gray-600 font-normal leading-relaxed mb-8 max-w-2xl">
+                El primer ecosistema digital de alimentación inteligente diseñado por profesionales para usuarios de <strong className="text-neutral-dark">Ozempic, Wegovy y Mounjaro.</strong>
+              </p>
+
+              {/* Responsive CTA Button in #00C853 */}
+              <div className="w-full sm:max-w-md">
+                <button
+                  id="hero-cta-btn"
+                  onClick={triggerCheckout}
+                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    ¡QUIERO MEJORES RESULTADOS YA!
+                    <ArrowRight className="h-5 w-5" />
+                  </span>
+                  <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
+                </button>
+                
+                {/* Micro support text */}
+                <div className="flex items-center justify-center gap-6 mt-3 text-xs text-gray-500 font-medium">
+                  <span className="flex items-center gap-1">
+                    <Check className="h-4 w-4 text-brand-green stroke-[3px]" /> Acceso inmediato
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Lock className="h-3.5 w-3.5 text-brand-green" /> Pago 100% seguro
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <ShieldCheck className="h-4 w-4 text-brand-green" /> 7 Días de Garantía
+                  </span>
+                </div>
+              </div>
+
+              {/* Direct Proof under button */}
+              <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6 w-full justify-center lg:justify-start">
+                <div className="flex -space-x-2">
+                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Ozempic" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Wegovy" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Mounjaro" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
+                </div>
+                <div className="text-left text-xs text-gray-600">
+                  <div className="flex items-center text-amber-500 gap-0.5">
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current animate-pulse" />
+                    <span className="font-bold text-gray-800 ml-1">4.9/5</span>
+                  </div>
+                  <p>Más de <strong>2,450 pacientes</strong> optimizando su pérdida grasa</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Visual Column / Interactive Calculator Box */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+                {/* Visual Glow Ornament */}
+                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand-green/20 to-brand-gold/20 blur-2xl opacity-70 group-hover:opacity-100 transition duration-1000 -z-10" />
+                
+                {/* Book & Layout Premium Mockup Representation */}
+                <div className="bg-white border border-gray-100 shadow-2xl rounded-3xl overflow-hidden p-3 bg-gradient-to-b from-white to-gray-50/50">
+                  <img 
+                    src={mockupImage} 
+                    alt="Kit de Sobrevivencia GLP-1 Inteligente" 
+                    className="w-full h-auto rounded-2xl shadow-md object-cover transform hover:scale-[1.02] transition-transform duration-300"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="p-4 pt-4 text-center">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#9A7A3E] bg-[#FAF5EC] px-3 py-1 rounded-full inline-block mb-1 border border-[#F2E6CD]">
+                      Kit Digital Multidispositivo
+                    </span>
+                    <p className="text-xs text-gray-500 font-medium">Compatible con Celulares, Tablets y Computadoras</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ADDITIONAL INTERACTIVE POWER TOOL: CLINICAL PROTEIN DEFICIT CALCULATOR */}
+      <section className="bg-[#FAFBF9] py-16 px-6 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
+              Análisis de Riesgo Clínico Gratuito
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-neutral-dark mb-3">
+              ¿Tu masa muscular corre peligro con el tratamiento?
+            </h2>
+            <p className="text-sm text-gray-600 max-w-xl mx-auto">
+              La falta de nutrientes adecuados mientras usas medicamentos GLP-1 acelera la pérdida de músculo (sarcopenia), destruyendo tu metabolismo. Calcula tu déficit en 30 segundos:
+            </p>
+          </div>
+
+          <div className="bg-white border border-gray-200/80 rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-12">
+            
+            {/* Input Form Column */}
+            <form onSubmit={handleCalculator} className="p-6 md:p-8 md:col-span-7 border-r border-gray-100">
+              <h3 className="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
+                <Scale className="h-5 w-5 text-brand-green" />
+                Ingresa tus datos de tratamiento
+              </h3>
+
+              <div className="space-y-5">
+                {/* Weight Input */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                    Tu Peso Actual
+                  </label>
+                  <div className="flex rounded-xl overflow-hidden border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-brand-green-hover focus-within:border-transparent">
+                    <input 
+                      type="number" 
+                      value={calcWeight}
+                      onChange={(e) => setCalcWeight(Number(e.target.value))}
+                      className="w-full px-4 py-3 text-gray-800 font-semibold focus:outline-none placeholder-gray-400"
+                      placeholder="Ej. 75"
+                      min="30"
+                      max="250"
+                      required
+                    />
+                    <div className="flex border-l border-gray-200 bg-gray-50 rounded-r-xl">
+                      <button 
+                        type="button" 
+                        onClick={() => setCalcWeightUnit('kg')}
+                        className={`px-3 py-1 text-xs font-bold ${calcWeightUnit === 'kg' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-500 hover:text-gray-800'}`}
+                      >
+                        KG
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => setCalcWeightUnit('lb')}
+                        className={`px-3 py-1 text-xs font-bold ${calcWeightUnit === 'lb' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-500 hover:text-gray-800'}`}
+                      >
+                        LB
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Medication Dropdown */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                    Fármaco Utilizado
+                  </label>
+                  <select 
+                    value={calcMed}
+                    onChange={(e) => setCalcMed(e.target.value)}
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent text-gray-800 font-medium"
+                  >
+                    <option value="Ozempic">Ozempic® (Semaglutida)</option>
+                    <option value="Wegovy">Wegovy® (Semaglutida)</option>
+                    <option value="Mounjaro">Mounjaro® (Tirzepatida)</option>
+                    <option value="Otros">Otro Análogo GLP-1 / Liraglutida</option>
+                  </select>
+                </div>
+
+                {/* Protein Intake Radio Buttons */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                    ¿Cuánta proteína estimas comer diario?
+                  </label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'low' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                      <input 
+                        type="radio" 
+                        name="protein" 
+                        value="low"
+                        checked={calcCurrentProtein === 'low'}
+                        onChange={() => setCalcCurrentProtein('low')}
+                        className="text-brand-green focus:ring-brand-green h-4 w-4"
+                      />
+                      <span className="text-xs">Baja (Solo carne/huevos en 1 comida de tamaño pequeño - ~40g)</span>
+                    </label>
+                    
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'med' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                      <input 
+                        type="radio" 
+                        name="protein" 
+                        value="med"
+                        checked={calcCurrentProtein === 'med'}
+                        onChange={() => setCalcCurrentProtein('med')}
+                        className="text-brand-green focus:ring-brand-green h-4 w-4"
+                      />
+                      <span className="text-xs">Moderada (Proteínas en 2 comidas en porciones normales - ~65g)</span>
+                    </label>
+
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'high' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                      <input 
+                        type="radio" 
+                        name="protein" 
+                        value="high"
+                        checked={calcCurrentProtein === 'high'}
+                        onChange={() => setCalcCurrentProtein('high')}
+                        className="text-brand-green focus:ring-brand-green h-4 w-4"
+                      />
+                      <span className="text-xs">Alta (Proteína dosificada en todas las comidas conscientes - ~90g)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition duration-300 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm animate-pulse-green"
+              >
+                <Activity className="h-4 w-4 text-brand-gold" />
+                VER MI DIAGNÓSTICO METABÓLICO
+              </button>
+            </form>
+
+            {/* Assessment Result Column */}
+            <div className="bg-[#FAFBF9] p-6 md:p-8 md:col-span-5 flex flex-col justify-center text-center md:text-left relative">
+              <AnimatePresence mode='wait'>
+                {!isCalced ? (
+                  <motion.div 
+                    key="not-calculated"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center justify-center h-full py-10"
+                  >
+                    <HelpCircle className="h-12 w-12 text-gray-300 mb-3 animate-bounce" />
+                    <p className="text-xs text-gray-500 max-w-[220px] text-center font-medium">
+                      Completa los datos de la izquierda para generar tu diagnóstico de riesgo.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="calculated"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-5"
+                  >
+                    <span className="inline-block text-[10px] uppercase font-bold tracking-wider bg-brand-green/10 text-brand-green px-2.5 py-1 rounded-full">
+                      Resultado Personalizado
+                    </span>
+
+                    {/* Deficit metrics */}
+                    <div>
+                      <p className="text-xs text-sidebar font-bold text-gray-500 uppercase tracking-wider mb-1">
+                        Tu requerimiento diario mínimo con GLP-1:
+                      </p>
+                      <h4 className="text-3xl font-extrabold text-neutral-dark flex items-baseline gap-1">
+                        {recommendedProtein} <span className="text-sm font-medium text-gray-500">gramos</span>
+                      </h4>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                        Tu Déficit Proteico Estimado:
+                      </p>
+                      <h4 className={`text-2xl font-extrabold ${deficit > 15 ? 'text-red-600' : 'text-emerald-600'} flex items-baseline gap-1`}>
+                        {deficit <= 0 ? 0 : deficit} <span className="text-sm font-medium text-gray-500">g de déficit / día</span>
+                      </h4>
+                    </div>
+
+                    {/* Risk Badge */}
+                    <div className="border-t border-gray-200/80 pt-4 mt-2">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-bold text-gray-500 uppercase">Riesgo de Flacidez & Catabolismo:</span>
+                        <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                          muscleLossRisk === 'Crítico' ? 'bg-red-100 text-red-700 animate-pulse' : 
+                          muscleLossRisk === 'Moderado' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {muscleLossRisk}
+                        </span>
+                      </div>
+                      
+                      {/* Risk progress bar visual */}
+                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-1">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-1000 ${
+                            muscleLossRisk === 'Crítico' ? 'bg-red-600' : 
+                            muscleLossRisk === 'Moderado' ? 'bg-amber-500' : 'bg-emerald-500'
+                          }`}
+                          style={{ width: `${Math.min(100, Math.max(15, (deficit / 100) * 100))}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-500 leading-relaxed">
+                      {muscleLossRisk === 'Crítico' ? (
+                        <strong className="text-red-700 flex items-center gap-1">
+                          <ShieldAlert className="h-4 w-4 shrink-0" /> Alerta: Estás degradando músculo activo.
+                        </strong>
+                      ) : (
+                        <span className="text-gray-700">Tu masa muscular necesita estimulación diaria.</span>
+                      )}{" "}
+                      Para proteger tu elasticidad cutánea y acelerar el gasto calórico basal en reposo, debes incorporar los protocolos de nuestro <strong>Recetario de Alta Proteína</strong> de inmediato.
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={triggerCheckout}
+                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-1 animate-pulse-green"
+                    >
+                      <span>OBTENER MI RECETARIO INTELIGENTE</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 2. SEÇÃO: O QUE VC VAI RECEBER */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto border-2 border-brand-green/20 rounded-3xl p-8 md:p-12 shadow-xl shadow-brand-green/5 bg-gray-soft/30">
+          
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-[#FAF5EC] border border-[#F2E6CD] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+              Contenido del Ecosistema
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-sans text-neutral-dark mb-4">
+              Tu Kit de Sobrevivencia y Optimización GLP-1
+            </h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              Todo lo que necesitas para evitar efectos secundarios molestos y multiplicar tu pérdida grasa de manera saludable en un solo pack digital descargable.
+            </p>
+          </div>
+
+          {/* Grid de 2x2 no desktop, 1 coluna no mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* Card 1 */}
+            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
+              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+                <BookOpen className="h-6 w-6 text-brand-green" />
+              </div>
+              <div>
+                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
+                  1. Guía Médica de Alimentación
+                </h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Descubre la estructura exacta de platos recomendada por expertos para estructurar tus porciones óptimamente y desbloquear la máxima saciedad metabólica sin descuidar tu nutrición esencial.
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
+                  ✓ Estructura de platos clínicamente validada
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
+              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+                <Utensils className="h-6 w-6 text-brand-green" />
+              </div>
+              <div>
+                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
+                  2. Recetario de Alta Proteína
+                </h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Recetas deliciosas, saciantes y ultrarrápidas, listas en 15 minutos. Diseñadas específicamente para proteger tu masa muscular activa, evitar la fatiga y combatir la temida flacidez dérmica.
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
+                  ✓ Nutrición de absorción rápida anti-flacidez
+                </span>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
+              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+                <ShoppingBag className="h-6 w-6 text-brand-green" />
+              </div>
+              <div>
+                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
+                  3. Lista de Súper Compras Inteligente
+                </h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  El mapa exacto y directo de lo que debes y NO debes comprar en el supermercado. Ahorra cientos de dólares en cestas vacías y evita los alimentos inflamatorios de alto índice glucémico.
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
+                  ✓ Ahorro inteligente de despensa inflamatoria
+                </span>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
+              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+                <ClipboardList className="h-6 w-6 text-brand-green" />
+              </div>
+              <div>
+                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
+                  4. Diario de Progreso Imprimible
+                </h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Un sistema físico/digital portátil para registrar tus tomas semanales de dosis, síntomas, ingesta libre de agua, y tus niveles de energía diarias para monitorear tu evolución metabólica real.
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
+                  ✓ Plantillas organizadoras en PDF y digital
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="text-center mt-12">
+            <button 
+              onClick={triggerCheckout}
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group animate-pulse-green"
+            >
+              <ShoppingCart className="h-5 w-5 text-brand-gold" />
+              <span>DESBLOQUEAR EL KIT COMPLETO POR US$ 9,90</span>
+              <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. SEÇÃO: POR QUE ESCOLHER OS PRODUTOS */}
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+        <div className="max-w-6xl mx-auto">
+          
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+              Enfoque Científico Distintivo
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-dark mb-4">
+              ¿Por qué este método es diferente?
+            </h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              Perder peso no tiene por qué significar arruinar tu tono muscular y vivir con náuseas crónicas. Ponemos la ciencia de tu lado.
+            </p>
+          </div>
+
+          {/* List/Bento Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
+            
+            <div className="lg:col-span-6 space-y-6">
+              
+              <div className="flex gap-4 p-4 rounded-xl hover:bg-white hover:shadow-sm transition-all">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/5 rounded-lg flex items-center justify-center text-brand-green-vibrant">
+                  <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
+                    Desarrollado por especialistas en nutrición clínica
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Diseñado por profesionales de la salud metabólica que entienden exactamente cómo interactúan los agonistas de GLP-1 con la asimilación de macronutrientes esenciales.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4 rounded-xl hover:bg-white hover:shadow-sm transition-all">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/5 rounded-lg flex items-center justify-center text-brand-green-vibrant">
+                  <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
+                    Enfoque directo en proteger el músculo (Antiflacidez)
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Aseguras que el volumen graso sea lo único en ser eliminado, conservando tus fibras de soporte muscular intactas para lucir un cuerpo firme y saludable tras el vaciado.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4 rounded-xl hover:bg-white hover:shadow-sm transition-all">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/5 rounded-lg flex items-center justify-center text-brand-green-vibrant">
+                  <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
+                    Combate activo de efectos colaterales indeseados
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Aprende pautas sencillas de ingesta hídrica equilibrada y digestión controlada para aliviar las náuseas, disminuir el dolor de cabeza y potenciar tus niveles energéticos.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* HIGHLY PERSUASIVE COMPARISON TABLE IN SPANISH (Antes vs Después / Sin Guía vs Con Guía) */}
+            <div className="lg:col-span-6">
+              <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
+                <div className="bg-neutral-dark text-white p-5 text-center">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block mb-1">Análisis Comparativo</span>
+                  <h4 className="font-extrabold text-lg">¿Cómo planeas vivir tu transformación?</h4>
+                </div>
+                
+                <div className="grid grid-cols-2 divide-x divide-gray-100">
+                  {/* Común Column */}
+                  <div className="p-6 bg-red-50/20 text-center">
+                    <span className="text-xs font-bold text-red-600 tracking-wide uppercase block mb-3">Fármaco GLP-1 Solo</span>
+                    <ul className="space-y-4 text-xs text-left text-gray-600">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold">✕</span>
+                        <span><strong>Pérdida muscular grave:</strong> Piel colgada en brazos, glúteos y rostro (efecto "cara Ozempic").</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold">✕</span>
+                        <span><strong>Fatiga extrema:</strong> Sorteas el día sin fuerza ni energía por déficit selectivo proteico.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold">✕</span>
+                        <span><strong>Estreñimiento y Náuseas:</strong> Sin saber qué fibra o enzima asimilar para reducir el espasmo digestivo.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold">✕</span>
+                        <span><strong>Efecto Rebote inminente:</strong> Retornas al peso anterior al dejar la dosis debido a un metabolismo frenado.</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Optimizado Column */}
+                  <div className="p-6 bg-emerald-50/10 text-center relative">
+                    <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-black tracking-widest py-0.5 px-2 rounded-full">RECOMMENDED</div>
+                    <span className="text-xs font-bold text-brand-green tracking-wide uppercase block mb-3">Kit GLP-1 Inteligente</span>
+                    <ul className="space-y-4 text-xs text-left text-gray-700">
+                      <li className="flex items-start gap-2">
+                        <span className="text-brand-green-vibrant font-bold">✓</span>
+                        <span><strong>Tono muscular firme:</strong> Masa magra activa preservada con nutrición clínicamente equilibrada.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-brand-green-vibrant font-bold">✓</span>
+                        <span><strong>Vitalidad & Enfoque:</strong> Nutrientes biodisponibles que mantienen tus células cargadas de energía.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-brand-green-vibrant font-bold">✓</span>
+                        <span><strong>Bienestar Digestivo:</strong> Protocolos simples que minimizan reflujos, acidez y el estreñimiento leve.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-brand-green-vibrant font-bold">✓</span>
+                        <span><strong>Cuerpo Sostenible:</strong> Mantienes tu peso ideal post-tratamiento gracias a un metabolismo íntegro y protegido.</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. SEÇÃO: OFERTAS & SCARCITY */}
+      <section className="py-20 px-6 bg-[#FAFBF9]">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
+              Ofertas Especial de Lanzamiento
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-dark mb-4">
+              Una pequeña inversión para el cuerpo que mereces
+            </h2>
+            <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
+              Evita gastar cientos de dólares en productos innecesarios. Asegura hoy todo nuestro arsenal inteligente a una fracción de su costo regular.
+            </p>
+          </div>
+
+          {/* Pricing premium card */}
+          <div className="bg-brand-green border-2 border-brand-gold rounded-3xl shadow-2xl relative overflow-hidden max-w-lg mx-auto text-white">
+            {/* Stamp of value */}
+            <div className="bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
+                ¡PACK DIGITAL CON ACCESO INMEDIATO!
+              <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
+            </div>
+
+            <div className="p-8 md:p-10 text-center">
+              <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest mb-2">
+                Guía GLP-1 Inteligente Completo
+              </h3>
+              
+              {/* Product stack mini items */}
+              <div className="space-y-3 mt-4 mb-6 text-left border-b border-white/10 pb-6 text-white/90">
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor regular $19.90)</span></span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Recetario Rápido de Alta Proteína <span className="text-white/50 font-medium">(Valor regular $14.90)</span></span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Lista de Supermercado Inteligente <span className="text-white/50 font-medium">(Valor regular $9.90)</span></span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Diario de Hábitos y Rastreador GLP-1 <span className="text-white/50 font-medium">(Valor regular $5.20)</span></span>
+                </div>
+              </div>
+
+              {/* Price anchoring */}
+              <div className="flex flex-col items-center justify-center mb-6">
+                <span className="text-xs text-white/50 line-through tracking-wide">
+                  Valor Total: US$ 49,90
+                </span>
+                <div className="flex items-baseline justify-center gap-1 mt-1">
+                  <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
+                  <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold">
+                    9,90
+                  </span>
+                  <span className="text-sm font-semibold text-white/70 ml-1">Un pago único</span>
+                </div>
+                <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mt-2 bg-white/5 border border-brand-gold/20 px-3 py-1 rounded-full">
+                  Sin mensualidades ni cobros ocultos
+                </span>
+              </div>
+
+              {/* Button CTA */}
+              <button
+                _id="oferta-cta-purchase-trigger"
+                onClick={triggerCheckout}
+                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2"
+              >
+                <ShoppingCart className="h-5 w-5 text-white" />
+                <span>¡COMPRAR EL KIT COMPLETO POR US$ 9,90!</span>
+              </button>
+
+              {/* Urgency warning */}
+              <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                Disponible por tiempo limitado con este precio de lanzamiento.
+              </p>
+
+              {/* Secure transaction and pay methods */}
+              <div className="border-t border-white/10 pt-6">
+                <div className="flex justify-center items-center gap-3 opacity-80 mb-2">
+                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL DE ALTA SEGURIDAD</span>
+                </div>
+                <div className="flex justify-center items-center gap-2.5">
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">VISA</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">MASTERCARD</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">AMEX</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">PAYPAL</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. SEÇÃO: GARANTIA */}
+      <section className="py-16 px-6 bg-white border-t border-gray-100">
+        <div className="max-w-4xl mx-auto bg-[#FAFBF9] border border-gray-200/80 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-lg relative overflow-hidden">
+          
+          {/* Subtle Golden Glow Ornament */}
+          <div className="absolute right-0 top-0 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl -z-10" />
+
+          {/* Warranty elegance seal badge illustration */}
+          <div className="shrink-0 relative group">
+            <div className="absolute inset-x-0 h-28 w-28 bg-brand-gold/30 rounded-full blur-xl group-hover:bg-brand-gold/40 transition duration-300" />
+            <div className="h-28 w-28 rounded-full border-4 border-brand-gold bg-white relative z-10 flex flex-col items-center justify-center text-center p-2 shadow-xl animate-pulse-gold">
+              <Award className="h-10 w-10 text-brand-gold mb-1" />
+              <span className="text-[10px] font-black leading-none text-brand-gold-dark tracking-wide uppercase">100% GARANTIZADO</span>
+            </div>
+          </div>
+
+          {/* Copy */}
+          <div className="text-center md:text-left">
+            <h3 className="font-black text-neutral-dark text-xl md:text-2xl mb-3">
+              Garantía Incondicional de 7 Días.
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Prueba el contenido, aplica las deliciosas recetas y mira los consejos clínicamente estructurados. Si sientes que este kit digital no es para ti, o no cubre tus expectativas nutricionales, simplemente escríbenos. Te devolveremos el <strong>100% de tu dinero inmediatamente</strong> y sin preguntas. Estás respaldado al 100%. El riesgo es totalmente nuestro.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. SEÇÃO: FAQ (Preguntas Frecuentes) */}
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-[#FAFBF9] border-t border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] border border-[#F2E6CD] px-3 py-1 rounded-full mb-3 inline-block">
+              ¿Tienes Dudas?
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-neutral-dark mb-4">
+              Preguntas Frecuentes (FAQ)
+            </h2>
+            <p className="text-gray-500 text-sm max-w-lg mx-auto">
+              Todo lo que necesitas saber antes de asegurar tu acceso a la Guía GLP-1 Inteligente.
+            </p>
+          </div>
+
+          {/* Accordion Questions Stack */}
+          <div className="space-y-4">
+            
+            {/* Q1 */}
+            <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all duration-250">
+              <button
+                type="button"
+                onClick={() => toggleFaq(1)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+              >
+                <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
+                  ¿Para quién es esta guía?
+                </span>
+                {activeFaq === 1 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-gray-400 shrink-0" />
+                )}
+              </button>
+              
+              <AnimatePresence>
+                {activeFaq === 1 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-gray-100"
+                  >
+                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
+                      <p>
+                        Este kit está diseñado para cualquier persona que esté utilizando actualmente medicamentos agonistas del receptor de GLP-1 como Ozempic®, Wegovy®, Mounjaro® u otros análogos, así como para quienes estén por iniciar su tratamiento y deseen asegurar los mejores resultados posibles desde la primera semana.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Q2 */}
+            <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all duration-250">
+              <button
+                type="button"
+                onClick={() => toggleFaq(2)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+              >
+                <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
+                  ¿El acceso es inmediato?
+                </span>
+                {activeFaq === 2 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-gray-400 shrink-0" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {activeFaq === 2 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-gray-100"
+                  >
+                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed">
+                      <p>
+                        ¡Sí, al 100%! Una vez completado tu pago seguro de US$ 9.90, recibirás de forma automática e inmediata un enlace de descarga directa en tu correo electrónico. Podrás acceder a todo el material en formato PDF de alta resolución desde tu smartphone, tablet o computadora.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Q3 */}
+            <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all duration-250">
+              <button
+                type="button"
+                onClick={() => toggleFaq(3)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+              >
+                <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
+                  ¿Cómo me ayuda con la flacidez?
+                </span>
+                {activeFaq === 3 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-gray-400 shrink-0" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {activeFaq === 3 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-gray-100"
+                  >
+                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed">
+                      <p>
+                        La pérdida rápida de peso inducida por los GLP-1 suele degradar tanto grasa como músculo. Cuando pierdes músculo, tu piel pierde su sostén natural, provocando flacidez extrema. Nuestra guía te enseña exactamente cuánta proteína de alta biodisponibilidad ingerir diariamente, cómo distribuirla estratégicamente y qué alimentos clave evitan el catabolismo de forma simple y deliciosa, protegiendo tu masa muscular.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+          </div>
+
+
+
+        </div>
+      </section>
+
+      {/* 7. SEÇÃO: RODAPÉ */}
+      <footer className="bg-neutral-dark text-white/70 py-16 px-6 text-center border-t border-gray-800">
+        <div className="max-w-6xl mx-auto space-y-8">
+          
+          {/* Logo brand and badge */}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className="flex items-center gap-2">
+              <Activity className="h-6 w-6 text-brand-gold" />
+              <span className="font-bold tracking-tight text-xl text-white">Guía GLP-1 Inteligente</span>
+            </div>
+            <p className="text-xs text-white/40">Nutrición de alta conversión para un cambio real y duradero.</p>
+          </div>
+
+          {/* Discret links */}
+          <div className="flex justify-center flex-wrap gap-6 text-xs font-semibold">
+            <button 
+              onClick={() => setActiveModal('terms')} 
+              className="text-white/60 hover:text-white hover:underline transition"
+            >
+              Términos de Uso
+            </button>
+            <span className="text-white/20">|</span>
+            <button 
+              onClick={() => setActiveModal('privacy')} 
+              className="text-white/60 hover:text-white hover:underline transition"
+            >
+              Políticas de Privacidad
+            </button>
+            <span className="text-white/20">|</span>
+            <a href="mailto:soporte@guiaglp1.com" className="text-white/60 hover:text-white hover:underline transition">
+              Contacto Soporte
+            </a>
+          </div>
+
+          {/* Copyright description */}
+          <div className="text-xs text-white/30 border-t border-white/5 pt-8">
+            <p className="font-normal">
+              © 2026 Guía GLP-1 Inteligente. Todos los derechos reservados.
+            </p>
+            <p className="text-[10px] mt-2 text-white/20">
+              Vite, React and Tailwind Direct Marketing Sandbox.
+            </p>
+          </div>
+
+          {/* Medical warning disclaimer in smaller text */}
+          <div className="max-w-4xl mx-auto text-[9px] leading-relaxed text-white/40 bg-white/5 p-5 rounded-2xl border border-white/5 text-justify">
+            <strong className="text-white">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no de ninguna manera sustituye el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
+          </div>
+
+        </div>
+      </footer>
+
+      {/* --- POPUP DE PREGUNTAS INSTITUCIONALES (TERMS / PRIVACY) --- */}
+      <AnimatePresence>
+        {activeModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              className="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative block overflow-y-auto max-h-[85vh] border border-gray-100"
+            >
+              <button 
+                onClick={() => setActiveModal(null)} 
+                className="absolute top-4 right-4 bg-gray-100 rounded-full p-1.5 hover:bg-gray-200 text-gray-500 transition-colors"
+              >
+                <XCloseIcon className="h-5 w-5" />
+              </button>
+
+              {activeModal === 'terms' ? (
+                <div>
+                  <h3 className="text-xl font-bold text-neutral-dark mb-4 flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-brand-green" /> Terminos y Condiciones de Uso
+                  </h3>
+                  <div className="space-y-4 text-xs text-gray-600 leading-relaxed text-justify">
+                    <p>Bienvenido a Guía GLP-1 Inteligente, comercializado con fines divulgativos de estilo de vida saludable.</p>
+                    <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el Kit, incluyendo recetarios, diarios de hábitos clínicos y consejos de compras inteligentes está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa, redistribución o duplicación no autorizada bajo multas aplicables.</p>
+                    <p><strong>2. Uso del Contenido:</strong> El material se vende como material de lectura educativa suplementaria y no constituye un canal terapéutico presencial. Los resultados de pérdida ponderal pueden variar de persona a persona según el nivel inicial de grasa corporal, la dosis farmacológica y la adhesión directa.</p>
+                    <p><strong>3. Políticas de Envío:</strong> Los archivos PDF se entregan automáticamente y sin cargo postal directo por correo tras procesarse la validación del gateway de pago de US$ 9.90.</p>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-xl font-bold text-neutral-dark mb-4 flex items-center gap-2">
+                    <ShieldCheck className="h-5 w-5 text-brand-green" /> Políticas de Privacidad y Consentimiento
+                  </h3>
+                  <div className="space-y-4 text-xs text-gray-600 leading-relaxed text-justify">
+                    <p>Su privacidad es nuestra máxima prioridad científica y comercial:</p>
+                    <p><strong>1. Recopilación de Datos Personales:</strong> Solo recopilamos su correo electrónico y nombre de forma consentida para realizar el despacho automatizado del infoproduto digital y notificaciones de actualización médica.</p>
+                    <p><strong>2. Seguridad Informática:</strong> No almacenamos en absoluto números de tarjetas de crédito o credenciales de pago locales. Todas las operaciones pasan mediante gateways de encriptación seguros homologados con altos estándares industriales PCI-DSS.</p>
+                    <p><strong>3. Cancelaciones y Eliminación de Registro:</strong> En todo momento puede mandar un email a nuestro soporte y exigir la eliminación definitiva de su dirección de correo de nuestras listas de boletines.</p>
+                  </div>
+                </div>
+              )}
+
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="w-full mt-6 bg-brand-green hover:bg-brand-green-hover text-white py-3 rounded-xl font-bold text-sm transition"
+              >
+                Entendido, Cerrar Ventana
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- HIGH CONVERSION SECURE CHECKOUT & DOWNLOAD PORTAL MODAL --- */}
+      <AnimatePresence>
+        {isCheckoutOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-neutral-dark/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 30 }}
+              className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative border border-gray-100 flex flex-col max-h-[90vh]"
+            >
+              
+              {/* Header Box checkout */}
+              <div className="bg-brand-green text-white p-5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Lock className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <div>
+                    <span className="text-xs uppercase font-extrabold text-brand-gold tracking-widest block">Checkout Seguro</span>
+                    <h4 className="text-sm font-bold -mt-0.5">Suscripción Manual & Descarga Directa</h4>
+                  </div>
+                </div>
+                
+                {checkoutStep !== 'loading' && (
+                  <button 
+                    onClick={() => setIsCheckoutOpen(false)}
+                    className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-colors"
+                  >
+                    <XCloseIcon className="h-4.5 w-4.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Progress Steps UI */}
+              {checkoutStep !== 'success' && checkoutStep !== 'loading' && (
+                <div className="grid grid-cols-2 divide-x divide-gray-100 border-b border-gray-100 text-center bg-gray-50/50">
+                  <div className={`py-2 text-[10px] font-bold ${checkoutStep === 'details' ? 'text-brand-green bg-white' : 'text-gray-400'}`}>
+                    1. DATOS DE ENVÍO
+                  </div>
+                  <div className={`py-2 text-[10px] font-bold ${checkoutStep === 'payment' ? 'text-brand-green bg-white' : 'text-gray-400'}`}>
+                    2. PAGO ENCRIPTADO
+                  </div>
+                </div>
+              )}
+
+              {/* Steps Scroll Body */}
+              <div className="overflow-y-auto p-6 flex-1">
+                <AnimatePresence mode="wait">
+                  
+                  {/* STEP 1: Details */}
+                  {checkoutStep === 'details' && (
+                    <motion.form 
+                      key="step-details"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      onSubmit={handleNextStep}
+                      className="space-y-4"
+                    >
+                      <div className="text-center mb-4">
+                        <p className="text-xs text-gray-500">
+                          Introduce el correo electrónico al cual deseas mandar el cargamento digital instantáneo.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">
+                          Tu Nombre Completo
+                        </label>
+                        <div className="relative">
+                          <User className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" />
+                          <input 
+                            type="text"
+                            required
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800"
+                            placeholder="Ej. Sofía Rodríguez"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">
+                          Tu Correo Electrónico Principal
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" />
+                          <input 
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800"
+                            placeholder="sofi@ejemplo.com"
+                          />
+                        </div>
+                        <span className="text-[10px] text-gray-400 block mt-1">
+                          Soporte anti-spam. Despacho automatizado inmediato.
+                        </span>
+                      </div>
+
+                      {/* FAST ACTION DIRECT RESPONSE ORDER BUMP BANNER */}
+                      <div className="bg-[#FAF5EC] border-2 border-dashed border-brand-gold rounded-2xl p-4 mt-6">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-brand-gold text-white rounded-lg p-1 mt-0.5 shrink-0">
+                            <Plus className="h-4 w-4" />
+                          </div>
+                          <div>
+                            <span className="bg-brand-gold-dark text-white text-[9px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase">OFERTA DE UN ÚNICO CLIC</span>
+                            <h4 className="font-bold text-gray-800 text-xs mt-1">
+                              Guía de Ayuno Seguro bajo GLP-1 (+$2.99)
+                            </h4>
+                            <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">
+                              Agrega de forma permanente el módulo de ayuno intermitente adaptado de manera segura para que el vaciado gástrico lento no juegue en contra de tu energía. 
+                            </p>
+                            <label className="flex items-center gap-2 mt-2.5 bg-white py-1.5 px-3 rounded-lg border border-[#F2E6CD] cursor-pointer select-none">
+                              <input 
+                                type="checkbox"
+                                checked={hasOrderBump}
+                                onChange={(e) => setHasOrderBump(e.target.checked)}
+                                className="text-brand-green focus:ring-brand-green h-4.5 w-4.5 rounded border-gray-300"
+                              />
+                              <span className="text-xs font-bold text-brand-green">¡Sí, lo agrego por solo $2.99 más!</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-1.5 text-base shadow-lg shadow-brand-green-vibrant/20 transition mt-4 animate-pulse-green"
+                      >
+                        <span>GUARDAR Y PASAR AL PAGO</span>
+                        <ArrowRight className="h-4 w-4 animate-pulse" />
+                      </button>
+                    </motion.form>
+                  )}
+
+                  {/* STEP 2: Payment Simulation */}
+                  {checkoutStep === 'payment' && (
+                    <motion.form 
+                      key="step-payment"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      onSubmit={handleNextStep}
+                      className="space-y-4"
+                    >
+                      {/* Price Summary */}
+                      <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center text-sm border border-gray-100">
+                        <div>
+                          <p className="text-xs text-gray-500">Despacho para:</p>
+                          <strong className="text-gray-800 text-xs block truncate max-w-[200px]">{email}</strong>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-gray-500">Monto Final:</p>
+                          <strong className="text-brand-green font-extrabold text-base">
+                            US$ {hasOrderBump ? '12,89' : '9,90'}
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Info warning */}
+                      <div className="bg-emerald-50 text-emerald-800 text-[11px] p-3 rounded-xl border border-emerald-100 flex items-center gap-2">
+                        <ShieldCheck className="h-4.5 w-4.5 text-brand-green shrink-0" />
+                        <span>Visualización de Sandbox. Cualquier número de tarjeta simulado es válido.</span>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">
+                          Número de Tarjeta (Simulada)
+                        </label>
+                        <div className="relative">
+                          <CreditCard className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" />
+                          <input 
+                            type="text"
+                            required
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
+                            className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800"
+                            placeholder="4000 1234 5678 9010"
+                            maxLength={19}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">
+                            Vencimiento
+                          </label>
+                          <input 
+                            type="text"
+                            required
+                            value={cardExpiry}
+                            onChange={(e) => setCardExpiry(e.target.value)}
+                            className="bg-white w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800 text-center"
+                            placeholder="MM/AA"
+                            maxLength={5}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">
+                            Código CVV
+                          </label>
+                          <input 
+                            type="password"
+                            required
+                            value={cardCvv}
+                            onChange={(e) => setCardCvv(e.target.value)}
+                            className="bg-white w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800 text-center"
+                            placeholder="123"
+                            maxLength={4}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 pt-4 border-t border-gray-100">
+                        <button
+                          type="button"
+                          onClick={() => setCheckoutStep('details')}
+                          className="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-600 py-3 px-4 rounded-xl font-bold text-sm transition"
+                        >
+                          Atrás
+                        </button>
+                        
+                        <button
+                          type="submit"
+                          className="w-2/3 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-3 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-1 shadow-md shadow-brand-green-vibrant/20 animate-pulse-green"
+                        >
+                          <Lock className="h-4 w-4" />
+                          <span>PAGAR CON SEGURIDAD SSL</span>
+                        </button>
+                      </div>
+                    </motion.form>
+                  )}
+
+                  {/* STEP 3: Loading Stripe style simulation */}
+                  {checkoutStep === 'loading' && (
+                    <motion.div 
+                      key="step-loading"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-12 space-y-6"
+                    >
+                      <div className="relative h-20 w-20 mx-auto">
+                        <div className="absolute inset-0 rounded-full border-4 border-gray-200" />
+                        <div className="absolute inset-0 rounded-full border-4 border-brand-green border-t-transparent animate-spin" />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <p className="text-brand-green font-bold text-base uppercase tracking-widest">
+                          Procesando Pago Seguro...
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {checkoutProgress < 40 ? 'Sincronizando licencia médica...' : 
+                           checkoutProgress < 75 ? 'Registrando correo del paciente en el servidor...' : 
+                           'Generando tus enlaces de descarga PDF de alta resolución...'}
+                        </p>
+                        <p className="text-xs font-bold text-gray-400">
+                          Progreso: {checkoutProgress}%
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* STEP 4: Success, immediate download lounge! */}
+                  {checkoutStep === 'success' && (
+                    <motion.div 
+                      key="step-success"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="space-y-6 pb-2"
+                    >
+                      <div className="text-center space-y-3 pb-4 border-b border-gray-100">
+                        <div className="h-14 w-14 bg-emerald-100 text-brand-green rounded-full flex items-center justify-center mx-auto shadow-inner">
+                          <CheckCircle2 className="h-8 w-8 stroke-[2.5px]" />
+                        </div>
+                        <h4 className="text-xl font-extrabold text-neutral-dark">
+                          ¡Pago Aceptado con Éxito!
+                        </h4>
+                        <p className="text-xs text-gray-500 px-4">
+                          Hola <strong>{fullName}</strong>, hemos enviado los accesos directos a <strong>{email}</strong>. También puedes descargarlos directamente a continuación:
+                        </p>
+                      </div>
+
+                      {/* DOWNLOADABLE TILES LIST */}
+                      <div className="space-y-3">
+                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0">
+                              <BookOpen className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <h5 className="text-xs font-bold text-gray-800">1. Guía Médica Alimentaria</h5>
+                              <p className="text-[10px] text-gray-400">PDF interactivo de Alta Resolución • 3.4 MB</p>
+                            </div>
+                          </div>
+                          
+                          <a 
+                            href="javascript:void(0)" 
+                            onClick={() => alert('¡Descarga Iniciada! Tu navegador está bajando la Guía de Alimentación GLP-1.')}
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
+                            title="Descargar Guía"
+                          >
+                            <Download className="h-4 w-4" />
+                          </a>
+                        </div>
+
+                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0">
+                              <Utensils className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <h5 className="text-xs font-bold text-gray-800">2. Recetario de Alta Proteína</h5>
+                              <p className="text-[10px] text-gray-400">PDF interactivo • 2.8 MB • 35 Recetas</p>
+                            </div>
+                          </div>
+                          
+                          <a 
+                            href="javascript:void(0)" 
+                            onClick={() => alert('¡Descarga Iniciada! Bajando el Recetario Proteico GLP-1 con 35 platos de 15 minutos.')}
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
+                            title="Descargar Recetario"
+                          >
+                            <Download className="h-4 w-4" />
+                          </a>
+                        </div>
+
+                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-gray-150 rounded-lg flex items-center justify-center shrink-0 text-gray-700">
+                              <ShoppingBag className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <h5 className="text-xs font-bold text-gray-800">3. Lista de Supermercación</h5>
+                              <p className="text-[10px] text-gray-400">Folleto Imprimible formato A4 • 1.1 MB</p>
+                            </div>
+                          </div>
+                          
+                          <a 
+                            href="javascript:void(0)" 
+                            onClick={() => alert('¡Descarga Iniciada! Bajando tu checklist de compras inteligentes.')}
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
+                            title="Descargar Folleto"
+                          >
+                            <Download className="h-4 w-4" />
+                          </a>
+                        </div>
+
+                        {hasOrderBump && (
+                          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 bg-[#FAF5EC] text-brand-gold border border-[#F2E6CD] rounded-lg flex items-center justify-center shrink-0">
+                                <Flame className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <h5 className="text-xs font-bold text-brand-gold-dark">Bonus: Guía de Ayuno Seguro</h5>
+                                <p className="text-[10px] text-brand-gold-dark opacity-80">PDF Módulo Exclusivo • 1.5 MB</p>
+                              </div>
+                            </div>
+                            
+                            <a 
+                              href="javascript:void(0)" 
+                              onClick={() => alert('¡Descarga Iniciada! Tu módulo bonus de ayuno médico ha comenzado a descargarse.')}
+                              className="text-white bg-brand-gold hover:bg-brand-gold-dark font-bold text-xs p-2 rounded-lg"
+                              title="Descargar Módulo de Ayuno"
+                            >
+                              <Download className="h-4 w-4" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Quick advice box */}
+                      <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 text-xs">
+                        <strong className="text-emerald-900 block mb-1">Primer paso recomendado del médico:</strong>
+                        <p className="text-emerald-700 leading-relaxed">
+                          Abre el <strong>Recetario (Guía 2)</strong> y busca la receta <em>"Hachis de pavo y quinua de 15 min"</em>. Aporta 35 gramos de proteína limpia y es ideal para evitar náuseas digestivas.
+                        </p>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(`https://guiaglp1.com/access?token=sandbox_${email}`)}
+                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold py-3 px-3 rounded-lg flex items-center justify-center gap-1.5"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                          <span>{isCopied ? '¡Enlace Copiado!' : 'Copiar Link de Acceso'}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsCheckoutOpen(false);
+                            setCheckoutStep('details');
+                          }}
+                          className="flex-1 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-xs font-bold py-3 px-3 rounded-lg"
+                        >
+                          Terminar Simulación
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                </AnimatePresence>
+              </div>
+
+              {/* SSL lock warning under scroll bottom */}
+              {checkoutStep !== 'success' && (
+                <div className="p-3 bg-gray-50 border-t border-gray-100 text-center flex items-center justify-center gap-1.5 text-[9px] text-gray-400 font-bold uppercase tracking-wide">
+                  <Lock className="h-3 w-3" />
+                  <span>TRANSMISIÓN DE DATOS ENCRIPTADA SSL DE 256 BITS</span>
+                </div>
+              )}
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+}
+
+// Compact helper components
+function XCloseIcon({ className }: { className?: string }) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      strokeWidth={2.5} 
+      stroke="currentColor" 
+      className={className}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  );
+}

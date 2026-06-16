@@ -1,0 +1,6 @@
+{
+  "name": "Guía y Kit de Alimentación GLP-1",
+  "description": "El primer ecosistema digital de alimentación inteligente diseñado por profesionales para usuarios de Ozempic, Wegovy y Mounjaro.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
