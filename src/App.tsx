@@ -83,11 +83,37 @@ export default function App() {
   };
 
   // Handle Checkout Process
-  const triggerCheckout = () => {
+  const triggerCheckout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    let targetUrl = e.currentTarget.href || 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
+    
+    // Fallback: If the target URL doesn't have UTM parameters but the current page does, let's append them.
+    // This ensures tracking is preserved even if external script scanning has any delay.
+    if (typeof window !== 'undefined' && window.location.search) {
+      const currentSearchParams = new URLSearchParams(window.location.search);
+      if (currentSearchParams.toString()) {
+        try {
+          const parsedUrl = new URL(targetUrl);
+          currentSearchParams.forEach((value, key) => {
+            if (!parsedUrl.searchParams.has(key)) {
+              parsedUrl.searchParams.set(key, value);
+            }
+          });
+          targetUrl = parsedUrl.toString();
+        } catch (err) {
+          console.error("Error parsing target URL:", err);
+        }
+      }
+    }
+
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'InitiateCheckout');
     }
-    window.location.href = 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
+    
+    // Delay navigation slightly so the Facebook Pixel request successfully executes and completes
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 400);
   };
 
   const handleNextStep = (e: React.FormEvent) => {
@@ -164,12 +190,13 @@ export default function App() {
               <span className="h-2 w-2 rounded-full bg-brand-green-vibrant animate-pulse"></span>
               Ecosistema Autorizado
             </span>
-            <button 
+            <a 
+              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 animate-pulse-green"
+              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 animate-pulse-green flex items-center justify-center"
             >
               Comprar Ahora
-            </button>
+            </a>
           </div>
         </div>
       </header>
@@ -212,17 +239,18 @@ export default function App() {
 
               {/* Responsive CTA Button in #00C853 */}
               <div className="w-full sm:max-w-md">
-                <button
+                <a
                   id="hero-cta-btn"
+                  href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                   onClick={triggerCheckout}
-                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden"
+                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     ¡QUIERO MEJORES RESULTADOS YA!
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
-                </button>
+                </a>
                 
                 {/* Micro support text */}
                 <div className="flex items-center justify-center gap-6 mt-3 text-xs text-gray-500 font-medium">
@@ -500,14 +528,14 @@ export default function App() {
                       Para proteger tu elasticidad cutánea y acelerar el gasto calórico basal en reposo, debes incorporar los protocolos de nuestro <strong>Recetario de Alta Proteína</strong> de inmediato.
                     </p>
 
-                    <button
-                      type="button"
+                    <a
+                      href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                       onClick={triggerCheckout}
-                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-1 animate-pulse-green"
+                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-1 animate-pulse-green cursor-pointer"
                     >
                       <span>OBTENER MI RECETARIO INTELIGENTE</span>
                       <ArrowRight className="h-3 w-3" />
-                    </button>
+                    </a>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -611,14 +639,15 @@ export default function App() {
           </div>
 
           <div className="text-center mt-12">
-            <button 
+            <a 
+              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group animate-pulse-green"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group animate-pulse-green cursor-pointer"
             >
               <ShoppingCart className="h-5 w-5 text-brand-gold" />
               <span>DESBLOQUEAR EL KIT COMPLETO POR US$ 9,90</span>
               <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
-            </button>
+            </a>
           </div>
 
         </div>
@@ -822,14 +851,15 @@ export default function App() {
               </div>
 
               {/* Button CTA */}
-              <button
-                _id="oferta-cta-purchase-trigger"
+              <a
+                id="oferta-cta-purchase-trigger"
+                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                 onClick={triggerCheckout}
-                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2"
+                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
                 <span>¡COMPRAR EL KIT COMPLETO POR US$ 9,90!</span>
-              </button>
+              </a>
 
               {/* Urgency warning */}
               <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
