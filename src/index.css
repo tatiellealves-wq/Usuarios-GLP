@@ -1,17 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lora", Georgia, "Times New Roman", serif;
   --color-brand-green: #355E2D;
   --color-brand-green-hover: #264A1F;
-  --color-brand-green-vibrant: #00C853;
-  --color-brand-green-vibrant-hover: #00B354;
-  --color-brand-gold: #D4AF37;
-  --color-brand-gold-dark: #C5A059;
-  --color-neutral-dark: #1A1A1A;
+  --color-brand-green-vibrant: #0F9D58;
+  --color-brand-green-vibrant-hover: #0A8A4C;
+  --color-brand-gold: #C8920A;
+  --color-brand-gold-dark: #A87A10;
+  --color-neutral-dark: #1C1C1E;
   --color-gray-soft: #F8F9FA;
-  --color-gray-mint: #F4F6F4;
+  --color-gray-mint: #F7F3EE;
 }
 
 @layer base {
@@ -36,6 +37,14 @@
   font-weight: 400;
 }
 
+.font-display {
+  font-family: var(--font-display);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Custom premium gold badge animation */
 @keyframes pulse-gold {
   0%, 100% {
@@ -49,10 +58,10 @@
 /* Custom Vibrant Green CTA pulse for high conversion */
 @keyframes pulse-vibrant-green {
   0%, 100% {
-    box-shadow: 0 4px 20px rgba(0, 200, 83, 0.25), 0 0 0 0 rgba(0, 200, 83, 0.4);
+    box-shadow: 0 4px 20px rgba(15, 157, 88, 0.28), 0 0 0 0 rgba(15, 157, 88, 0.38);
   }
   50% {
-    box-shadow: 0 4px 25px rgba(0, 200, 83, 0.45), 0 0 0 12px rgba(0, 200, 83, 0);
+    box-shadow: 0 4px 28px rgba(15, 157, 88, 0.42), 0 0 0 10px rgba(15, 157, 88, 0);
   }
 }
 
@@ -72,11 +81,11 @@
 /* Premium clean wellness background styling with very soft elegant green and gold tones */
 .bg-premium-wellness {
   background-color: #ffffff;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(53, 94, 45, 0.02) 0%, transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(212, 175, 55, 0.015) 0%, transparent 35%),
-    radial-gradient(circle at 50% 80%, rgba(0, 200, 83, 0.01) 0%, transparent 45%),
-    linear-gradient(to bottom, #ffffff, #f8f9fa 50%, #ffffff 100%);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(53, 94, 45, 0.025) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(200, 146, 10, 0.015) 0%, transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(15, 157, 88, 0.012) 0%, transparent 45%),
+    linear-gradient(to bottom, #ffffff, #f7f3ee 60%, #ffffff 100%);
   background-attachment: fixed;
 }
 

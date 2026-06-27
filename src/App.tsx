@@ -190,10 +190,10 @@ export default function App() {
               <span className="h-2 w-2 rounded-full bg-brand-green-vibrant animate-pulse"></span>
               Ecosistema Autorizado
             </span>
-            <a 
+            <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 animate-pulse-green flex items-center justify-center"
+              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 flex items-center justify-center"
             >
               Comprar Ahora
             </a>
@@ -209,7 +209,7 @@ export default function App() {
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-red-800 text-xs md:text-sm font-bold tracking-wide">
             <span className="h-2 w-2 rounded-full bg-red-650 bg-red-600 animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none">
-              OFERTA VALIDA SOMENTE HOJE ({getFormattedDate()})
+              OFERTA VÁLIDA SOLO HOY — {getFormattedDate()}
             </span>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function App() {
               </div>
 
               {/* Huge Headline with exact #355E2D */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-sans text-brand-green tracking-tight leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-brand-green tracking-tight leading-[1.15] mb-6">
                 ¿Usas GLP-1? <span className="text-neutral-dark underline decoration-brand-gold decoration-4 decoration-skip-ink">Sácale el jugo</span> a tu tratamiento, protege tu músculo y acelera tus resultados.
               </h1>
 
@@ -322,7 +322,7 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
               Análisis de Riesgo Clínico Gratuito
             </span>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-dark mb-3">
+            <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-3">
               ¿Tu masa muscular corre peligro con el tratamiento?
             </h2>
             <p className="text-sm text-gray-600 max-w-xl mx-auto">
@@ -439,7 +439,7 @@ export default function App() {
 
               <button 
                 type="submit"
-                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition duration-300 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm animate-pulse-green"
+                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition duration-300 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm"
               >
                 <Activity className="h-4 w-4 text-brand-gold" />
                 VER MI DIAGNÓSTICO METABÓLICO
@@ -479,7 +479,7 @@ export default function App() {
                       <p className="text-xs text-sidebar font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Tu requerimiento diario mínimo con GLP-1:
                       </p>
-                      <h4 className="text-3xl font-extrabold text-neutral-dark flex items-baseline gap-1">
+                      <h4 className="text-3xl font-extrabold text-neutral-dark flex items-baseline gap-1 tabular-nums">
                         {recommendedProtein} <span className="text-sm font-medium text-gray-500">gramos</span>
                       </h4>
                     </div>
@@ -488,7 +488,7 @@ export default function App() {
                       <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Tu Déficit Proteico Estimado:
                       </p>
-                      <h4 className={`text-2xl font-extrabold ${deficit > 15 ? 'text-red-600' : 'text-emerald-600'} flex items-baseline gap-1`}>
+                      <h4 className={`text-2xl font-extrabold tabular-nums ${deficit > 15 ? 'text-red-600' : 'text-emerald-600'} flex items-baseline gap-1`}>
                         {deficit <= 0 ? 0 : deficit} <span className="text-sm font-medium text-gray-500">g de déficit / día</span>
                       </h4>
                     </div>
@@ -553,7 +553,7 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-[#FAF5EC] border border-[#F2E6CD] px-3.5 py-1.5 rounded-full mb-4 inline-block">
               Contenido del Ecosistema
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-sans text-neutral-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Tu Kit de Sobrevivencia y Optimización GLP-1
             </h2>
             <p className="text-gray-500 text-lg max-w-2xl mx-auto">
@@ -642,7 +642,7 @@ export default function App() {
             <a 
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group animate-pulse-green cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group cursor-pointer"
             >
               <ShoppingCart className="h-5 w-5 text-brand-gold" />
               <span>DESBLOQUEAR EL KIT COMPLETO POR US$ 9,90</span>
@@ -661,7 +661,7 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] px-3.5 py-1.5 rounded-full mb-4 inline-block">
               Enfoque Científico Distintivo
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               ¿Por qué este método es diferente?
             </h2>
             <p className="text-gray-500 text-lg max-w-2xl mx-auto">
@@ -791,7 +791,7 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
               Ofertas Especial de Lanzamiento
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Una pequeña inversión para el cuerpo que mereces
             </h2>
             <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
@@ -840,7 +840,7 @@ export default function App() {
                 </span>
                 <div className="flex items-baseline justify-center gap-1 mt-1">
                   <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
-                  <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold">
+                  <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold tabular-nums">
                     9,90
                   </span>
                   <span className="text-sm font-semibold text-white/70 ml-1">Un pago único</span>
@@ -873,10 +873,10 @@ export default function App() {
                   <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL DE ALTA SEGURIDAD</span>
                 </div>
                 <div className="flex justify-center items-center gap-2.5">
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">VISA</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">MASTERCARD</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">AMEX</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 px-2 rounded text-[10px] font-bold text-white/80">PAYPAL</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">VISA</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">MASTERCARD</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">AMEX</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">PAYPAL</span>
                 </div>
               </div>
 
@@ -904,7 +904,7 @@ export default function App() {
 
           {/* Copy */}
           <div className="text-center md:text-left">
-            <h3 className="font-black text-neutral-dark text-xl md:text-2xl mb-3">
+            <h3 className="font-bold font-display text-neutral-dark text-xl md:text-2xl mb-3">
               Garantía Incondicional de 7 Días.
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
@@ -923,8 +923,8 @@ export default function App() {
             <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] border border-[#F2E6CD] px-3 py-1 rounded-full mb-3 inline-block">
               ¿Tienes Dudas?
             </span>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-dark mb-4">
-              Preguntas Frecuentes (FAQ)
+            <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-4">
+              Preguntas Frecuentes
             </h2>
             <p className="text-gray-500 text-sm max-w-lg mx-auto">
               Todo lo que necesitas saber antes de asegurar tu acceso a la Guía GLP-1 Inteligente.
@@ -1087,9 +1087,6 @@ export default function App() {
           <div className="text-xs text-white/30 border-t border-white/5 pt-8">
             <p className="font-normal">
               © 2026 Guía GLP-1 Inteligente. Todos los derechos reservados.
-            </p>
-            <p className="text-[10px] mt-2 text-white/20">
-              Vite, React and Tailwind Direct Marketing Sandbox.
             </p>
           </div>
 
