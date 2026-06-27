@@ -913,6 +913,9 @@ export default function App() {
                 <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mt-2 bg-white/5 border border-brand-gold/20 px-3 py-1 rounded-full">
                   Sin mensualidades ni cobros ocultos
                 </span>
+                <span className="text-xs font-semibold text-white/80 mt-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                  🇲🇽 Puedes pagar en pesos mexicanos (MXN) — la conversión es automática en el checkout
+                </span>
               </div>
 
               {/* Button CTA */}
@@ -935,13 +938,15 @@ export default function App() {
               {/* Secure transaction and pay methods */}
               <div className="border-t border-white/10 pt-6">
                 <div className="flex justify-center items-center gap-3 opacity-80 mb-2">
-                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL DE ALTA SEGURIDAD</span>
+                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL · ACEPTAMOS PESOS MEXICANOS (MXN)</span>
                 </div>
-                <div className="flex justify-center items-center gap-2.5">
+                <div className="flex flex-wrap justify-center items-center gap-2.5">
                   <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">VISA</span>
                   <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">MASTERCARD</span>
                   <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">AMEX</span>
                   <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">PAYPAL</span>
+                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">OXXO</span>
+                  <span className="bg-brand-gold/15 border border-brand-gold/30 px-2.5 py-1 rounded text-[10px] font-bold text-brand-gold">🇲🇽 MXN</span>
                 </div>
               </div>
 
@@ -1392,6 +1397,7 @@ export default function App() {
                           <strong className="text-brand-green font-extrabold text-base">
                             US$ {hasOrderBump ? '12,89' : '9,90'}
                           </strong>
+                          <p className="text-[10px] text-gray-500 mt-0.5">🇲🇽 Cobrado en pesos mexicanos (MXN)</p>
                         </div>
                       </div>
 
