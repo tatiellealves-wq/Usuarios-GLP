@@ -202,12 +202,12 @@ export default function App() {
       </header>
 
       {/* 1. SECTOR HERO (Dobra Principal) */}
-      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-white">
+      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-[#0D3320]">
         
         {/* Full-width urgency banner at the top of Hero section */}
-        <div className="bg-amber-50 border-b border-amber-200/50 py-3 px-4 mb-8 -mx-6 text-center">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-amber-800 text-xs md:text-sm font-semibold tracking-wide">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+        <div className="bg-white/10 border-b border-white/10 py-3 px-4 mb-8 -mx-6 text-center">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-amber-300 text-xs md:text-sm font-semibold tracking-wide">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none">
               OFERTA VÁLIDA SOLO HOY — {getFormattedDate()}
             </span>
@@ -220,21 +220,21 @@ export default function App() {
             {/* Copy Column */}
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200/60 px-4 py-1.5 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
                 <Award className="h-4 w-4 text-brand-gold" />
-                <span className="text-xs font-semibold tracking-wide text-brand-green uppercase">
+                <span className="text-xs font-semibold tracking-wide text-green-200 uppercase">
                   Sello de Validación Metábolica de Alta Conversión
                 </span>
               </div>
 
               {/* Huge Headline with exact #355E2D */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-brand-green tracking-tight leading-[1.15] mb-6">
-                ¿Usas GLP-1? <span className="text-neutral-dark underline decoration-brand-gold decoration-4 decoration-skip-ink">Sácale el jugo</span> a tu tratamiento, protege tu músculo y acelera tus resultados.
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
+                ¿Usas GLP-1? <span className="text-brand-gold underline decoration-brand-gold decoration-4 decoration-skip-ink">Sácale el jugo</span> a tu tratamiento, protege tu músculo y acelera tus resultados.
               </h1>
 
               {/* Subheadline */}
-              <p className="text-lg md:text-xl text-gray-600 font-normal leading-relaxed mb-8 max-w-2xl">
-                El primer ecosistema digital de alimentación inteligente diseñado por profesionales para usuarios de <strong className="text-neutral-dark">Ozempic, Wegovy y Mounjaro.</strong>
+              <p className="text-lg md:text-xl text-green-100 font-normal leading-relaxed mb-8 max-w-2xl">
+                El primer ecosistema digital de alimentación inteligente diseñado por profesionales para usuarios de <strong className="text-white">Ozempic, Wegovy y Mounjaro.</strong>
               </p>
 
               {/* Responsive CTA Button in #00C853 */}
@@ -253,36 +253,36 @@ export default function App() {
                 </a>
                 
                 {/* Micro support text */}
-                <div className="flex items-center justify-center gap-6 mt-3 text-xs text-gray-500 font-medium">
+                <div className="flex items-center justify-center gap-6 mt-3 text-xs text-green-200 font-medium">
                   <span className="flex items-center gap-1">
-                    <Check className="h-4 w-4 text-brand-green stroke-[3px]" /> Acceso inmediato
+                    <Check className="h-4 w-4 text-brand-gold stroke-[3px]" /> Acceso inmediato
                   </span>
                   <span className="flex items-center gap-1">
-                    <Lock className="h-3.5 w-3.5 text-brand-green" /> Pago 100% seguro
+                    <Lock className="h-3.5 w-3.5 text-brand-gold" /> Pago 100% seguro
                   </span>
                   <span className="flex items-center gap-1">
-                    <ShieldCheck className="h-4 w-4 text-brand-green" /> 7 Días de Garantía
+                    <ShieldCheck className="h-4 w-4 text-brand-gold" /> 7 Días de Garantía
                   </span>
                 </div>
               </div>
 
               {/* Direct Proof under button */}
-              <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6 w-full justify-center lg:justify-start">
+              <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6 w-full justify-center lg:justify-start">
                 <div className="flex -space-x-2">
                   <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Ozempic" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
                   <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Wegovy" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
                   <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Mounjaro" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
                 </div>
-                <div className="text-left text-xs text-gray-600">
+                <div className="text-left text-xs text-green-100">
                   <div className="flex items-center text-amber-500 gap-0.5">
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current animate-pulse" />
-                    <span className="font-bold text-gray-800 ml-1">4.9/5</span>
+                    <span className="font-bold text-white ml-1">4.9/5</span>
                   </div>
-                  <p>Más de <strong>2,450 pacientes</strong> optimizando su pérdida grasa</p>
+                  <p>Más de <strong className="text-white">2,450 pacientes</strong> optimizando su pérdida grasa</p>
                 </div>
               </div>
             </div>
@@ -294,7 +294,7 @@ export default function App() {
                 <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand-green/20 to-brand-gold/20 blur-2xl opacity-70 group-hover:opacity-100 transition duration-1000 -z-10" />
                 
                 {/* Book & Layout Premium Mockup Representation */}
-                <div className="bg-white border border-gray-100 shadow-2xl rounded-3xl overflow-hidden p-3 bg-gradient-to-b from-white to-gray-50/50">
+                <div className="bg-white border border-white/20 shadow-2xl shadow-black/30 rounded-3xl overflow-hidden p-3">
                   <img 
                     src={mockupImage} 
                     alt="Kit de Sobrevivencia GLP-1 Inteligente" 
@@ -316,7 +316,7 @@ export default function App() {
       </section>
 
       {/* SOCIAL PROOF STATS BAR */}
-      <div className="border-y border-gray-100 bg-white py-6 px-6">
+      <div className="border-y border-green-100 bg-green-50 py-6 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">2,450+</p>
