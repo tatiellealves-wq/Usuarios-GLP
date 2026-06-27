@@ -205,9 +205,9 @@ export default function App() {
       <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-white">
         
         {/* Full-width urgency banner at the top of Hero section */}
-        <div className="bg-red-50 border-b border-red-100 py-3.5 px-4 mb-8 -mx-6 text-center shadow-xs">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-red-800 text-xs md:text-sm font-bold tracking-wide">
-            <span className="h-2 w-2 rounded-full bg-red-650 bg-red-600 animate-pulse shrink-0" />
+        <div className="bg-amber-50 border-b border-amber-200/50 py-3 px-4 mb-8 -mx-6 text-center">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-amber-800 text-xs md:text-sm font-semibold tracking-wide">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none">
               OFERTA VÁLIDA SOLO HOY — {getFormattedDate()}
             </span>
@@ -220,7 +220,7 @@ export default function App() {
             {/* Copy Column */}
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-[#F3F6F2] border border-[#E1EADF] px-4 py-1.5 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200/60 px-4 py-1.5 rounded-full mb-6">
                 <Award className="h-4 w-4 text-brand-gold" />
                 <span className="text-xs font-semibold tracking-wide text-brand-green uppercase">
                   Sello de Validación Metábolica de Alta Conversión
@@ -302,7 +302,7 @@ export default function App() {
                     referrerPolicy="no-referrer"
                   />
                   <div className="p-4 pt-4 text-center">
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#9A7A3E] bg-[#FAF5EC] px-3 py-1 rounded-full inline-block mb-1 border border-[#F2E6CD]">
+                    <span className="text-[10px] uppercase font-semibold tracking-widest text-green-700 bg-green-50 px-3 py-1 rounded-full inline-block mb-1 border border-green-200/50">
                       Kit Digital Multidispositivo
                     </span>
                     <p className="text-xs text-gray-500 font-medium">Compatible con Celulares, Tablets y Computadoras</p>
@@ -316,10 +316,10 @@ export default function App() {
       </section>
 
       {/* ADDITIONAL INTERACTIVE POWER TOOL: CLINICAL PROTEIN DEFICIT CALCULATOR */}
-      <section className="bg-[#FAFBF9] py-16 px-6 border-y border-gray-100">
+      <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
               Análisis de Riesgo Clínico Gratuito
             </span>
             <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-3">
@@ -330,7 +330,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="bg-white border border-gray-200/80 rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-12">
+          <div className="bg-white border border-gray-200/60 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12">
             
             {/* Input Form Column */}
             <form onSubmit={handleCalculator} className="p-6 md:p-8 md:col-span-7 border-r border-gray-100">
@@ -398,7 +398,7 @@ export default function App() {
                     ¿Cuánta proteína estimas comer diario?
                   </label>
                   <div className="grid grid-cols-1 gap-3">
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'low' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'low' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
                       <input 
                         type="radio" 
                         name="protein" 
@@ -410,7 +410,7 @@ export default function App() {
                       <span className="text-xs">Baja (Solo carne/huevos en 1 comida de tamaño pequeño - ~40g)</span>
                     </label>
                     
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'med' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'med' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
                       <input 
                         type="radio" 
                         name="protein" 
@@ -422,7 +422,7 @@ export default function App() {
                       <span className="text-xs">Moderada (Proteínas en 2 comidas en porciones normales - ~65g)</span>
                     </label>
 
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'high' ? 'border-brand-green bg-[#F3F6F2] font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'high' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
                       <input 
                         type="radio" 
                         name="protein" 
@@ -447,7 +447,7 @@ export default function App() {
             </form>
 
             {/* Assessment Result Column */}
-            <div className="bg-[#FAFBF9] p-6 md:p-8 md:col-span-5 flex flex-col justify-center text-center md:text-left relative">
+            <div className="bg-green-50/40 p-6 md:p-8 md:col-span-5 flex flex-col justify-center text-center md:text-left relative">
               <AnimatePresence mode='wait'>
                 {!isCalced ? (
                   <motion.div 
@@ -547,10 +547,10 @@ export default function App() {
 
       {/* 2. SEÇÃO: O QUE VC VAI RECEBER */}
       <section className="py-20 px-6 bg-white">
-        <div className="max-w-6xl mx-auto border-2 border-brand-green/20 rounded-3xl p-8 md:p-12 shadow-xl shadow-brand-green/5 bg-gray-soft/30">
+        <div className="max-w-6xl mx-auto rounded-2xl p-8 md:p-12 bg-green-50/25 border border-green-100/60">
           
           <div className="text-center mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-[#FAF5EC] border border-[#F2E6CD] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-amber-50 border border-amber-200 px-3.5 py-1.5 rounded-full mb-4 inline-block">
               Contenido del Ecosistema
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
@@ -565,8 +565,8 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             {/* Card 1 */}
-            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
-              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
+              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
                 <BookOpen className="h-6 w-6 text-brand-green" />
               </div>
               <div>
@@ -583,8 +583,8 @@ export default function App() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
-              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
+              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
                 <Utensils className="h-6 w-6 text-brand-green" />
               </div>
               <div>
@@ -601,8 +601,8 @@ export default function App() {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
-              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
+              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
                 <ShoppingBag className="h-6 w-6 text-brand-green" />
               </div>
               <div>
@@ -619,8 +619,8 @@ export default function App() {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-gray-soft border border-gray-200/60 rounded-2xl p-8 hover:bg-white hover:shadow-xl hover:border-brand-green/20 transition-all duration-300 flex gap-5">
-              <div className="h-12 w-12 bg-white border border-gray-250/20 shrink-0 rounded-xl flex items-center justify-center shadow-xs">
+            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
+              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
                 <ClipboardList className="h-6 w-6 text-brand-green" />
               </div>
               <div>
@@ -654,11 +654,11 @@ export default function App() {
       </section>
 
       {/* 3. SEÇÃO: POR QUE ESCOLHER OS PRODUTOS */}
-      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+      <section className="py-20 px-6 bg-white border-t border-gray-100">
         <div className="max-w-6xl mx-auto">
           
           <div className="text-center mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-50 px-3.5 py-1.5 rounded-full mb-4 inline-block">
               Enfoque Científico Distintivo
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
@@ -721,9 +721,9 @@ export default function App() {
             {/* HIGHLY PERSUASIVE COMPARISON TABLE IN SPANISH (Antes vs Después / Sin Guía vs Con Guía) */}
             <div className="lg:col-span-6">
               <div className="bg-white border border-gray-200 rounded-3xl shadow-xl overflow-hidden">
-                <div className="bg-neutral-dark text-white p-5 text-center">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block mb-1">Análisis Comparativo</span>
-                  <h4 className="font-extrabold text-lg">¿Cómo planeas vivir tu transformación?</h4>
+                <div className="bg-brand-green text-white p-5 text-center">
+                  <span className="text-[10px] uppercase font-semibold tracking-widest text-green-300 block mb-1">Análisis Comparativo</span>
+                  <h4 className="font-bold font-display text-lg">¿Cómo planeas tu transformación?</h4>
                 </div>
                 
                 <div className="grid grid-cols-2 divide-x divide-gray-100">
@@ -752,7 +752,7 @@ export default function App() {
 
                   {/* Optimizado Column */}
                   <div className="p-6 bg-emerald-50/10 text-center relative">
-                    <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-black tracking-widest py-0.5 px-2 rounded-full">RECOMMENDED</div>
+                    <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-bold tracking-wider py-0.5 px-2 rounded-full">RECOMENDADO</div>
                     <span className="text-xs font-bold text-brand-green tracking-wide uppercase block mb-3">Kit GLP-1 Inteligente</span>
                     <ul className="space-y-4 text-xs text-left text-gray-700">
                       <li className="flex items-start gap-2">
@@ -784,11 +784,11 @@ export default function App() {
       </section>
 
       {/* 4. SEÇÃO: OFERTAS & SCARCITY */}
-      <section className="py-20 px-6 bg-[#FAFBF9]">
+      <section className="py-20 px-6 bg-green-50/30">
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100/60 px-3.5 py-1 rounded-full mb-3 inline-block">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
               Ofertas Especial de Lanzamiento
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
@@ -800,7 +800,7 @@ export default function App() {
           </div>
 
           {/* Pricing premium card */}
-          <div className="bg-brand-green border-2 border-brand-gold rounded-3xl shadow-2xl relative overflow-hidden max-w-lg mx-auto text-white">
+          <div className="bg-brand-green rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white ring-1 ring-white/10">
             {/* Stamp of value */}
             <div className="bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
               <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
@@ -888,7 +888,7 @@ export default function App() {
 
       {/* 5. SEÇÃO: GARANTIA */}
       <section className="py-16 px-6 bg-white border-t border-gray-100">
-        <div className="max-w-4xl mx-auto bg-[#FAFBF9] border border-gray-200/80 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-lg relative overflow-hidden">
+        <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-sm relative overflow-hidden">
           
           {/* Subtle Golden Glow Ornament */}
           <div className="absolute right-0 top-0 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl -z-10" />
@@ -916,11 +916,11 @@ export default function App() {
       </section>
 
       {/* 6. SEÇÃO: FAQ (Preguntas Frecuentes) */}
-      <section className="py-20 px-6 bg-gradient-to-b from-white to-[#FAFBF9] border-t border-gray-100">
+      <section className="py-20 px-6 bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#9A7A3E] bg-[#FAF5EC] border border-[#F2E6CD] px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full mb-3 inline-block">
               ¿Tienes Dudas?
             </span>
             <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-4">
@@ -960,7 +960,7 @@ export default function App() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden border-t border-gray-100"
                   >
-                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
+                    <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
                       <p>
                         Este kit está diseñado para cualquier persona que esté utilizando actualmente medicamentos agonistas del receptor de GLP-1 como Ozempic®, Wegovy®, Mounjaro® u otros análogos, así como para quienes estén por iniciar su tratamiento y deseen asegurar los mejores resultados posibles desde la primera semana.
                       </p>
@@ -996,7 +996,7 @@ export default function App() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden border-t border-gray-100"
                   >
-                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed">
+                    <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
                         ¡Sí, al 100%! Una vez completado tu pago seguro de US$ 9.90, recibirás de forma automática e inmediata un enlace de descarga directa en tu correo electrónico. Podrás acceder a todo el material en formato PDF de alta resolución desde tu smartphone, tablet o computadora.
                       </p>
@@ -1032,7 +1032,7 @@ export default function App() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden border-t border-gray-100"
                   >
-                    <div className="p-5 md:p-6 bg-gray-soft text-xs md:text-sm text-gray-600 leading-relaxed">
+                    <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
                         La pérdida rápida de peso inducida por los GLP-1 suele degradar tanto grasa como músculo. Cuando pierdes músculo, tu piel pierde su sostén natural, provocando flacidez extrema. Nuestra guía te enseña exactamente cuánta proteína de alta biodisponibilidad ingerir diariamente, cómo distribuirla estratégicamente y qué alimentos clave evitan el catabolismo de forma simple y deliciosa, protegiendo tu masa muscular.
                       </p>
@@ -1050,7 +1050,7 @@ export default function App() {
       </section>
 
       {/* 7. SEÇÃO: RODAPÉ */}
-      <footer className="bg-neutral-dark text-white/70 py-16 px-6 text-center border-t border-gray-800">
+      <footer className="bg-slate-950 text-white/60 py-16 px-6 text-center border-t border-white/5">
         <div className="max-w-6xl mx-auto space-y-8">
           
           {/* Logo brand and badge */}
@@ -1263,7 +1263,7 @@ export default function App() {
                       </div>
 
                       {/* FAST ACTION DIRECT RESPONSE ORDER BUMP BANNER */}
-                      <div className="bg-[#FAF5EC] border-2 border-dashed border-brand-gold rounded-2xl p-4 mt-6">
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
                         <div className="flex items-start gap-3">
                           <div className="bg-brand-gold text-white rounded-lg p-1 mt-0.5 shrink-0">
                             <Plus className="h-4 w-4" />
@@ -1276,7 +1276,7 @@ export default function App() {
                             <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">
                               Agrega de forma permanente el módulo de ayuno intermitente adaptado de manera segura para que el vaciado gástrico lento no juegue en contra de tu energía. 
                             </p>
-                            <label className="flex items-center gap-2 mt-2.5 bg-white py-1.5 px-3 rounded-lg border border-[#F2E6CD] cursor-pointer select-none">
+                            <label className="flex items-center gap-2 mt-2.5 bg-white py-1.5 px-3 rounded-lg border border-amber-200 cursor-pointer select-none">
                               <input 
                                 type="checkbox"
                                 checked={hasOrderBump}
@@ -1449,7 +1449,7 @@ export default function App() {
 
                       {/* DOWNLOADABLE TILES LIST */}
                       <div className="space-y-3">
-                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
                           <div className="flex items-center gap-3">
                             <div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0">
                               <BookOpen className="h-5 w-5" />
@@ -1470,7 +1470,7 @@ export default function App() {
                           </a>
                         </div>
 
-                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
                           <div className="flex items-center gap-3">
                             <div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0">
                               <Utensils className="h-5 w-5" />
@@ -1491,7 +1491,7 @@ export default function App() {
                           </a>
                         </div>
 
-                        <div className="bg-[#FAFBF9] border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
+                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
                           <div className="flex items-center gap-3">
                             <div className="h-10 w-10 bg-gray-150 rounded-lg flex items-center justify-center shrink-0 text-gray-700">
                               <ShoppingBag className="h-5 w-5" />
@@ -1515,7 +1515,7 @@ export default function App() {
                         {hasOrderBump && (
                           <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-3 flex justify-between items-center hover:bg-white shadow-sm transition">
                             <div className="flex items-center gap-3">
-                              <div className="h-10 w-10 bg-[#FAF5EC] text-brand-gold border border-[#F2E6CD] rounded-lg flex items-center justify-center shrink-0">
+                              <div className="h-10 w-10 bg-amber-50 text-brand-gold border border-amber-200 rounded-lg flex items-center justify-center shrink-0">
                                 <Flame className="h-5 w-5" />
                               </div>
                               <div>
