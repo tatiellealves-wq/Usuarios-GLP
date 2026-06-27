@@ -28,7 +28,8 @@ import {
   CreditCard,
   Mail,
   Plus,
-  X
+  X,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -934,6 +935,13 @@ export default function App() {
 
               {/* Secure transaction and pay methods */}
               <div className="border-t border-white/10 pt-6">
+                {/* Local currency payment highlight */}
+                <div className="flex items-center justify-center gap-2 mb-5 bg-white/5 border border-brand-gold/30 rounded-xl px-4 py-3 max-w-md mx-auto">
+                  <Globe className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span className="text-[11px] md:text-xs font-semibold text-white/90 leading-snug text-left">
+                    Paga en <strong className="text-brand-gold">tu moneda local</strong> — la conversión se hace automáticamente en el checkout, sin complicaciones.
+                  </span>
+                </div>
                 <div className="flex justify-center items-center gap-3 opacity-80 mb-2">
                   <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL DE ALTA SEGURIDAD</span>
                 </div>
@@ -1104,6 +1112,42 @@ export default function App() {
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
                         Ese miedo es completamente legítimo — y tiene nombre clínico: sarcopenia inducida por GLP-1. La guía médica de alimentación y el recetario de alta proteína trabajan juntos para mantener el tejido muscular mientras se pierde grasa. Preservar músculo es lo que mantiene el contorno del cuerpo firme y evita el aspecto "desinflado". No podemos prometerte que prevendrá el 100% de los cambios cutáneos — pero sí podemos decirte que la nutrición es la única variable que tienes bajo tu control para minimizarlos.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Q4 */}
+            <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all duration-250">
+              <button
+                type="button"
+                onClick={() => toggleFaq(4)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
+              >
+                <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
+                  El precio está en dólares. ¿Puedo pagar en la moneda de mi país?
+                </span>
+                {activeFaq === 4 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-gray-400 shrink-0" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {activeFaq === 4 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-gray-100"
+                  >
+                    <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
+                      <p>
+                        Sí. Aunque el valor se muestra en dólares (US$) para mantener un precio único en todos los países, el checkout detecta automáticamente tu ubicación y te permite pagar en tu moneda local con la conversión del día. Puedes usar tarjeta de crédito o débito, y según tu país también aparecen métodos locales como PIX, transferencia o pago en efectivo. No necesitas hacer ninguna conversión manual: el sistema te muestra el monto exacto a pagar en tu moneda antes de confirmar.
                       </p>
                     </div>
                   </motion.div>
