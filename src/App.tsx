@@ -33,7 +33,6 @@ import {
   Plus
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
-import { SplineSceneBasic } from '@/components/ui/spline-section'
 
 import mockupImage from './assets/images/glp1_guide_mockup_1781632222712.jpg';
 
@@ -371,11 +370,6 @@ export default function App() {
         </div>
       </div>
       </FadeIn>
-
-      {/* INTERACTIVE 3D SPLINE SECTION (21st.dev, brand-adapted) */}
-      <section className="px-6 py-12 md:py-16 max-w-6xl mx-auto">
-        <SplineSceneBasic />
-      </section>
 
       {/* ADDITIONAL INTERACTIVE POWER TOOL: CLINICAL PROTEIN DEFICIT CALCULATOR */}
       <FadeIn>
