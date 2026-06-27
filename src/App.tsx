@@ -166,7 +166,7 @@ export default function App() {
       
       {/* 100% CLINICO EMERGENCY ANNOUNCEMENT TO BAR */}
       <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
-        <ShieldCheck className="h-4 w-4 text-brand-gold animate-pulse text-rose-300" />
+        <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
           Misión Científica: Evitar la sarcopenia y la flacidez cutánea por GLP-1
         </span>
@@ -315,6 +315,29 @@ export default function App() {
         </div>
       </section>
 
+      {/* SOCIAL PROOF STATS BAR */}
+      <div className="border-y border-gray-100 bg-white py-6 px-6">
+        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
+          <div className="text-center px-2 md:px-6">
+            <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">2,450+</p>
+            <p className="text-xs text-gray-500 mt-1 leading-snug">pacientes optimizando<br className="hidden md:block" /> su tratamiento GLP-1</p>
+          </div>
+          <div className="text-center px-2 md:px-6">
+            <div className="flex items-center justify-center gap-0.5 mb-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 text-amber-400 fill-current" />
+              ))}
+            </div>
+            <p className="text-2xl md:text-3xl font-extrabold text-neutral-dark tabular-nums">4.9<span className="text-base font-bold text-gray-400">/5</span></p>
+            <p className="text-xs text-gray-500 mt-0.5">valoración promedio</p>
+          </div>
+          <div className="text-center px-2 md:px-6">
+            <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">100%</p>
+            <p className="text-xs text-gray-500 mt-1 leading-snug">garantía de devolución<br className="hidden md:block" /> en 7 días</p>
+          </div>
+        </div>
+      </div>
+
       {/* ADDITIONAL INTERACTIVE POWER TOOL: CLINICAL PROTEIN DEFICIT CALCULATOR */}
       <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
         <div className="max-w-4xl mx-auto">
@@ -439,7 +462,7 @@ export default function App() {
 
               <button 
                 type="submit"
-                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition duration-300 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm"
+                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition-colors duration-200 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm cursor-pointer"
               >
                 <Activity className="h-4 w-4 text-brand-gold" />
                 VER MI DIAGNÓSTICO METABÓLICO
@@ -457,7 +480,7 @@ export default function App() {
                     exit={{ opacity: 0 }}
                     className="flex flex-col items-center justify-center h-full py-10"
                   >
-                    <HelpCircle className="h-12 w-12 text-gray-300 mb-3 animate-bounce" />
+                    <HelpCircle className="h-12 w-12 text-gray-300 mb-3" />
                     <p className="text-xs text-gray-500 max-w-[220px] text-center font-medium">
                       Completa los datos de la izquierda para generar tu diagnóstico de riesgo.
                     </p>
@@ -531,7 +554,7 @@ export default function App() {
                     <a
                       href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                       onClick={triggerCheckout}
-                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition duration-300 flex items-center justify-center gap-1 animate-pulse-green cursor-pointer"
+                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <span>OBTENER MI RECETARIO INTELIGENTE</span>
                       <ArrowRight className="h-3 w-3" />
@@ -939,7 +962,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => toggleFaq(1)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
                   ¿Para quién es esta guía?
@@ -975,7 +998,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => toggleFaq(2)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
                   ¿El acceso es inmediato?
@@ -1011,7 +1034,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => toggleFaq(3)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none"
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
                   ¿Cómo me ayuda con la flacidez?
@@ -1113,9 +1136,10 @@ export default function App() {
               exit={{ scale: 0.95, y: 15 }}
               className="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative block overflow-y-auto max-h-[85vh] border border-gray-100"
             >
-              <button 
-                onClick={() => setActiveModal(null)} 
-                className="absolute top-4 right-4 bg-gray-100 rounded-full p-1.5 hover:bg-gray-200 text-gray-500 transition-colors"
+              <button
+                onClick={() => setActiveModal(null)}
+                aria-label="Cerrar ventana"
+                className="absolute top-4 right-4 bg-gray-100 rounded-full p-1.5 hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
               >
                 <XCloseIcon className="h-5 w-5" />
               </button>
@@ -1184,11 +1208,12 @@ export default function App() {
                 </div>
                 
                 {checkoutStep !== 'loading' && (
-                  <button 
+                  <button
                     onClick={() => setIsCheckoutOpen(false)}
-                    className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-colors"
+                    aria-label="Cerrar checkout"
+                    className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                   >
-                    <XCloseIcon className="h-4.5 w-4.5" />
+                    <XCloseIcon className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -1291,7 +1316,7 @@ export default function App() {
 
                       <button
                         type="submit"
-                        className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-1.5 text-base shadow-lg shadow-brand-green-vibrant/20 transition mt-4 animate-pulse-green"
+                        className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-1.5 text-base shadow-lg shadow-brand-green-vibrant/20 transition-colors duration-200 mt-4"
                       >
                         <span>GUARDAR Y PASAR AL PAGO</span>
                         <ArrowRight className="h-4 w-4 animate-pulse" />
@@ -1389,7 +1414,7 @@ export default function App() {
                         
                         <button
                           type="submit"
-                          className="w-2/3 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-3 px-4 rounded-xl font-bold text-sm transition flex items-center justify-center gap-1 shadow-md shadow-brand-green-vibrant/20 animate-pulse-green"
+                          className="w-2/3 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-3 px-4 rounded-xl font-bold text-sm transition-colors duration-200 flex items-center justify-center gap-1 shadow-md shadow-brand-green-vibrant/20"
                         >
                           <Lock className="h-4 w-4" />
                           <span>PAGAR CON SEGURIDAD SSL</span>
@@ -1493,7 +1518,7 @@ export default function App() {
 
                         <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
                           <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 bg-gray-150 rounded-lg flex items-center justify-center shrink-0 text-gray-700">
+                            <div className="h-10 w-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 text-gray-700">
                               <ShoppingBag className="h-5 w-5" />
                             </div>
                             <div>

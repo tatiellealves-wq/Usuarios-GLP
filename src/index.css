@@ -89,3 +89,16 @@
     linear-gradient(to right, rgba(22, 101, 52, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(22, 101, 52, 0.03) 1px, transparent 1px);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-green,
+  .animate-pulse-gold,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
