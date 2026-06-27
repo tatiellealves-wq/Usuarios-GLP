@@ -222,19 +222,19 @@ export default function App() {
               {/* Trust Badge */}
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
                 <Award className="h-4 w-4 text-brand-gold" />
-                <span className="text-xs font-semibold tracking-wide text-green-200 uppercase">
-                  Sello de Validación Metábolica de Alta Conversión
+                <span className="text-xs font-semibold tracking-wide text-green-200">
+                  Desarrollado por nutricionistas clínicas especializadas en metabolismo y farmacoterapia para GLP-1
                 </span>
               </div>
 
               {/* Huge Headline with exact #355E2D */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                ¿Usas GLP-1? <span className="text-brand-gold underline decoration-brand-gold decoration-4 decoration-skip-ink">Sácale el jugo</span> a tu tratamiento, protege tu músculo y acelera tus resultados.
+                El Ozempic puede quitarte los kilos.<br /><span className="text-brand-gold">Pero si no comes bien, también te quita el músculo.</span>
               </h1>
 
               {/* Subheadline */}
               <p className="text-lg md:text-xl text-green-100 font-normal leading-relaxed mb-8 max-w-2xl">
-                El primer ecosistema digital de alimentación inteligente diseñado por profesionales para usuarios de <strong className="text-white">Ozempic, Wegovy y Mounjaro.</strong>
+                El Protocolo de Nutrición Anabólica para GLP-1: el único método que sincroniza tu alimentación con la ventana metabólica que abre el medicamento para preservar músculo, eliminar grasa y evitar el efecto rebote cuando termines el tratamiento.
               </p>
 
               {/* Responsive CTA Button in #00C853 */}
@@ -246,7 +246,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    ¡QUIERO MEJORES RESULTADOS YA!
+                    Sí, quiero perder grasa sin perder mi músculo
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
@@ -668,7 +668,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group cursor-pointer"
             >
               <ShoppingCart className="h-5 w-5 text-brand-gold" />
-              <span>DESBLOQUEAR EL KIT COMPLETO POR US$ 9,90</span>
+              <span>Sí, quiero perder grasa sin perder mi músculo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -703,10 +703,10 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
-                    Desarrollado por especialistas en nutrición clínica
+                    No es una dieta genérica disfrazada de "apta para GLP-1"
                   </h4>
                   <p className="text-sm text-gray-500">
-                    Diseñado por profesionales de la salud metabólica que entienden exactamente cómo interactúan los agonistas de GLP-1 con la asimilación de macronutrientes esenciales.
+                    Cada receta, cada lista de compras, cada indicación fue construida sobre la fisiología específica de lo que hace el semaglutide a tu metabolismo — incluyendo la supresión de apetito que hace que comer suficiente proteína sea casi imposible sin un sistema.
                   </p>
                 </div>
               </div>
@@ -717,10 +717,10 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
-                    Enfoque directo en proteger el músculo (Antiflacidez)
+                    35 recetas de alta proteína para cuando casi no tienes hambre
                   </h4>
                   <p className="text-sm text-gray-500">
-                    Aseguras que el volumen graso sea lo único en ser eliminado, conservando tus fibras de soporte muscular intactas para lucir un cuerpo firme y saludable tras el vaciado.
+                    Mientras todas las guías te dicen que comas menos, esta te da exactamente cuánto músculo necesitas preservar — y las recetas listas en 15 minutos que lo hacen posible aunque apenas tengas apetito.
                   </p>
                 </div>
               </div>
@@ -731,10 +731,10 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
-                    Combate activo de efectos colaterales indeseados
+                    El plan de salida que tu médico no te dio
                   </h4>
                   <p className="text-sm text-gray-500">
-                    Aprende pautas sencillas de ingesta hídrica equilibrada y digestión controlada para aliviar las náuseas, disminuir el dolor de cabeza y potenciar tus niveles energéticos.
+                    El 80% de las personas que dejan el GLP-1 recuperan el peso en 12 meses. El kit incluye el protocolo de salida de 12 semanas — la diferencia entre mantener tu resultado y empezar de cero.
                   </p>
                 </div>
               </div>
@@ -815,10 +815,10 @@ export default function App() {
               Ofertas Especial de Lanzamiento
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              Una pequeña inversión para el cuerpo que mereces
+              Gastas $1,000 al mes en el medicamento.<br className="hidden md:block" /> Este kit cuesta menos que un café.
             </h2>
             <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
-              Evita gastar cientos de dólares en productos innecesarios. Asegura hoy todo nuestro arsenal inteligente a una fracción de su costo regular.
+              Tu inyección semanal te costó entre $800 y $1,200 este mes. Sin el protocolo nutricional correcto, ese medicamento puede consumir hasta un <strong className="text-neutral-dark">35% de tu masa muscular</strong>. La Guía GLP-1 Inteligente existe para que cada dólar que gastas en Ozempic trabaje para ti, no contra ti.
             </p>
           </div>
 
@@ -881,13 +881,13 @@ export default function App() {
                 className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
-                <span>¡COMPRAR EL KIT COMPLETO POR US$ 9,90!</span>
+                <span>Sí, quiero perder grasa sin perder mi músculo</span>
               </a>
 
               {/* Urgency warning */}
               <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" />
-                Disponible por tiempo limitado con este precio de lanzamiento.
+                <Clock className="h-3.5 w-3.5 shrink-0" />
+                Cada semana que usas el GLP-1 sin el protocolo correcto es una semana en que tu cuerpo puede estar sacrificando músculo. El momento de actuar es ahora.
               </p>
 
               {/* Secure transaction and pay methods */}
@@ -928,10 +928,10 @@ export default function App() {
           {/* Copy */}
           <div className="text-center md:text-left">
             <h3 className="font-bold font-display text-neutral-dark text-xl md:text-2xl mb-3">
-              Garantía Incondicional de 7 Días.
+              Garantía Total de 7 Días — sin preguntas.
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Prueba el contenido, aplica las deliciosas recetas y mira los consejos clínicamente estructurados. Si sientes que este kit digital no es para ti, o no cubre tus expectativas nutricionales, simplemente escríbenos. Te devolveremos el <strong>100% de tu dinero inmediatamente</strong> y sin preguntas. Estás respaldado al 100%. El riesgo es totalmente nuestro.
+              Una mujer que ya está invirtiendo en su salud merece tomar decisiones sin riesgo. Si en 7 días sientes que este kit no es para ti, te devolvemos cada centavo — sin preguntas, sin formularios, sin esperas. Así de seguras estamos de lo que tienes en tus manos.
             </p>
           </div>
 
@@ -965,7 +965,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
-                  ¿Para quién es esta guía?
+                  ¿Sirve esto si acabo de empezar con el Ozempic y todavía estoy ajustando la dosis?
                 </span>
                 {activeFaq === 1 ? (
                   <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
@@ -985,7 +985,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
                       <p>
-                        Este kit está diseñado para cualquier persona que esté utilizando actualmente medicamentos agonistas del receptor de GLP-1 como Ozempic®, Wegovy®, Mounjaro® u otros análogos, así como para quienes estén por iniciar su tratamiento y deseen asegurar los mejores resultados posibles desde la primera semana.
+                        Sí — y este es exactamente el momento en que más lo necesitas. Las primeras semanas de GLP-1 son cuando el metabolismo es más sensible: el cuerpo está aprendiendo a quemar grasa, pero sin el protocolo correcto también empieza a perder músculo. Este kit te da el mapa nutricional desde el día uno, no después de que el daño ya está hecho.
                       </p>
                     </div>
                   </motion.div>
@@ -1001,7 +1001,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
-                  ¿El acceso es inmediato?
+                  Pagué, ¿y ahora qué? ¿Cuánto tiempo hasta que puedo usarlo?
                 </span>
                 {activeFaq === 2 ? (
                   <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
@@ -1021,7 +1021,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
-                        ¡Sí, al 100%! Una vez completado tu pago seguro de US$ 9.90, recibirás de forma automática e inmediata un enlace de descarga directa en tu correo electrónico. Podrás acceder a todo el material en formato PDF de alta resolución desde tu smartphone, tablet o computadora.
+                        Inmediatamente. En el momento en que se confirma tu pago, Hotmart te envía un correo con el acceso directo a los 4 PDFs. No necesitas crear cuenta, esperar revisiones ni descargar ninguna app. En menos de 3 minutos tienes el kit en tu pantalla — y puedes empezar la Guía de Alimentación esta misma noche.
                       </p>
                     </div>
                   </motion.div>
@@ -1037,7 +1037,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
-                  ¿Cómo me ayuda con la flacidez?
+                  Tengo miedo de que cuando pierda el peso me quede la piel flácida. ¿Esto realmente puede prevenirlo?
                 </span>
                 {activeFaq === 3 ? (
                   <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
@@ -1057,7 +1057,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
-                        La pérdida rápida de peso inducida por los GLP-1 suele degradar tanto grasa como músculo. Cuando pierdes músculo, tu piel pierde su sostén natural, provocando flacidez extrema. Nuestra guía te enseña exactamente cuánta proteína de alta biodisponibilidad ingerir diariamente, cómo distribuirla estratégicamente y qué alimentos clave evitan el catabolismo de forma simple y deliciosa, protegiendo tu masa muscular.
+                        Ese miedo es completamente legítimo — y tiene nombre clínico: sarcopenia inducida por GLP-1. La guía médica de alimentación y el recetario de alta proteína trabajan juntos para mantener el tejido muscular mientras se pierde grasa. Preservar músculo es lo que mantiene el contorno del cuerpo firme y evita el aspecto "desinflado". No podemos prometerte que prevendrá el 100% de los cambios cutáneos — pero sí podemos decirte que la nutrición es la única variable que tienes bajo tu control para minimizarlos.
                       </p>
                     </div>
                   </motion.div>
