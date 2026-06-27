@@ -32,9 +32,40 @@ import {
   RefreshCw,
   Plus
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
 import mockupImage from './assets/images/glp1_guide_mockup_1781632222712.jpg';
+
+// Reusable scroll-reveal wrapper. Animates only opacity/transform (y),
+// and respects the user's reduced-motion preference by rendering a plain
+// pass-through container with no animation.
+function FadeIn({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 // Main Application Component
 export default function App() {
@@ -316,6 +347,7 @@ export default function App() {
       </section>
 
       {/* SOCIAL PROOF STATS BAR */}
+      <FadeIn>
       <div className="border-y border-green-100 bg-green-50 py-6 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
           <div className="text-center px-2 md:px-6">
@@ -337,8 +369,10 @@ export default function App() {
           </div>
         </div>
       </div>
+      </FadeIn>
 
       {/* ADDITIONAL INTERACTIVE POWER TOOL: CLINICAL PROTEIN DEFICIT CALCULATOR */}
+      <FadeIn>
       <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
@@ -567,8 +601,10 @@ export default function App() {
           </div>
         </div>
       </section>
+      </FadeIn>
 
       {/* 2. SEÇÃO: O QUE VC VAI RECEBER */}
+      <FadeIn>
       <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto rounded-2xl p-8 md:p-12 bg-green-50/25 border border-green-100/60">
           
@@ -675,8 +711,10 @@ export default function App() {
 
         </div>
       </section>
+      </FadeIn>
 
       {/* 3. SEÇÃO: POR QUE ESCOLHER OS PRODUTOS */}
+      <FadeIn>
       <section className="py-20 px-6 bg-white border-t border-gray-100">
         <div className="max-w-6xl mx-auto">
           
@@ -805,8 +843,10 @@ export default function App() {
 
         </div>
       </section>
+      </FadeIn>
 
       {/* 4. SEÇÃO: OFERTAS & SCARCITY */}
+      <FadeIn>
       <section className="py-20 px-6 bg-green-50/30">
         <div className="max-w-4xl mx-auto">
           
@@ -908,8 +948,10 @@ export default function App() {
 
         </div>
       </section>
+      </FadeIn>
 
       {/* 5. SEÇÃO: GARANTIA */}
+      <FadeIn>
       <section className="py-16 px-6 bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-sm relative overflow-hidden">
           
@@ -937,8 +979,10 @@ export default function App() {
 
         </div>
       </section>
+      </FadeIn>
 
       {/* 6. SEÇÃO: FAQ (Preguntas Frecuentes) */}
+      <FadeIn>
       <section className="py-20 px-6 bg-white border-t border-gray-100">
         <div className="max-w-4xl mx-auto">
           
@@ -1071,6 +1115,7 @@ export default function App() {
 
         </div>
       </section>
+      </FadeIn>
 
       {/* 7. SEÇÃO: RODAPÉ */}
       <footer className="bg-slate-950 text-white/60 py-16 px-6 text-center border-t border-white/5">
