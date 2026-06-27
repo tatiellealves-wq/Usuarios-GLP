@@ -20,17 +20,15 @@ import {
   ChevronDown, 
   ChevronUp, 
   Scale, 
-  Clock, 
-  Heart,
+  Clock,
   CheckCircle2,
   HelpCircle,
   Copy,
-  Receipt,
   User,
   CreditCard,
   Mail,
-  RefreshCw,
-  Plus
+  Plus,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -224,7 +222,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-xs font-bold px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 flex items-center justify-center"
+              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               Comprar Ahora
             </a>
@@ -264,8 +262,8 @@ export default function App() {
               </h1>
 
               {/* Subheadline */}
-              <p className="text-lg md:text-xl text-green-100 font-normal leading-relaxed mb-8 max-w-2xl">
-                El Protocolo de Nutrición Anabólica para GLP-1: el único método que sincroniza tu alimentación con la ventana metabólica que abre el medicamento para preservar músculo, eliminar grasa y evitar el efecto rebote cuando termines el tratamiento.
+              <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-8 max-w-2xl">
+                El Protocolo de Nutrición Anabólica para GLP-1: sincroniza tu alimentación con la ventana metabólica que abre el medicamento para preservar músculo, quemar grasa y blindarte contra el efecto rebote cuando termines el tratamiento.
               </p>
 
               {/* Responsive CTA Button in #00C853 */}
@@ -274,7 +272,7 @@ export default function App() {
                   id="hero-cta-btn"
                   href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                   onClick={triggerCheckout}
-                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer"
+                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     Sí, quiero perder grasa sin perder mi músculo
@@ -352,7 +350,7 @@ export default function App() {
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">2,450+</p>
-            <p className="text-xs text-gray-500 mt-1 leading-snug">pacientes optimizando<br className="hidden md:block" /> su tratamiento GLP-1</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">pacientes optimizando<br className="hidden md:block" /> su tratamiento GLP-1</p>
           </div>
           <div className="text-center px-2 md:px-6">
             <div className="flex items-center justify-center gap-0.5 mb-1">
@@ -361,11 +359,11 @@ export default function App() {
               ))}
             </div>
             <p className="text-2xl md:text-3xl font-extrabold text-neutral-dark tabular-nums">4.9<span className="text-base font-bold text-gray-400">/5</span></p>
-            <p className="text-xs text-gray-500 mt-0.5">valoración promedio</p>
+            <p className="text-xs text-gray-600 mt-0.5">valoración promedio</p>
           </div>
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">100%</p>
-            <p className="text-xs text-gray-500 mt-1 leading-snug">garantía de devolución<br className="hidden md:block" /> en 7 días</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">garantía de devolución<br className="hidden md:block" /> en 7 días</p>
           </div>
         </div>
       </div>
@@ -403,28 +401,32 @@ export default function App() {
                     Tu Peso Actual
                   </label>
                   <div className="flex rounded-xl overflow-hidden border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-brand-green-hover focus-within:border-transparent">
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      aria-label="Tu peso actual"
                       value={calcWeight}
                       onChange={(e) => setCalcWeight(Number(e.target.value))}
-                      className="w-full px-4 py-3 text-gray-800 font-semibold focus:outline-none placeholder-gray-400"
+                      className="w-full px-4 py-3 text-gray-800 font-semibold tabular-nums focus:outline-none placeholder-gray-400"
                       placeholder="Ej. 75"
                       min="30"
                       max="250"
                       required
                     />
                     <div className="flex border-l border-gray-200 bg-gray-50 rounded-r-xl">
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => setCalcWeightUnit('kg')}
-                        className={`px-3 py-1 text-xs font-bold ${calcWeightUnit === 'kg' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-500 hover:text-gray-800'}`}
+                        aria-pressed={calcWeightUnit === 'kg'}
+                        className={`px-4 min-h-[44px] text-xs font-bold cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green ${calcWeightUnit === 'kg' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-600 hover:text-gray-900'}`}
                       >
                         KG
                       </button>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => setCalcWeightUnit('lb')}
-                        className={`px-3 py-1 text-xs font-bold ${calcWeightUnit === 'lb' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-500 hover:text-gray-800'}`}
+                        aria-pressed={calcWeightUnit === 'lb'}
+                        className={`px-4 min-h-[44px] text-xs font-bold cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green ${calcWeightUnit === 'lb' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-600 hover:text-gray-900'}`}
                       >
                         LB
                       </button>
@@ -496,7 +498,7 @@ export default function App() {
 
               <button 
                 type="submit"
-                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl transition-colors duration-200 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm cursor-pointer"
+                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 min-h-[44px] rounded-xl transition-colors duration-200 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
               >
                 <Activity className="h-4 w-4 text-brand-gold" />
                 VER MI DIAGNÓSTICO METABÓLICO
@@ -533,7 +535,7 @@ export default function App() {
 
                     {/* Deficit metrics */}
                     <div>
-                      <p className="text-xs text-sidebar font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
                         Tu requerimiento diario mínimo con GLP-1:
                       </p>
                       <h4 className="text-3xl font-extrabold text-neutral-dark flex items-baseline gap-1 tabular-nums">
@@ -542,7 +544,7 @@ export default function App() {
                     </div>
 
                     <div>
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
                         Tu Déficit Proteico Estimado:
                       </p>
                       <h4 className={`text-2xl font-extrabold tabular-nums ${deficit > 15 ? 'text-red-600' : 'text-emerald-600'} flex items-baseline gap-1`}>
@@ -574,7 +576,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    <p className="text-xs text-gray-500 leading-relaxed">
+                    <p className="text-xs text-gray-600 leading-relaxed">
                       {muscleLossRisk === 'Crítico' ? (
                         <strong className="text-red-700 flex items-center gap-1">
                           <ShieldAlert className="h-4 w-4 shrink-0" /> Alerta: Estás degradando músculo activo.
@@ -588,7 +590,7 @@ export default function App() {
                     <a
                       href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                       onClick={triggerCheckout}
-                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer"
+                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 min-h-[44px] rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
                     >
                       <span>OBTENER MI RECETARIO INTELIGENTE</span>
                       <ArrowRight className="h-3 w-3" />
@@ -615,7 +617,7 @@ export default function App() {
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Tu Kit de Sobrevivencia y Optimización GLP-1
             </h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
               Todo lo que necesitas para evitar efectos secundarios molestos y multiplicar tu pérdida grasa de manera saludable en un solo pack digital descargable.
             </p>
           </div>
@@ -632,11 +634,11 @@ export default function App() {
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
                   1. Guía Médica de Alimentación
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   Descubre la estructura exacta de platos recomendada por expertos para estructurar tus porciones óptimamente y desbloquear la máxima saciedad metabólica sin descuidar tu nutrición esencial.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  ✓ Estructura de platos clínicamente validada
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Estructura de platos clínicamente validada
                 </span>
               </div>
             </div>
@@ -650,11 +652,11 @@ export default function App() {
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
                   2. Recetario de Alta Proteína
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   Recetas deliciosas, saciantes y ultrarrápidas, listas en 15 minutos. Diseñadas específicamente para proteger tu masa muscular activa, evitar la fatiga y combatir la temida flacidez dérmica.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  ✓ Nutrición de absorción rápida anti-flacidez
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Nutrición de absorción rápida anti-flacidez
                 </span>
               </div>
             </div>
@@ -668,11 +670,11 @@ export default function App() {
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
                   3. Lista de Súper Compras Inteligente
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   El mapa exacto y directo de lo que debes y NO debes comprar en el supermercado. Ahorra cientos de dólares en cestas vacías y evita los alimentos inflamatorios de alto índice glucémico.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  ✓ Ahorro inteligente de despensa inflamatoria
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Ahorro inteligente de despensa inflamatoria
                 </span>
               </div>
             </div>
@@ -686,11 +688,11 @@ export default function App() {
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
                   4. Diario de Progreso Imprimible
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   Un sistema físico/digital portátil para registrar tus tomas semanales de dosis, síntomas, ingesta libre de agua, y tus niveles de energía diarias para monitorear tu evolución metabólica real.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  ✓ Plantillas organizadoras en PDF y digital
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Plantillas organizadoras en PDF y digital
                 </span>
               </div>
             </div>
@@ -701,7 +703,7 @@ export default function App() {
             <a 
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4.5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition duration-300 group cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5 text-brand-gold" />
               <span>Sí, quiero perder grasa sin perder mi músculo — US$ 9,90</span>
@@ -725,7 +727,7 @@ export default function App() {
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               ¿Por qué este método es diferente?
             </h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
               Perder peso no tiene por qué significar arruinar tu tono muscular y vivir con náuseas crónicas. Ponemos la ciencia de tu lado.
             </p>
           </div>
@@ -791,21 +793,21 @@ export default function App() {
                   {/* Común Column */}
                   <div className="p-6 bg-red-50/20 text-center">
                     <span className="text-xs font-bold text-red-600 tracking-wide uppercase block mb-3">Fármaco GLP-1 Solo</span>
-                    <ul className="space-y-4 text-xs text-left text-gray-600">
+                    <ul className="space-y-4 text-xs text-left text-gray-700">
                       <li className="flex items-start gap-2">
-                        <span className="text-red-500 font-bold">✕</span>
+                        <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong>Pérdida muscular grave:</strong> Piel colgada en brazos, glúteos y rostro (efecto "cara Ozempic").</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-red-500 font-bold">✕</span>
+                        <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong>Fatiga extrema:</strong> Sorteas el día sin fuerza ni energía por déficit selectivo proteico.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-red-500 font-bold">✕</span>
+                        <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong>Estreñimiento y Náuseas:</strong> Sin saber qué fibra o enzima asimilar para reducir el espasmo digestivo.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-red-500 font-bold">✕</span>
+                        <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong>Efecto Rebote inminente:</strong> Retornas al peso anterior al dejar la dosis debido a un metabolismo frenado.</span>
                       </li>
                     </ul>
@@ -817,20 +819,20 @@ export default function App() {
                     <span className="text-xs font-bold text-brand-green tracking-wide uppercase block mb-3">Kit GLP-1 Inteligente</span>
                     <ul className="space-y-4 text-xs text-left text-gray-700">
                       <li className="flex items-start gap-2">
-                        <span className="text-brand-green-vibrant font-bold">✓</span>
+                        <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong>Tono muscular firme:</strong> Masa magra activa preservada con nutrición clínicamente equilibrada.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-brand-green-vibrant font-bold">✓</span>
-                        <span><strong>Vitalidad & Enfoque:</strong> Nutrientes biodisponibles que mantienen tus células cargadas de energía.</span>
+                        <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <span><strong>Vitalidad y enfoque:</strong> Nutrientes biodisponibles que mantienen tus células cargadas de energía.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-brand-green-vibrant font-bold">✓</span>
-                        <span><strong>Bienestar Digestivo:</strong> Protocolos simples que minimizan reflujos, acidez y el estreñimiento leve.</span>
+                        <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <span><strong>Bienestar digestivo:</strong> Protocolos simples que minimizan reflujos, acidez y el estreñimiento leve.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-brand-green-vibrant font-bold">✓</span>
-                        <span><strong>Cuerpo Sostenible:</strong> Mantienes tu peso ideal post-tratamiento gracias a un metabolismo íntegro y protegido.</span>
+                        <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <span><strong>Cuerpo sostenible:</strong> Mantienes tu peso ideal post-tratamiento gracias a un metabolismo íntegro y protegido.</span>
                       </li>
                     </ul>
                   </div>
@@ -857,7 +859,7 @@ export default function App() {
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Gastas $1,000 al mes en el medicamento.<br className="hidden md:block" /> Este kit cuesta menos que un café.
             </h2>
-            <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
               Tu inyección semanal te costó entre $800 y $1,200 este mes. Sin el protocolo nutricional correcto, ese medicamento puede consumir hasta un <strong className="text-neutral-dark">35% de tu masa muscular</strong>. La Guía GLP-1 Inteligente existe para que cada dólar que gastas en Ozempic trabaje para ti, no contra ti.
             </p>
           </div>
@@ -918,7 +920,7 @@ export default function App() {
                 id="oferta-cta-purchase-trigger"
                 href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                 onClick={triggerCheckout}
-                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
                 <span>Sí, quiero perder grasa sin perder mi músculo</span>
@@ -993,7 +995,7 @@ export default function App() {
             <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Preguntas Frecuentes
             </h2>
-            <p className="text-gray-500 text-sm max-w-lg mx-auto">
+            <p className="text-gray-600 text-sm leading-relaxed max-w-lg mx-auto">
               Todo lo que necesitas saber antes de asegurar tu acceso a la Guía GLP-1 Inteligente.
             </p>
           </div>
@@ -1118,7 +1120,7 @@ export default function App() {
       </FadeIn>
 
       {/* 7. SEÇÃO: RODAPÉ */}
-      <footer className="bg-slate-950 text-white/60 py-16 px-6 text-center border-t border-white/5">
+      <footer className="bg-slate-950 text-white/70 py-16 px-6 text-center border-t border-white/5">
         <div className="max-w-6xl mx-auto space-y-8">
           
           {/* Logo brand and badge */}
@@ -1127,40 +1129,40 @@ export default function App() {
               <Activity className="h-6 w-6 text-brand-gold" />
               <span className="font-bold tracking-tight text-xl text-white">Guía GLP-1 Inteligente</span>
             </div>
-            <p className="text-xs text-white/40">Nutrición de alta conversión para un cambio real y duradero.</p>
+            <p className="text-xs text-white/70">Nutrición clínica para un cambio real y duradero.</p>
           </div>
 
           {/* Discret links */}
           <div className="flex justify-center flex-wrap gap-6 text-xs font-semibold">
-            <button 
-              onClick={() => setActiveModal('terms')} 
-              className="text-white/60 hover:text-white hover:underline transition"
+            <button
+              onClick={() => setActiveModal('terms')}
+              className="text-white/70 hover:text-white hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
               Términos de Uso
             </button>
-            <span className="text-white/20">|</span>
-            <button 
-              onClick={() => setActiveModal('privacy')} 
-              className="text-white/60 hover:text-white hover:underline transition"
+            <span className="text-white/30" aria-hidden="true">|</span>
+            <button
+              onClick={() => setActiveModal('privacy')}
+              className="text-white/70 hover:text-white hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
               Políticas de Privacidad
             </button>
-            <span className="text-white/20">|</span>
-            <a href="mailto:soporte@guiaglp1.com" className="text-white/60 hover:text-white hover:underline transition">
+            <span className="text-white/30" aria-hidden="true">|</span>
+            <a href="mailto:soporte@guiaglp1.com" className="text-white/70 hover:text-white hover:underline transition-colors duration-150 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
               Contacto Soporte
             </a>
           </div>
 
           {/* Copyright description */}
-          <div className="text-xs text-white/30 border-t border-white/5 pt-8">
+          <div className="text-xs text-white/60 border-t border-white/10 pt-8">
             <p className="font-normal">
               © 2026 Guía GLP-1 Inteligente. Todos los derechos reservados.
             </p>
           </div>
 
           {/* Medical warning disclaimer in smaller text */}
-          <div className="max-w-4xl mx-auto text-[9px] leading-relaxed text-white/40 bg-white/5 p-5 rounded-2xl border border-white/5 text-justify">
-            <strong className="text-white">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no de ninguna manera sustituye el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
+          <div className="max-w-4xl mx-auto text-[10px] leading-relaxed text-white/60 bg-white/5 p-5 rounded-2xl border border-white/10 text-left">
+            <strong className="text-white">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no sustituye de ninguna manera el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
           </div>
 
         </div>
@@ -1248,7 +1250,7 @@ export default function App() {
                   <Lock className="h-4.5 w-4.5 text-brand-gold shrink-0" />
                   <div>
                     <span className="text-xs uppercase font-extrabold text-brand-gold tracking-widest block">Checkout Seguro</span>
-                    <h4 className="text-sm font-bold -mt-0.5">Suscripción Manual & Descarga Directa</h4>
+                    <h4 className="text-sm font-bold -mt-0.5">Pago único y descarga inmediata</h4>
                   </div>
                 </div>
                 
@@ -1526,18 +1528,18 @@ export default function App() {
                             </div>
                             <div>
                               <h5 className="text-xs font-bold text-gray-800">1. Guía Médica Alimentaria</h5>
-                              <p className="text-[10px] text-gray-400">PDF interactivo de Alta Resolución • 3.4 MB</p>
+                              <p className="text-[10px] text-gray-500">PDF interactivo de Alta Resolución • 3.4 MB</p>
                             </div>
                           </div>
                           
-                          <a 
-                            href="javascript:void(0)" 
+                          <button
+                            type="button"
                             onClick={() => alert('¡Descarga Iniciada! Tu navegador está bajando la Guía de Alimentación GLP-1.')}
-                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
-                            title="Descargar Guía"
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-brand-green"
+                            aria-label="Descargar Guía Médica Alimentaria"
                           >
                             <Download className="h-4 w-4" />
-                          </a>
+                          </button>
                         </div>
 
                         <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
@@ -1547,18 +1549,18 @@ export default function App() {
                             </div>
                             <div>
                               <h5 className="text-xs font-bold text-gray-800">2. Recetario de Alta Proteína</h5>
-                              <p className="text-[10px] text-gray-400">PDF interactivo • 2.8 MB • 35 Recetas</p>
+                              <p className="text-[10px] text-gray-500">PDF interactivo • 2.8 MB • 35 Recetas</p>
                             </div>
                           </div>
                           
-                          <a 
-                            href="javascript:void(0)" 
+                          <button
+                            type="button"
                             onClick={() => alert('¡Descarga Iniciada! Bajando el Recetario Proteico GLP-1 con 35 platos de 15 minutos.')}
-                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
-                            title="Descargar Recetario"
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-brand-green"
+                            aria-label="Descargar Recetario de Alta Proteína"
                           >
                             <Download className="h-4 w-4" />
-                          </a>
+                          </button>
                         </div>
 
                         <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
@@ -1567,19 +1569,19 @@ export default function App() {
                               <ShoppingBag className="h-5 w-5" />
                             </div>
                             <div>
-                              <h5 className="text-xs font-bold text-gray-800">3. Lista de Supermercación</h5>
-                              <p className="text-[10px] text-gray-400">Folleto Imprimible formato A4 • 1.1 MB</p>
+                              <h5 className="text-xs font-bold text-gray-800">3. Lista de Supermercado Inteligente</h5>
+                              <p className="text-[10px] text-gray-500">Folleto Imprimible formato A4 • 1.1 MB</p>
                             </div>
                           </div>
                           
-                          <a 
-                            href="javascript:void(0)" 
+                          <button
+                            type="button"
                             onClick={() => alert('¡Descarga Iniciada! Bajando tu checklist de compras inteligentes.')}
-                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold text-xs p-2 rounded-lg"
-                            title="Descargar Folleto"
+                            className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-brand-green"
+                            aria-label="Descargar Lista de Supermercado"
                           >
                             <Download className="h-4 w-4" />
-                          </a>
+                          </button>
                         </div>
 
                         {hasOrderBump && (
@@ -1594,14 +1596,14 @@ export default function App() {
                               </div>
                             </div>
                             
-                            <a 
-                              href="javascript:void(0)" 
+                            <button
+                              type="button"
                               onClick={() => alert('¡Descarga Iniciada! Tu módulo bonus de ayuno médico ha comenzado a descargarse.')}
-                              className="text-white bg-brand-gold hover:bg-brand-gold-dark font-bold text-xs p-2 rounded-lg"
-                              title="Descargar Módulo de Ayuno"
+                              className="text-white bg-brand-gold hover:bg-brand-gold-dark font-bold p-2.5 rounded-lg cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-brand-gold"
+                              aria-label="Descargar Módulo de Ayuno Seguro"
                             >
                               <Download className="h-4 w-4" />
-                            </a>
+                            </button>
                           </div>
                         )}
                       </div>
