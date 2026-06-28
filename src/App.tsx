@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ShieldCheck, 
-  Check, 
-  BookOpen, 
-  Utensils, 
-  ShoppingBag, 
-  ClipboardList, 
-  Star, 
-  Award, 
-  Activity, 
-  Flame, 
-  ShieldAlert, 
-  Lock, 
-  Sparkles, 
-  Download, 
-  ShoppingCart, 
-  FileText, 
-  ArrowRight, 
-  ChevronDown, 
-  ChevronUp, 
-  Scale, 
+import {
+  ShieldCheck,
+  Check,
+  BookOpen,
+  Utensils,
+  ShoppingBag,
+  ClipboardList,
+  Star,
+  Award,
+  Activity,
+  ShieldAlert,
+  Lock,
+  Sparkles,
+  ShoppingCart,
+  FileText,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Scale,
   Clock,
   CheckCircle2,
   HelpCircle,
-  Copy,
-  User,
-  CreditCard,
-  Mail,
-  Plus,
   X,
   Globe
 } from 'lucide-react';
@@ -65,16 +58,6 @@ function FadeIn({
 
 export default function App() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState<'details' | 'payment' | 'loading' | 'success'>('details');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [hasOrderBump, setHasOrderBump] = useState(false);
-  const [checkoutProgress, setCheckoutProgress] = useState(0);
-  const [isCopied, setIsCopied] = useState(false);
   const [calcWeight, setCalcWeight] = useState<number>(75);
   const [calcWeightUnit, setCalcWeightUnit] = useState<'kg' | 'lb'>('kg');
   const [calcMed, setCalcMed] = useState<string>('Ozempic');
@@ -141,42 +124,6 @@ export default function App() {
     setTimeout(() => {
       window.location.href = targetUrl;
     }, 400);
-  };
-
-  const handleNextStep = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (checkoutStep === 'details') {
-      if (!fullName || !email) {
-        alert('Por favor, ingresa tu nombre completo y correo electrónico para enviar el acceso.');
-        return;
-      }
-      setCheckoutStep('payment');
-    } else if (checkoutStep === 'payment') {
-      if (!cardNumber || !cardExpiry || !cardCvv) {
-        alert('Por favor, ingresa los datos de tu tarjeta simulada.');
-        return;
-      }
-      setCheckoutStep('loading');
-      simulatePaymentProgress();
-    }
-  };
-
-  const simulatePaymentProgress = () => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 5;
-      setCheckoutProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        setCheckoutStep('success');
-      }
-    }, 150);
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
   };
 
   const weightInKg = calcWeightUnit === 'lb' ? Math.round(calcWeight * 0.453592) : calcWeight;
@@ -249,7 +196,7 @@ export default function App() {
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                Tomás Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Y tu cuerpo está pagando el precio en silencio.</span>
+                Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Y tu cuerpo está pagando el precio en silencio.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-8 max-w-2xl">
@@ -1205,7 +1152,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
-                        É exatamente para ti. O kit foi desenhado assumindo que ninguém te explicou nada — porque é isso que acontece com 97% das pessoas que começam com GLP-1. A Guia de Alimentação usa linguagem clara, com exemplos visuais de pratos e porções. Sem termos médicos complicados nem contagem de macros. Só instruções concretas: o que comer, quanto, quando. Se sabes pegar um garfo, consegues aplicar este protocolo desde o primeiro dia.
+                        Es exactamente para ti. El kit fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa al 97% de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
                       </p>
                     </div>
                   </motion.div>
@@ -1324,146 +1271,6 @@ export default function App() {
                 </div>
               )}
               <button onClick={() => setActiveModal(null)} className="w-full mt-6 bg-brand-green hover:bg-brand-green-hover text-white py-3 rounded-xl font-bold text-sm transition">Entendido, Cerrar Ventana</button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isCheckoutOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-neutral-dark/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <motion.div initial={{ scale: 0.9, y: 30 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 30 }} className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative border border-gray-100 flex flex-col max-h-[90vh]">
-              <div className="bg-brand-green text-white p-5 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Lock className="h-4.5 w-4.5 text-brand-gold shrink-0" />
-                  <div>
-                    <span className="text-xs uppercase font-extrabold text-brand-gold tracking-widest block">Checkout Seguro</span>
-                    <h4 className="text-sm font-bold -mt-0.5">Pago único y descarga inmediata</h4>
-                  </div>
-                </div>
-                {checkoutStep !== 'loading' && (
-                  <button onClick={() => setIsCheckoutOpen(false)} aria-label="Cerrar checkout" className="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2.5 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50">
-                    <XCloseIcon className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-              {checkoutStep !== 'success' && checkoutStep !== 'loading' && (
-                <div className="grid grid-cols-2 divide-x divide-gray-100 border-b border-gray-100 text-center bg-gray-50/50">
-                  <div className={`py-2 text-[10px] font-bold ${checkoutStep === 'details' ? 'text-brand-green bg-white' : 'text-gray-400'}`}>1. DATOS DE ENVÍO</div>
-                  <div className={`py-2 text-[10px] font-bold ${checkoutStep === 'payment' ? 'text-brand-green bg-white' : 'text-gray-400'}`}>2. PAGO ENCRIPTADO</div>
-                </div>
-              )}
-              <div className="overflow-y-auto p-6 flex-1">
-                <AnimatePresence mode="wait">
-                  {checkoutStep === 'details' && (
-                    <motion.form key="step-details" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} onSubmit={handleNextStep} className="space-y-4">
-                      <div className="text-center mb-4"><p className="text-xs text-gray-500">Introduce el correo electrónico al cual deseas mandar el acceso digital.</p></div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">Tu Nombre Completo</label>
-                        <div className="relative"><User className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" /><input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800" placeholder="Ej. Sofía Rodríguez" /></div>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">Tu Correo Electrónico Principal</label>
-                        <div className="relative"><Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" /><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800" placeholder="sofi@ejemplo.com" /></div>
-                        <span className="text-[10px] text-gray-400 block mt-1">Soporte anti-spam. Despacho automatizado inmediato.</span>
-                      </div>
-                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
-                        <div className="flex items-start gap-3">
-                          <div className="bg-brand-gold text-white rounded-lg p-1 mt-0.5 shrink-0"><Plus className="h-4 w-4" /></div>
-                          <div>
-                            <span className="bg-brand-gold-dark text-white text-[9px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase">OFERTA DE UN ÚNICO CLIC</span>
-                            <h4 className="font-bold text-gray-800 text-xs mt-1">Guía de Ayuno Seguro bajo GLP-1 (+$2.99)</h4>
-                            <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">Agrega el módulo de ayuno intermitente adaptado para GLP-1.</p>
-                            <label className="flex items-center gap-2 mt-2.5 bg-white py-1.5 px-3 rounded-lg border border-amber-200 cursor-pointer select-none">
-                              <input type="checkbox" checked={hasOrderBump} onChange={(e) => setHasOrderBump(e.target.checked)} className="text-brand-green focus:ring-brand-green h-4.5 w-4.5 rounded border-gray-300" />
-                              <span className="text-xs font-bold text-brand-green">¡Sí, lo agrego por solo $2.99 más!</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <button type="submit" className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-1.5 text-base shadow-lg shadow-brand-green-vibrant/20 transition-colors duration-200 mt-4">
-                        <span>GUARDAR Y PASAR AL PAGO</span><ArrowRight className="h-4 w-4 animate-pulse" />
-                      </button>
-                    </motion.form>
-                  )}
-                  {checkoutStep === 'payment' && (
-                    <motion.form key="step-payment" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} onSubmit={handleNextStep} className="space-y-4">
-                      <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center text-sm border border-gray-100">
-                        <div><p className="text-xs text-gray-500">Despacho para:</p><strong className="text-gray-800 text-xs block truncate max-w-[200px]">{email}</strong></div>
-                        <div className="text-right"><p className="text-xs text-gray-500">Monto Final:</p><strong className="text-brand-green font-extrabold text-base">US$ {hasOrderBump ? '12,89' : '9,90'}</strong></div>
-                      </div>
-                      <div className="bg-emerald-50 text-emerald-800 text-[11px] p-3 rounded-xl border border-emerald-100 flex items-center gap-2">
-                        <ShieldCheck className="h-4.5 w-4.5 text-brand-green shrink-0" />
-                        <span>Entorno de prueba. Se acepta cualquier dato de tarjeta para validación.</span>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">Número de Tarjeta (Simulada)</label>
-                        <div className="relative"><CreditCard className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" /><input type="text" required value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="bg-white w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800" placeholder="4000 1234 5678 9010" maxLength={19} /></div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div><label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">Vencimiento</label><input type="text" required value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="bg-white w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800 text-center" placeholder="MM/AA" maxLength={5} /></div>
-                        <div><label className="block text-xs font-bold text-gray-700 uppercase mb-1.5 tracking-wide">Código CVV</label><input type="password" required value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} className="bg-white w-full px-4 py-3 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-800 text-center" placeholder="123" maxLength={4} /></div>
-                      </div>
-                      <div className="flex gap-4 pt-4 border-t border-gray-100">
-                        <button type="button" onClick={() => setCheckoutStep('details')} className="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-600 py-3 px-4 rounded-xl font-bold text-sm transition">Atrás</button>
-                        <button type="submit" className="w-2/3 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-3 px-4 rounded-xl font-bold text-sm transition-colors duration-200 flex items-center justify-center gap-1 shadow-md shadow-brand-green-vibrant/20"><Lock className="h-4 w-4" /><span>PAGAR CON SEGURIDAD SSL</span></button>
-                      </div>
-                    </motion.form>
-                  )}
-                  {checkoutStep === 'loading' && (
-                    <motion.div key="step-loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12 space-y-6">
-                      <div className="relative h-20 w-20 mx-auto"><div className="absolute inset-0 rounded-full border-4 border-gray-200" /><div className="absolute inset-0 rounded-full border-4 border-brand-green border-t-transparent animate-spin" /></div>
-                      <div className="space-y-2">
-                        <p className="text-brand-green font-bold text-base uppercase tracking-widest">Procesando Pago Seguro...</p>
-                        <p className="text-xs text-gray-500">{checkoutProgress < 40 ? 'Sincronizando licencia médica...' : checkoutProgress < 75 ? 'Registrando correo del paciente...' : 'Generando enlaces de descarga PDF...'}</p>
-                        <p className="text-xs font-bold text-gray-400">Progreso: {checkoutProgress}%</p>
-                      </div>
-                    </motion.div>
-                  )}
-                  {checkoutStep === 'success' && (
-                    <motion.div key="step-success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 pb-2">
-                      <div className="text-center space-y-3 pb-4 border-b border-gray-100">
-                        <div className="h-14 w-14 bg-emerald-100 text-brand-green rounded-full flex items-center justify-center mx-auto shadow-inner"><CheckCircle2 className="h-8 w-8 stroke-[2.5px]" /></div>
-                        <h4 className="text-xl font-extrabold text-neutral-dark">¡Pago Aceptado con Éxito!</h4>
-                        <p className="text-xs text-gray-500 px-4">Hola <strong>{fullName}</strong>, hemos enviado los accesos a <strong>{email}</strong>. También puedes descargarlos aquí:</p>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
-                          <div className="flex items-center gap-3"><div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0"><BookOpen className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-gray-800">1. Guía Médica Alimentaria</h5><p className="text-[10px] text-gray-500">PDF interactivo • 3.4 MB</p></div></div>
-                          <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Guía Médica"><Download className="h-4 w-4" /></button>
-                        </div>
-                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
-                          <div className="flex items-center gap-3"><div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0"><Utensils className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-gray-800">2. Recetario Anti-Náusea de Alta Proteína</h5><p className="text-[10px] text-gray-500">PDF • 2.8 MB • 35 Recetas</p></div></div>
-                          <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Recetario"><Download className="h-4 w-4" /></button>
-                        </div>
-                        <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
-                          <div className="flex items-center gap-3"><div className="h-10 w-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 text-gray-700"><ShoppingBag className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-gray-800">3. Lista de Supermercado Inteligente</h5><p className="text-[10px] text-gray-500">Folleto A4 • 1.1 MB</p></div></div>
-                          <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Lista"><Download className="h-4 w-4" /></button>
-                        </div>
-                        {hasOrderBump && (
-                          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-3 flex justify-between items-center">
-                            <div className="flex items-center gap-3"><div className="h-10 w-10 bg-amber-50 text-brand-gold border border-amber-200 rounded-lg flex items-center justify-center shrink-0"><Flame className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-brand-gold-dark">Bonus: Guía de Ayuno Seguro</h5><p className="text-[10px] text-brand-gold-dark opacity-80">PDF Exclusivo • 1.5 MB</p></div></div>
-                            <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-gold hover:bg-brand-gold-dark font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Bonus"><Download className="h-4 w-4" /></button>
-                          </div>
-                        )}
-                      </div>
-                      <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 text-xs">
-                        <strong className="text-emerald-900 block mb-1">Primer paso recomendado:</strong>
-                        <p className="text-emerald-700 leading-relaxed">Abre el <strong>Recetario (Guía 2)</strong> y busca <em>"Hachis de pavo y quinua de 15 min"</em>. Aporta 35g de proteína limpia ideal para evitar náuseas.</p>
-                      </div>
-                      <div className="flex gap-3">
-                        <button type="button" onClick={() => copyToClipboard(`https://guiaglp1.com/access?token=sandbox_${email}`)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold py-3 px-3 rounded-lg flex items-center justify-center gap-1.5"><Copy className="h-3.5 w-3.5" /><span>{isCopied ? '¡Enlace Copiado!' : 'Copiar Link de Acceso'}</span></button>
-                        <button type="button" onClick={() => { setIsCheckoutOpen(false); setCheckoutStep('details'); }} className="flex-1 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-xs font-bold py-3 px-3 rounded-lg">Cerrar y Continuar</button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              {checkoutStep !== 'success' && (
-                <div className="p-3 bg-gray-50 border-t border-gray-100 text-center flex items-center justify-center gap-1.5 text-[9px] text-gray-400 font-bold uppercase tracking-wide">
-                  <Lock className="h-3 w-3" /><span>TRANSMISIÓN ENCRIPTADA SSL 256 BITS</span>
-                </div>
-              )}
             </motion.div>
           </motion.div>
         )}
