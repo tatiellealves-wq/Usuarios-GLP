@@ -191,7 +191,7 @@ export default function App() {
       <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
-          Misión Científica: Evitar la sarcopenia y la flacidez cutánea por GLP-1
+          Guía nutricional oficial para usuarios de Ozempic, Wegovy y Mounjaro — porque el medicamento solo no es suficiente
         </span>
       </div>
 
@@ -244,16 +244,16 @@ export default function App() {
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
                 <Award className="h-4 w-4 text-brand-gold" />
                 <span className="text-xs font-semibold tracking-wide text-green-200">
-                  Desarrollado por nutricionistas clínicas especializadas en metabolismo y farmacoterapia para GLP-1
+                  El manual de alimentación que tu médico nunca te entregó cuando te recetó el GLP-1
                 </span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                El Ozempic puede quitarte los kilos.<br /><span className="text-brand-gold">Pero si no comes bien, también te quita el músculo.</span>
+                Tomás Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Y tu cuerpo está pagando el precio en silencio.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-8 max-w-2xl">
-                El Protocolo de Nutrición Anabólica para GLP-1: sincroniza tu alimentación con la ventana metabólica que abre el medicamento para preservar músculo, quemar grasa y blindarte contra el efecto rebote cuando termines el tratamiento.
+                El GLP-1 funciona — pero viene con un protocolo nutricional que el 97% de los médicos nunca explica. Sin él, estás perdiendo músculo, sufriendo náuseas innecesarias y preparando el terreno para el efecto rebote. <strong className="text-brand-gold">Este kit es ese protocolo.</strong>
               </p>
 
               <div className="w-full sm:max-w-md">
@@ -264,12 +264,12 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Sí, quiero perder grasa sin perder mi músculo
+                    Quiero el protocolo completo — US$ 9,90
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
                 </a>
-                
+
                 <div className="flex items-center justify-center gap-6 mt-3 text-xs text-green-200 font-medium">
                   <span className="flex items-center gap-1">
                     <Check className="h-4 w-4 text-brand-gold stroke-[3px]" /> Acceso inmediato
@@ -298,7 +298,7 @@ export default function App() {
                     <Star className="h-3.5 w-3.5 fill-current animate-pulse" />
                     <span className="font-bold text-white ml-1">4.9/5</span>
                   </div>
-                  <p>Más de <strong className="text-white">2,450 pacientes</strong> optimizando su pérdida grasa</p>
+                  <p>Más de <strong className="text-white">2,450 pacientes</strong> ya usan el protocolo</p>
                 </div>
               </div>
             </div>
@@ -353,6 +353,86 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
+      <section className="py-20 px-6 bg-slate-950 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3.5 py-1.5 rounded-full mb-4 inline-block">
+              Si usas Ozempic, Wegovy o Mounjaro y te identificas con alguno de estos…
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold font-display text-white tracking-tight mb-4">
+              Nadie te avisó que el medicamento<br className="hidden md:block" /> viene con 5 problemas que nadie resuelve.
+            </h2>
+            <p className="text-green-200/70 text-base max-w-xl mx-auto">
+              No es que el GLP-1 no funciona. El problema es que te dieron la mitad de la ecuación.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="text-3xl mb-3">🤢</div>
+              <h3 className="font-bold text-white text-base mb-2">Náuseas y malestar constante</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El GLP-1 reduce el vaciado gástrico. Comer lo incorrecto antes o después de la inyección convierte días normales en jornadas de reflujo, mareos y fatiga que te dejan sin querer hacer nada.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="text-3xl mb-3">❓</div>
+              <h3 className="font-bold text-white text-base mb-2">"No sé qué comer. Nadie me explicó nada."</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Tu médico te recetó el medicamento en 10 minutos. Pero no te dijo qué estructura debe tener tu plato, qué alimentos agravan los síntomas ni cuánto comer. El resultado: improvisas todos los días.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="text-3xl mb-3">💪</div>
+              <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El GLP-1 suprime el apetito de forma tan drástica que terminas comiendo poco de todo — incluyendo la proteína que mantiene tus músculos firmes. La piel se va aflojando sin que notes cuándo empezó.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="text-3xl mb-3">😴</div>
+              <h3 className="font-bold text-white text-base mb-2">Sin energía para vivir el día</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Comes poco, no sabes si estás comiendo lo correcto, y el cuerpo entra en modo ahorro. El resultado es una fatiga que no se va con dormir — porque el problema no es el sueño, es la nutrición.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200 md:col-span-2 lg:col-span-1">
+              <div className="text-3xl mb-3">😰</div>
+              <h3 className="font-bold text-white text-base mb-2">Miedo al rebote cuando termines el tratamiento</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El 80% de las personas que dejan el GLP-1 recuperan el peso en menos de 12 meses. Sin un metabolismo protegido y hábitos alimentarios reales, el rebote no es una posibilidad — es casi una certeza.
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-white/80 text-base font-semibold mb-2">
+              Estos 5 problemas tienen una causa en común:
+            </p>
+            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-8">
+              Nadie te enseñó a comer mientras usas el GLP-1.
+            </p>
+            <a
+              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+              onClick={triggerCheckout}
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+            >
+              <span>Ver el protocolo que resuelve los 5 — US$ 9,90</span>
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+
+        </div>
+      </section>
+      </FadeIn>
+
+      <FadeIn>
       <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
@@ -360,10 +440,10 @@ export default function App() {
               Análisis de Riesgo Clínico Gratuito
             </span>
             <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-3">
-              ¿Tu masa muscular corre peligro con el tratamiento?
+              ¿Cuánta proteína está perdiendo tu cuerpo?
             </h2>
             <p className="text-sm text-gray-600 max-w-xl mx-auto">
-              La falta de nutrientes adecuados mientras usas medicamentos GLP-1 acelera la pérdida de músculo (sarcopenia), destruyendo tu metabolismo. Calcula tu déficit en 30 segundos:
+              La falta de proteína mientras usas GLP-1 acelera la pérdida de músculo y flacidez. Calcula tu déficit en 30 segundos:
             </p>
           </div>
 
@@ -585,13 +665,13 @@ export default function App() {
           
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-amber-50 border border-amber-200 px-3.5 py-1.5 rounded-full mb-4 inline-block">
-              Contenido del Ecosistema
+              Lo que incluye el Kit
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              Tu Kit de Sobrevivencia y Optimización GLP-1
+              Un protocolo completo para cada problema real
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              Todo lo que necesitas para evitar efectos secundarios molestos y multiplicar tu pérdida grasa de manera saludable en un solo pack digital descargable.
+              Cada pieza del kit ataca uno de los 5 problemas que el GLP-1 trae sin advertencia. No es una guía genérica — es la respuesta específica a lo que estás viviendo ahora mismo.
             </p>
           </div>
 
@@ -606,10 +686,10 @@ export default function App() {
                   1. Guía Médica de Alimentación
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Descubre la estructura exacta de platos recomendada por expertos para estructurar tus porciones óptimamente y desbloquear la máxima saciedad metabólica sin descuidar tu nutrición esencial.
+                  Resuelve el "¿qué como hoy?" para siempre. Te da la estructura exacta de platos que funciona con la fisiología del GLP-1: qué comer, en qué momento, en qué cantidad — para que nunca más improvises.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Estructura de platos clínicamente validada
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: "No sé qué comer"
                 </span>
               </div>
             </div>
@@ -620,13 +700,13 @@ export default function App() {
               </div>
               <div>
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  2. Recetario de Alta Proteína
+                  2. Recetario Anti-Náusea de Alta Proteína
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Recetas deliciosas, saciantes y ultrarrápidas, listas en 15 minutos. Diseñadas específicamente para proteger tu masa muscular activa, evitar la fatiga y combatir la temida flacidez dérmica.
+                  35 recetas diseñadas para cuando casi no tienes hambre y cualquier olor puede disparar el malestar. Fáciles, rápidas (15 min), con los alimentos específicos que el GLP-1 tolera mejor — y que preservan tu músculo.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Nutrición de absorción rápida anti-flacidez
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: náuseas + pérdida de músculo
                 </span>
               </div>
             </div>
@@ -637,13 +717,13 @@ export default function App() {
               </div>
               <div>
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  3. Lista de Súper Compras Inteligente
+                  3. Lista de Supermercado Inteligente
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  El mapa exacto y directo de lo que debes y NO debes comprar en el supermercado. Ahorra cientos de dólares en cestas vacías y evita los alimentos inflamatorios de alto índice glucémico.
+                  Lo que sí llevar y lo que NO. Los alimentos que disparan el reflujo y los que agravan la náusea ya no entran a tu casa. Lista lista para imprimir o llevar en el celular — sin pensar, sin dudar.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Ahorro inteligente de despensa inflamatoria
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: alimentos que empeoran los síntomas
                 </span>
               </div>
             </div>
@@ -654,13 +734,13 @@ export default function App() {
               </div>
               <div>
                 <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  4. Diario de Progreso Imprimible
+                  4. Diario de Síntomas y Progreso
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Un sistema físico/digital portátil para registrar tus tomas semanales de dosis, síntomas, ingesta libre de agua, y tus niveles de energía diarias para monitorear tu evolución metabólica real.
+                  Registra qué comiste, cómo te sentiste y tu nivel de energía día a día. Identifica qué alimentos te caen bien y cuáles no — y lleva evidencia real a tu próxima consulta médica para ajustar el tratamiento.
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Plantillas organizadoras en PDF y digital
+                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: fatiga y falta de control sobre el proceso
                 </span>
               </div>
             </div>
@@ -674,7 +754,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5 text-brand-gold" />
-              <span>Sí, quiero perder grasa sin perder mi músculo — US$ 9,90</span>
+              <span>Sí, quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -709,10 +789,10 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
-                    No es una dieta genérica disfrazada de "apta para GLP-1"
+                    Diseñado específicamente para los 3 problemas que nadie menciona
                   </h4>
                   <p className="text-sm text-gray-500">
-                    Cada receta, cada lista de compras, cada indicación fue construida sobre la fisiología específica de lo que hace el semaglutide a tu metabolismo — incluyendo la supresión de apetito que hace que comer suficiente proteína sea casi imposible sin un sistema.
+                    Náuseas, confusión alimentaria y pérdida muscular silenciosa. Cada receta, cada indicación y cada protocolo fue construido sobre la fisiología real del GLP-1 — no es una dieta genérica con el logo del Ozempic pegado encima.
                   </p>
                 </div>
               </div>
@@ -723,10 +803,10 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="font-bold text-neutral-dark text-base md:text-lg mb-1">
-                    35 recetas de alta proteína para cuando casi no tienes hambre
+                    35 recetas anti-náusea para cuando casi no tienes hambre ni ganas de cocinar
                   </h4>
                   <p className="text-sm text-gray-500">
-                    Mientras todas las guías te dicen que comas menos, esta te da exactamente cuánto músculo necesitas preservar — y las recetas listas en 15 minutos que lo hacen posible aunque apenas tengas apetito.
+                    Mientras otras guías simplemente te dicen "come menos", este kit te da las recetas exactas que funcionan cuando el estómago está sensible — y que aun así te dan toda la proteína que necesitas para no perder músculo.
                   </p>
                 </div>
               </div>
@@ -756,46 +836,46 @@ export default function App() {
                 
                 <div className="grid grid-cols-2 divide-x divide-gray-100">
                   <div className="p-6 bg-red-50/20 text-center">
-                    <span className="text-xs font-bold text-red-600 tracking-wide uppercase block mb-3">Fármaco GLP-1 Solo</span>
+                    <span className="text-xs font-bold text-red-600 tracking-wide uppercase block mb-3">GLP-1 sin protocolo</span>
                     <ul className="space-y-4 text-xs text-left text-gray-700">
                       <li className="flex items-start gap-2">
                         <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Pérdida muscular grave:</strong> Piel colgada en brazos, glúteos y rostro (efecto "cara Ozempic").</span>
+                        <span><strong>Náuseas sin fin:</strong> Comes lo de siempre, el medicamento lo rechaza, y sufres sin saber por qué.</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Fatiga extrema:</strong> Sorteas el día sin fuerza ni energía por déficit selectivo proteico.</span>
+                        <span><strong>Improvisas cada día:</strong> "¿Puedo comer esto? ¿En qué cantidad?" — sin respuestas, sin guía.</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Estreñimiento y Náuseas:</strong> Sin saber qué fibra o enzima asimilar para reducir el espasmo digestivo.</span>
+                        <span><strong>Músculo perdido:</strong> Piel floja en brazos, glúteos y rostro — el temido efecto "cara Ozempic".</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <X className="h-4 w-4 text-red-600 stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Efecto Rebote inminente:</strong> Retornas al peso anterior al dejar la dosis debido a un metabolismo frenado.</span>
+                        <span><strong>Rebote garantizado:</strong> Sin metabolismo protegido, el peso regresa en cuanto dejas el medicamento.</span>
                       </li>
                     </ul>
                   </div>
 
                   <div className="p-6 bg-emerald-50/10 text-center relative">
                     <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-bold tracking-wider py-0.5 px-2 rounded-full">RECOMENDADO</div>
-                    <span className="text-xs font-bold text-brand-green tracking-wide uppercase block mb-3">Kit GLP-1 Inteligente</span>
+                    <span className="text-xs font-bold text-brand-green tracking-wide uppercase block mb-3">GLP-1 + Kit Inteligente</span>
                     <ul className="space-y-4 text-xs text-left text-gray-700">
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Tono muscular firme:</strong> Masa magra activa preservada con nutrición clínicamente equilibrada.</span>
+                        <span><strong>Sin náuseas:</strong> Sabes exactamente qué comer antes y después de la inyección para evitar el malestar.</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Vitalidad y enfoque:</strong> Nutrientes biodisponibles que mantienen tus células cargadas de energía.</span>
+                        <span><strong>Claridad total:</strong> Estructura de platos, lista de compras, recetas — sin adivinar, sin ansiedad.</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Bienestar digestivo:</strong> Protocolos simples que minimizan reflujos, acidez y el estreñimiento leve.</span>
+                        <span><strong>Músculo y tono preservados:</strong> Alta proteína sin esfuerzo, incluso cuando casi no tienes hambre.</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span><strong>Cuerpo sostenible:</strong> Mantienes tu peso ideal post-tratamiento gracias a un metabolismo íntegro y protegido.</span>
+                        <span><strong>Resultado duradero:</strong> Metabolismo protegido — el peso se queda afuera cuando termina el tratamiento.</span>
                       </li>
                     </ul>
                   </div>
@@ -832,7 +912,7 @@ export default function App() {
                 {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-5 italic flex-1">
-                "Llevaba 3 meses con Ozempic y estaba perdiendo músculo en los brazos y la cara. Con la guía entendí exactamente por qué, y en 6 semanas ya noté la diferencia. <strong className="text-neutral-dark">Perdí 8 kilos de grasa pero conservé mi tono muscular.</strong>"
+                "Llevaba semanas con náuseas terribles después de cada inyección. Mi médico me dijo 'es normal'. Con el recetario del kit entendí que estaba comiendo exactamente los alimentos que empeoran el malestar. <strong className="text-neutral-dark">En 10 días las náuseas casi desaparecieron. Bajé 9 kilos y por primera vez estoy disfrutando el proceso.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100&h=100" alt="Valentina M." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
@@ -848,7 +928,7 @@ export default function App() {
                 {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-5 italic flex-1">
-                "Tenía pánico al efecto 'cara Ozempic'. El recetario me cambió la vida — las recetas son fáciles y me ayudaron a comer suficiente proteína aunque casi no tuviera hambre. <strong className="text-neutral-dark">¡Ya bajé 11kg y mi piel sigue firme!</strong>"
+                "Mi médica me recetó Wegovy y me dijo 'come menos'. Eso fue todo. No saber qué comer me generaba una ansiedad enorme. Con la guía de alimentación entendí la estructura exacta de mi plato. <strong className="text-neutral-dark">Sin adivinar. Sin ansiedad. En 2 meses bajé 11 kg y mi piel sigue firme.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
                 <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&q=80&w=100&h=100" alt="Carolina B." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
@@ -864,7 +944,7 @@ export default function App() {
                 {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-5 italic flex-1">
-                "Mi médica no me explicó nada sobre alimentación. Cuando encontré este kit entendí que lo estaba haciendo todo mal. <strong className="text-neutral-dark">En 2 meses sin perder músculo y con mucha más energía.</strong> Vale cada centavo."
+                "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-neutral-dark">En 6 semanas recuperé la energía, mis brazos volvieron a tener tono y perdí 7 kg de grasa.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
                 <img src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=100&h=100" alt="Fernanda S." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
@@ -886,13 +966,13 @@ export default function App() {
           
           <div className="text-center mb-12">
             <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
-              Ofertas Especial de Lanzamiento
+              Oferta Especial de Lanzamiento
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              Gastas $1,000 al mes en el medicamento.<br className="hidden md:block" /> Este kit cuesta menos que un café.
+              Tu medicamento hace su parte.<br className="hidden md:block" /> Este kit hace la tuya.
             </h2>
             <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-              Tu inyección semanal te costó entre $800 y $1,200 este mes. Sin el protocolo nutricional correcto, ese medicamento puede consumir hasta un <strong className="text-neutral-dark">35% de tu masa muscular</strong>. La Guía GLP-1 Inteligente existe para que cada dólar que gastas en Ozempic trabaje para ti, no contra ti.
+              Gastas entre $800 y $1,200 al mes en el GLP-1. Sin el protocolo correcto, sigues con náuseas, sin saber qué comer y perdiendo músculo — haciendo que cada dólar invertido en el tratamiento trabaje a medias. La Guía GLP-1 Inteligente completa la ecuación que tu médico dejó incompleta.
             </p>
           </div>
 
@@ -915,7 +995,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Recetario Rápido de Alta Proteína <span className="text-white/50 font-medium">(Valor regular $14.90)</span></span>
+                  <span>Recetario Anti-Náusea de Alta Proteína <span className="text-white/50 font-medium">(Valor regular $14.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
@@ -923,7 +1003,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Diario de Hábitos y Rastreador GLP-1 <span className="text-white/50 font-medium">(Valor regular $5.20)</span></span>
+                  <span>Diario de Síntomas y Progreso GLP-1 <span className="text-white/50 font-medium">(Valor regular $5.20)</span></span>
                 </div>
               </div>
 
@@ -950,12 +1030,12 @@ export default function App() {
                 className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
-                <span>Sí, quiero perder grasa sin perder mi músculo</span>
+                <span>Quiero el protocolo completo — US$ 9,90</span>
               </a>
 
               <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 shrink-0" />
-                Cada semana que usas el GLP-1 sin el protocolo correcto es una semana en que tu cuerpo puede estar sacrificando músculo. El momento de actuar es ahora.
+                Cada semana sin el protocolo es una semana de náuseas innecesarias, músculo perdido y confusión. El momento de actuar es ahora.
               </p>
 
               <div className="border-t border-white/10 pt-6">
@@ -1035,7 +1115,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
-                  ¿Sirve esto si acabo de empezar con el Ozempic y todavía estoy ajustando la dosis?
+                  Tengo muchas náuseas con el medicamento. ¿Esta guía puede ayudarme a reducirlas?
                 </span>
                 {activeFaq === 1 ? (
                   <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
@@ -1055,7 +1135,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
                       <p>
-                        Sí — y este es exactamente el momento en que más lo necesitas. Las primeras semanas de GLP-1 son cuando el metabolismo es más sensible: el cuerpo está aprendiendo a quemar grasa, pero sin el protocolo correcto también empieza a perder músculo. Este kit te da el mapa nutricional desde el día uno, no después de que el daño ya está hecho.
+                        Sí — y es uno de los problemas más frecuentes que resuelve el kit. La mayoría de las náuseas con GLP-1 no son inevitables: son el resultado de comer los alimentos incorrectos en el momento incorrecto. El recetario anti-náuseas del kit incluye qué comer antes de la inyección, qué evitar las primeras 24 horas y qué texturas tolera mejor el estómago durante el tratamiento. Las pacientes que aplican este protocolo reportan una reducción notable del malestar en los primeros 7-10 días.
                       </p>
                     </div>
                   </motion.div>
@@ -1105,7 +1185,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-white hover:bg-gray-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green transition-colors duration-150"
               >
                 <span className="font-bold text-gray-800 text-sm md:text-base pr-4">
-                  Tengo miedo de que cuando pierda el peso me quede la piel flácida. ¿Esto realmente puede prevenirlo?
+                  No sé absolutamente nada de nutrición. ¿Este kit es para mí o necesito conocimientos previos?
                 </span>
                 {activeFaq === 3 ? (
                   <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
@@ -1125,7 +1205,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-green-50/30 text-xs md:text-sm text-gray-600 leading-relaxed">
                       <p>
-                        Ese miedo es completamente legítimo — y tiene nombre clínico: sarcopenia inducida por GLP-1. La guía médica de alimentación y el recetario de alta proteína trabajan juntos para mantener el tejido muscular mientras se pierde grasa. Preservar músculo es lo que mantiene el contorno del cuerpo firme y evita el aspecto "desinflado". No podemos prometerte que prevendrá el 100% de los cambios cutáneos — pero sí podemos decirte que la nutrición es la única variable que tienes bajo tu control para minimizarlos.
+                        É exatamente para ti. O kit foi desenhado assumindo que ninguém te explicou nada — porque é isso que acontece com 97% das pessoas que começam com GLP-1. A Guia de Alimentação usa linguagem clara, com exemplos visuais de pratos e porções. Sem termos médicos complicados nem contagem de macros. Só instruções concretas: o que comer, quanto, quando. Se sabes pegar um garfo, consegues aplicar este protocolo desde o primeiro dia.
                       </p>
                     </div>
                   </motion.div>
@@ -1353,7 +1433,7 @@ export default function App() {
                           <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Guía Médica"><Download className="h-4 w-4" /></button>
                         </div>
                         <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
-                          <div className="flex items-center gap-3"><div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0"><Utensils className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-gray-800">2. Recetario de Alta Proteína</h5><p className="text-[10px] text-gray-500">PDF • 2.8 MB • 35 Recetas</p></div></div>
+                          <div className="flex items-center gap-3"><div className="h-10 w-10 bg-brand-green text-white rounded-lg flex items-center justify-center shrink-0"><Utensils className="h-5 w-5" /></div><div><h5 className="text-xs font-bold text-gray-800">2. Recetario Anti-Náusea de Alta Proteína</h5><p className="text-[10px] text-gray-500">PDF • 2.8 MB • 35 Recetas</p></div></div>
                           <button type="button" onClick={() => alert('¡Descarga Iniciada!')} className="text-white bg-brand-green hover:bg-brand-green-hover font-bold p-2.5 rounded-lg cursor-pointer" aria-label="Descargar Recetario"><Download className="h-4 w-4" /></button>
                         </div>
                         <div className="bg-white border border-gray-100 rounded-xl p-3 flex justify-between items-center hover:bg-green-50/20 shadow-sm transition">
