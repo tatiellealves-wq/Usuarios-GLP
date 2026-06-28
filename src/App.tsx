@@ -905,10 +905,10 @@ export default function App() {
                 "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-neutral-dark">En 6 semanas recuperé la energía, mis brazos volvieron a tener tono y perdí 7 kg de grasa.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
-                <img src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=100&h=100" alt="Fernanda S." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
+                <img src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=100&h=100" alt="Daniela R." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
                 <div>
-                  <p className="text-xs font-bold text-neutral-dark">Fernanda S.</p>
-                  <p className="text-[10px] text-gray-400">São Paulo, Brasil · Mounjaro</p>
+                  <p className="text-xs font-bold text-neutral-dark">Daniela R.</p>
+                  <p className="text-[10px] text-gray-400">Santiago, Chile · Mounjaro</p>
                 </div>
               </div>
             </div>
@@ -1212,7 +1212,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        Sí. Aunque el valor se muestra en dólares (US$) para mantener un precio único en todos los países, el checkout detecta automáticamente tu ubicación y te permite pagar en tu moneda local con la conversión del día. Puedes usar tarjeta de crédito o débito, y según tu país también aparecen métodos locales como PIX, transferencia o pago en efectivo. No necesitas hacer ninguna conversión manual: el sistema te muestra el monto exacto a pagar en tu moneda antes de confirmar.
+                        Sí. Aunque el valor se muestra en dólares (US$) para mantener un precio único en todos los países, el checkout detecta automáticamente tu ubicación y te permite pagar en tu moneda local con la conversión del día. Puedes usar tarjeta de crédito o débito, y según tu país también aparecen métodos locales como Mercado Pago, transferencia bancaria o pago en efectivo. No necesitas hacer ninguna conversión manual: el sistema te muestra el monto exacto a pagar en tu moneda antes de confirmar.
                       </p>
                     </div>
                   </motion.div>
