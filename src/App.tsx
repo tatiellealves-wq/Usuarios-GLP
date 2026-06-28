@@ -22,7 +22,11 @@ import {
   CheckCircle2,
   HelpCircle,
   X,
-  Globe
+  Globe,
+  Thermometer,
+  TrendingDown,
+  ZapOff,
+  RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -155,10 +159,6 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="hidden md:inline-flex items-center gap-1.5 text-xs text-gray-500 font-medium bg-gray-50 px-2.5 py-1 rounded-full">
-              <span className="h-2 w-2 rounded-full bg-brand-green-vibrant animate-pulse"></span>
-              Ecosistema Autorizado
-            </span>
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
@@ -188,12 +188,9 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
-                <Award className="h-4 w-4 text-brand-gold" />
-                <span className="text-xs font-semibold tracking-wide text-green-200">
-                  El manual de alimentación que tu médico nunca te entregó cuando te recetó el GLP-1
-                </span>
-              </div>
+              <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
+                El manual de alimentación que tu médico nunca te entregó
+              </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
                 Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Y tu cuerpo está pagando el precio en silencio.</span>
@@ -303,9 +300,6 @@ export default function App() {
       <section className="py-20 px-6 bg-slate-950 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3.5 py-1.5 rounded-full mb-4 inline-block">
-              Si usas Ozempic, Wegovy o Mounjaro y te identificas con alguno de estos…
-            </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display text-white tracking-tight mb-4">
               Nadie te avisó que el medicamento<br className="hidden md:block" /> viene con 5 problemas que nadie resuelve.
             </h2>
@@ -317,7 +311,9 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="text-3xl mb-3">🤢</div>
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <Thermometer className="h-5 w-5 text-red-400" />
+              </div>
               <h3 className="font-bold text-white text-base mb-2">Náuseas y malestar constante</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 El GLP-1 reduce el vaciado gástrico. Comer lo incorrecto antes o después de la inyección convierte días normales en jornadas de reflujo, mareos y fatiga que te dejan sin querer hacer nada.
@@ -325,7 +321,9 @@ export default function App() {
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="text-3xl mb-3">❓</div>
+              <div className="h-10 w-10 mb-4 rounded-xl bg-amber-900/40 flex items-center justify-center border border-amber-800/30">
+                <HelpCircle className="h-5 w-5 text-amber-400" />
+              </div>
               <h3 className="font-bold text-white text-base mb-2">"No sé qué comer. Nadie me explicó nada."</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 Tu médico te recetó el medicamento en 10 minutos. Pero no te dijo qué estructura debe tener tu plato, qué alimentos agravan los síntomas ni cuánto comer. El resultado: improvisas todos los días.
@@ -333,7 +331,9 @@ export default function App() {
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="text-3xl mb-3">💪</div>
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <TrendingDown className="h-5 w-5 text-red-400" />
+              </div>
               <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 El GLP-1 suprime el apetito de forma tan drástica que terminas comiendo poco de todo — incluyendo la proteína que mantiene tus músculos firmes. La piel se va aflojando sin que notes cuándo empezó.
@@ -341,7 +341,9 @@ export default function App() {
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="text-3xl mb-3">😴</div>
+              <div className="h-10 w-10 mb-4 rounded-xl bg-amber-900/40 flex items-center justify-center border border-amber-800/30">
+                <ZapOff className="h-5 w-5 text-amber-400" />
+              </div>
               <h3 className="font-bold text-white text-base mb-2">Sin energía para vivir el día</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 Comes poco, no sabes si estás comiendo lo correcto, y el cuerpo entra en modo ahorro. El resultado es una fatiga que no se va con dormir — porque el problema no es el sueño, es la nutrición.
@@ -349,7 +351,9 @@ export default function App() {
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200 md:col-span-2 lg:col-span-1">
-              <div className="text-3xl mb-3">😰</div>
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <RotateCcw className="h-5 w-5 text-red-400" />
+              </div>
               <h3 className="font-bold text-white text-base mb-2">Miedo al rebote cuando termines el tratamiento</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 El 80% de las personas que dejan el GLP-1 recuperan el peso en menos de 12 meses. Sin un metabolismo protegido y hábitos alimentarios reales, el rebote no es una posibilidad — es casi una certeza.
@@ -368,7 +372,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
               <span>Ver el protocolo que resuelve los 5 — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -383,9 +387,6 @@ export default function App() {
       <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
-              Análisis de Riesgo Clínico Gratuito
-            </span>
             <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-3">
               ¿Cuánta proteína está perdiendo tu cuerpo?
             </h2>
@@ -611,9 +612,6 @@ export default function App() {
         <div className="max-w-6xl mx-auto rounded-2xl p-8 md:p-12 bg-green-50/25 border border-green-100/60">
           
           <div className="text-center mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-amber-50 border border-amber-200 px-3.5 py-1.5 rounded-full mb-4 inline-block">
-              Lo que incluye el Kit
-            </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Un protocolo completo para cada problema real
             </h2>
@@ -695,14 +693,13 @@ export default function App() {
           </div>
 
           <div className="text-center mt-12">
-            <a 
+            <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 border border-brand-green-vibrant/60 text-brand-green-vibrant hover:bg-brand-green-vibrant hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant"
             >
-              <ShoppingCart className="h-5 w-5 text-brand-gold" />
               <span>Sí, quiero el protocolo completo — US$ 9,90</span>
-              <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4" />
             </a>
           </div>
 
@@ -715,9 +712,6 @@ export default function App() {
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3.5 py-1.5 rounded-full mb-4 inline-block">
-              Enfoque Científico Distintivo
-            </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-white mb-4">
               ¿Por qué este método es diferente?
             </h2>
@@ -837,7 +831,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/30 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
               <span>Quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -1226,9 +1220,8 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-5 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
             >
-              <ShoppingCart className="h-5 w-5" />
               <span>Quiero mi Kit GLP-1 — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
