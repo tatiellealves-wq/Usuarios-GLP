@@ -31,6 +31,8 @@ jobs:
           server: 185.245.180.248
           username: u565256123
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
           local-dir: ./dist/
           server-dir: /public_html/
           dangerous-clean-slate: false
