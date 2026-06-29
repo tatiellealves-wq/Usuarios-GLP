@@ -372,7 +372,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/50 hover:border-white/80 text-white font-semibold py-3.5 px-10 rounded-xl shadow-sm transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 hover:bg-gray-100 font-bold py-3.5 px-10 rounded-xl shadow-md transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span>Ver el protocolo que resuelve los 5 — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -696,7 +696,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant/10 hover:bg-brand-green-vibrant border-2 border-brand-green-vibrant text-brand-green-vibrant hover:text-white font-bold py-3.5 px-10 rounded-xl shadow-sm shadow-brand-green-vibrant/15 transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-10 rounded-xl shadow-md shadow-brand-green-vibrant/25 transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant"
             >
               <span>Sí, quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -831,7 +831,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/50 hover:border-white/80 text-white font-semibold py-3.5 px-10 rounded-xl shadow-sm transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 hover:bg-gray-100 font-bold py-3.5 px-10 rounded-xl shadow-md transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span>Quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -1220,7 +1220,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/50 hover:border-white/80 text-white font-semibold py-3.5 px-10 rounded-xl shadow-sm transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 hover:bg-gray-100 font-bold py-3.5 px-10 rounded-xl shadow-md transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <span>Quiero mi Kit GLP-1 — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
