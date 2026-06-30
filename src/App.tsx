@@ -1,36 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ShieldCheck,
-  Check,
-  BookOpen,
-  Utensils,
-  ShoppingBag,
-  ClipboardList,
-  Star,
-  Award,
-  Activity,
-  ShieldAlert,
-  Lock,
-  Sparkles,
-  ShoppingCart,
-  FileText,
-  ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  Scale,
-  Clock,
-  CheckCircle2,
-  HelpCircle,
-  X,
-  Globe,
-  Thermometer,
-  TrendingDown,
-  ZapOff,
-  RotateCcw
-} from 'lucide-react';
+import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check';
+import Check from 'lucide-react/dist/esm/icons/check';
+import BookOpen from 'lucide-react/dist/esm/icons/book-open';
+import Utensils from 'lucide-react/dist/esm/icons/utensils';
+import ShoppingBag from 'lucide-react/dist/esm/icons/shopping-bag';
+import ClipboardList from 'lucide-react/dist/esm/icons/clipboard-list';
+import Star from 'lucide-react/dist/esm/icons/star';
+import Award from 'lucide-react/dist/esm/icons/award';
+import Activity from 'lucide-react/dist/esm/icons/activity';
+import ShieldAlert from 'lucide-react/dist/esm/icons/shield-alert';
+import Lock from 'lucide-react/dist/esm/icons/lock';
+import Sparkles from 'lucide-react/dist/esm/icons/sparkles';
+import ShoppingCart from 'lucide-react/dist/esm/icons/shopping-cart';
+import FileText from 'lucide-react/dist/esm/icons/file-text';
+import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import ChevronUp from 'lucide-react/dist/esm/icons/chevron-up';
+import Scale from 'lucide-react/dist/esm/icons/scale';
+import Clock from 'lucide-react/dist/esm/icons/clock';
+import CheckCircle2 from 'lucide-react/dist/esm/icons/check-circle-2';
+import HelpCircle from 'lucide-react/dist/esm/icons/help-circle';
+import X from 'lucide-react/dist/esm/icons/x';
+import Globe from 'lucide-react/dist/esm/icons/globe';
+import Thermometer from 'lucide-react/dist/esm/icons/thermometer';
+import TrendingDown from 'lucide-react/dist/esm/icons/trending-down';
+import ZapOff from 'lucide-react/dist/esm/icons/zap-off';
+import RotateCcw from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
 import mockupImage from './assets/images/glp1_guide_mockup_1781632222712.jpg';
+
+function CountdownTimer() {
+  const [countdown, setCountdown] = useState({ h: 23, m: 59, s: 59 });
+
+  useEffect(() => {
+    const KEY = 'glp1_offer_expiry';
+    let expiry = parseInt(localStorage.getItem(KEY) || '0', 10);
+    if (!expiry || expiry < Date.now()) {
+      expiry = Date.now() + 24 * 60 * 60 * 1000;
+      localStorage.setItem(KEY, String(expiry));
+    }
+    const tick = () => {
+      const rem = expiry - Date.now();
+      if (rem <= 0) { setCountdown({ h: 0, m: 0, s: 0 }); return; }
+      setCountdown({
+        h: Math.floor(rem / 3600000),
+        m: Math.floor((rem % 3600000) / 60000),
+        s: Math.floor((rem % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 font-mono text-brand-gold tabular-nums normal-case text-sm">
+      {String(countdown.h).padStart(2, '0')}:{String(countdown.m).padStart(2, '0')}:{String(countdown.s).padStart(2, '0')}
+    </span>
+  );
+}
 
 function FadeIn({
   children,
@@ -68,28 +97,6 @@ export default function App() {
   const [calcCurrentProtein, setCalcCurrentProtein] = useState<string>('low');
   const [isCalced, setIsCalced] = useState(false);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
-  const [countdown, setCountdown] = useState({ h: 23, m: 59, s: 59 });
-
-  useEffect(() => {
-    const KEY = 'glp1_offer_expiry';
-    let expiry = parseInt(localStorage.getItem(KEY) || '0', 10);
-    if (!expiry || expiry < Date.now()) {
-      expiry = Date.now() + 24 * 60 * 60 * 1000;
-      localStorage.setItem(KEY, String(expiry));
-    }
-    const tick = () => {
-      const rem = expiry - Date.now();
-      if (rem <= 0) { setCountdown({ h: 0, m: 0, s: 0 }); return; }
-      setCountdown({
-        h: Math.floor(rem / 3600000),
-        m: Math.floor((rem % 3600000) / 60000),
-        s: Math.floor((rem % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
@@ -177,9 +184,7 @@ export default function App() {
             <span className="h-1.5 w-1.5 rounded-full bg-brand-gold animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none flex items-center gap-2 flex-wrap justify-center">
               OFERTA EXPIRA EN:
-              <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 font-mono text-brand-gold tabular-nums normal-case text-sm">
-                {String(countdown.h).padStart(2, '0')}:{String(countdown.m).padStart(2, '0')}:{String(countdown.s).padStart(2, '0')}
-              </span>
+              <CountdownTimer />
             </span>
           </div>
         </div>
