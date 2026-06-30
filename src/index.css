@@ -8,8 +8,8 @@
   --color-brand-green-hover: #14532D;
   --color-brand-green-vibrant: #16A34A;
   --color-brand-green-vibrant-hover: #15803D;
-  --color-brand-gold: #D97706;
-  --color-brand-gold-dark: #B45309;
+  --color-brand-gold: #D4AF37;
+  --color-brand-gold-dark: #A8860D;
   --color-neutral-dark: #0F172A;
   --color-gray-soft: #F8FAFC;
   --color-gray-mint: #F0FDF4;
@@ -46,10 +46,10 @@
 
 @keyframes pulse-gold {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.35);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(217, 119, 6, 0);
+    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
   }
 }
 

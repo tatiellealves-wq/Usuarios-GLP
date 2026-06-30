@@ -173,11 +173,11 @@ export default function App() {
       <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-[#0D3320]">
         
         <div className="bg-white/10 border-b border-white/10 py-3 px-4 mb-8 -mx-6 text-center">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-amber-300 text-xs md:text-sm font-semibold tracking-wide">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-brand-gold text-xs md:text-sm font-semibold tracking-wide">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-gold animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none flex items-center gap-2 flex-wrap justify-center">
               OFERTA EXPIRA EN:
-              <span className="bg-white/15 border border-amber-300/40 rounded-md px-2.5 py-0.5 font-mono text-amber-200 tabular-nums normal-case text-sm">
+              <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 font-mono text-brand-gold tabular-nums normal-case text-sm">
                 {String(countdown.h).padStart(2, '0')}:{String(countdown.m).padStart(2, '0')}:{String(countdown.s).padStart(2, '0')}
               </span>
             </span>
@@ -239,7 +239,7 @@ export default function App() {
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current animate-pulse" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
                     <span className="font-bold text-white ml-1">4.9/5</span>
                   </div>
                   <p>Más de <strong className="text-white">2,450 pacientes</strong> ya usan el protocolo</p>
@@ -372,9 +372,9 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Ver el protocolo que resuelve los 5 — US$ 9,90</span>
+              <span>Ver el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -594,7 +594,7 @@ export default function App() {
                       onClick={triggerCheckout}
                       className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 min-h-[44px] rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
                     >
-                      <span>OBTENER MI RECETARIO INTELIGENTE</span>
+                      <span>Cubrir mis {deficit > 0 ? deficit : 0}g de déficit — US$ 9,90</span>
                       <ArrowRight className="h-3 w-3" />
                     </a>
                   </motion.div>
@@ -696,9 +696,10 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 border border-brand-green-vibrant/60 text-brand-green-vibrant hover:bg-brand-green-vibrant hover:text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Sí, quiero el protocolo completo — US$ 9,90</span>
+              <ShoppingCart className="h-5 w-5" />
+              <span>Quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -831,7 +832,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <span>Quiero el protocolo completo — US$ 9,90</span>
               <ArrowRight className="h-4 w-4" />
@@ -850,7 +851,7 @@ export default function App() {
               Resultados Reales
             </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              Lo que dicen nuestras pacientes
+              Lo que dicen nuestros pacientes
             </h2>
             <p className="text-gray-600 text-sm leading-relaxed max-w-lg mx-auto">
               Más de 2,450 pacientes ya combinan su tratamiento GLP-1 con nuestro protocolo nutricional.
@@ -893,10 +894,11 @@ export default function App() {
 
             <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col">
               <div className="flex items-center gap-0.5 mb-4">
-                {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
+                {[...Array(4)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
+                <Star className="h-4 w-4 text-gray-200 fill-current" />
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-5 italic flex-1">
-                "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-neutral-dark">En 6 semanas recuperé la energía, mis brazos volvieron a tener tono y perdí 7 kg de grasa.</strong>"
+                "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-neutral-dark">En 6 semanas recuperé la energía y perdí 7 kg de grasa.</strong> Le doy 4 estrellas porque me hubiera gustado más recetas de desayuno, pero el resto es excelente."
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
                 <img src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=100&h=100" alt="Daniela R." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
@@ -1030,8 +1032,8 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-16 px-6 bg-amber-50/40 border-t border-amber-100/50">
-        <div className="max-w-4xl mx-auto bg-white border border-amber-200/40 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-sm relative overflow-hidden">
+      <section className="py-16 px-6 bg-green-50/40 border-t border-green-100/50">
+        <div className="max-w-4xl mx-auto bg-white border border-green-200/40 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-sm relative overflow-hidden">
           
           <div className="absolute right-0 top-0 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl -z-10" />
 
@@ -1048,7 +1050,7 @@ export default function App() {
               Garantía Total de 7 Días — sin preguntas.
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Una mujer que ya está invirtiendo en su salud merece tomar decisiones sin riesgo. Si en 7 días sientes que este kit no es para ti, te devolvemos cada centavo — sin preguntas, sin formularios, sin esperas. Así de seguras estamos de lo que tienes en tus manos.
+              Quien invierte en su salud merece tomar decisiones sin riesgo. Si en 7 días sientes que este kit no es para ti, te devolvemos cada centavo — sin preguntas, sin formularios, sin esperas. Así de seguros estamos de lo que tienes en tus manos.
             </p>
           </div>
 
@@ -1220,10 +1222,10 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/60 hover:bg-white/5 text-white/75 hover:text-white font-medium py-3 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
+              <ShoppingCart className="h-5 w-5" />
               <span>Quiero mi Kit GLP-1 — US$ 9,90</span>
-              <ArrowRight className="h-4 w-4" />
             </a>
             <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
@@ -1232,7 +1234,7 @@ export default function App() {
       </section>
       </FadeIn>
 
-      <footer className="bg-slate-950 text-white/70 py-16 px-6 text-center border-t border-white/5">
+      <footer className="bg-slate-950 text-white/70 py-16 pb-32 md:pb-16 px-6 text-center border-t border-white/5">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="flex items-center gap-2">
@@ -1254,11 +1256,24 @@ export default function App() {
             <p>© 2026 Guía GLP-1 Inteligente. Todos los derechos reservados.</p>
           </div>
 
-          <div className="max-w-4xl mx-auto text-[10px] leading-relaxed text-white/60 bg-white/5 p-5 rounded-2xl border border-white/10 text-left">
+          <div className="max-w-4xl mx-auto text-xs leading-relaxed text-white/75 bg-white/5 p-5 rounded-2xl border border-white/10 text-left">
             <strong className="text-white">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no sustituye de ninguna manera el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
           </div>
         </div>
       </footer>
+
+      {/* Botón fijo mobile */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur border-t border-gray-200 p-3 shadow-2xl">
+        <a
+          href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+          onClick={triggerCheckout}
+          className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-green-vibrant/30 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          <span>Comprar Ahora — US$ 9,90</span>
+          <Lock className="h-3.5 w-3.5 opacity-70" />
+        </a>
+      </div>
 
       <AnimatePresence>
         {activeModal && (
