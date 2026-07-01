@@ -68,27 +68,15 @@ export default function App() {
   const [calcCurrentProtein, setCalcCurrentProtein] = useState<string>('low');
   const [isCalced, setIsCalced] = useState(false);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
-  const [countdown, setCountdown] = useState({ h: 23, m: 59, s: 59 });
 
   useEffect(() => {
-    const KEY = 'glp1_offer_expiry';
-    let expiry = parseInt(localStorage.getItem(KEY) || '0', 10);
-    if (!expiry || expiry < Date.now()) {
-      expiry = Date.now() + 24 * 60 * 60 * 1000;
-      localStorage.setItem(KEY, String(expiry));
-    }
-    const tick = () => {
-      const rem = expiry - Date.now();
-      if (rem <= 0) { setCountdown({ h: 0, m: 0, s: 0 }); return; }
-      setCountdown({
-        h: Math.floor(rem / 3600000),
-        m: Math.floor((rem % 3600000) / 60000),
-        s: Math.floor((rem % 60000) / 1000),
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'ViewContent', {
+        content_name: 'Guia GLP-1 Inteligente',
+        value: 9.9,
+        currency: 'USD',
       });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    }
   }, []);
 
   const toggleFaq = (index: number) => {
@@ -122,12 +110,10 @@ export default function App() {
     }
 
     if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'InitiateCheckout');
+      (window as any).fbq('track', 'InitiateCheckout', { value: 9.9, currency: 'USD' });
     }
-    
-    setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 400);
+
+    window.location.href = targetUrl;
   };
 
   const weightInKg = calcWeightUnit === 'lb' ? Math.round(calcWeight * 0.453592) : calcWeight;
@@ -142,7 +128,7 @@ export default function App() {
       <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
-          Guía nutricional oficial para usuarios de Ozempic, Wegovy y Mounjaro — porque el medicamento solo no es suficiente
+          Guía nutricional completa para usuarios de Ozempic, Wegovy y Mounjaro — porque el medicamento solo no es suficiente
         </span>
       </div>
 
@@ -176,9 +162,9 @@ export default function App() {
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-brand-gold text-xs md:text-sm font-semibold tracking-wide">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-gold animate-pulse shrink-0" />
             <span className="font-poppins-bold uppercase select-none flex items-center gap-2 flex-wrap justify-center">
-              OFERTA EXPIRA EN:
-              <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 font-mono text-brand-gold tabular-nums normal-case text-sm">
-                {String(countdown.h).padStart(2, '0')}:{String(countdown.m).padStart(2, '0')}:{String(countdown.s).padStart(2, '0')}
+              PRECIO DE LANZAMIENTO:
+              <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 text-brand-gold tabular-nums normal-case text-sm">
+                US$ 9.90 <span className="text-white/50 line-through ml-1">US$ 49.90</span>
               </span>
             </span>
           </div>
@@ -193,12 +179,33 @@ export default function App() {
               </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Y tu cuerpo está pagando el precio en silencio.</span>
+                Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Este protocolo lo resuelve.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-8 max-w-2xl">
-                El GLP-1 funciona — pero viene con un protocolo nutricional que el 97% de los médicos nunca explica. Sin él, estás perdiendo músculo, sufriendo náuseas innecesarias y preparando el terreno para el efecto rebote. <strong className="text-brand-gold">Este kit es ese protocolo.</strong>
+              <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
+                El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">Este kit es ese protocolo.</strong>
               </p>
+
+              <div className="mb-6 flex items-center gap-4 justify-center lg:justify-start">
+                <div className="flex -space-x-2">
+                  {[['VM', 'bg-emerald-600'], ['CB', 'bg-teal-600'], ['DR', 'bg-green-700']].map(([initials, bg]) => (
+                    <div key={initials} className={`h-10 w-10 rounded-full border-2 border-white ${bg} flex items-center justify-center text-[11px] font-bold text-white`}>
+                      {initials}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-left text-xs text-green-100">
+                  <div className="flex items-center text-amber-500 gap-0.5">
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <span className="font-bold text-white ml-1">4.9/5</span>
+                  </div>
+                  <p>Más de <strong className="text-white">2,450 pacientes</strong> ya usan el protocolo</p>
+                </div>
+              </div>
 
               <div className="w-full sm:max-w-md">
                 <a
@@ -227,24 +234,6 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6 w-full justify-center lg:justify-start">
-                <div className="flex -space-x-2">
-                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Ozempic" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Wegovy" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100" alt="Usuario Mounjaro" className="h-10 w-10 rounded-full border-2 border-white object-cover" />
-                </div>
-                <div className="text-left text-xs text-green-100">
-                  <div className="flex items-center text-amber-500 gap-0.5">
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <span className="font-bold text-white ml-1">4.9/5</span>
-                  </div>
-                  <p>Más de <strong className="text-white">2,450 pacientes</strong> ya usan el protocolo</p>
-                </div>
-              </div>
             </div>
 
             <div className="lg:col-span-5 flex flex-col justify-center">
@@ -252,9 +241,12 @@ export default function App() {
                 <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand-green/20 to-brand-gold/20 blur-2xl opacity-70 group-hover:opacity-100 transition duration-1000 -z-10" />
                 
                 <div className="bg-white border border-white/20 shadow-2xl shadow-black/30 rounded-3xl overflow-hidden p-3">
-                  <img 
-                    src={mockupImage} 
-                    alt="Kit de Sobrevivencia GLP-1 Inteligente" 
+                  <img
+                    src={mockupImage}
+                    alt="Kit de Sobrevivencia GLP-1 Inteligente"
+                    width={900}
+                    height={672}
+                    fetchPriority="high"
                     className="w-full h-auto rounded-2xl shadow-md object-cover transform hover:scale-[1.02] transition-transform duration-300"
                     referrerPolicy="no-referrer"
                   />
@@ -868,7 +860,7 @@ export default function App() {
                 "Llevaba semanas con náuseas terribles después de cada inyección. Mi médico me dijo 'es normal'. Con el recetario del kit entendí que estaba comiendo exactamente los alimentos que empeoran el malestar. <strong className="text-neutral-dark">En 10 días las náuseas casi desaparecieron. Bajé 9 kilos y por primera vez estoy disfrutando el proceso.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100&h=100" alt="Valentina M." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
+                <div className="h-10 w-10 rounded-full bg-emerald-600 border-2 border-green-100 flex items-center justify-center text-[11px] font-bold text-white">VM</div>
                 <div>
                   <p className="text-xs font-bold text-neutral-dark">Valentina M.</p>
                   <p className="text-[10px] text-gray-400">Monterrey, México · Ozempic 1mg</p>
@@ -884,7 +876,7 @@ export default function App() {
                 "Mi médica me recetó Wegovy y me dijo 'come menos'. Eso fue todo. No saber qué comer me generaba una ansiedad enorme. Con la guía de alimentación entendí la estructura exacta de mi plato. <strong className="text-neutral-dark">Sin adivinar. Sin ansiedad. En 2 meses bajé 11 kg y mi piel sigue firme.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
-                <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&q=80&w=100&h=100" alt="Carolina B." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
+                <div className="h-10 w-10 rounded-full bg-teal-600 border-2 border-green-100 flex items-center justify-center text-[11px] font-bold text-white">CB</div>
                 <div>
                   <p className="text-xs font-bold text-neutral-dark">Carolina B.</p>
                   <p className="text-[10px] text-gray-400">Buenos Aires, Argentina · Wegovy</p>
@@ -901,7 +893,7 @@ export default function App() {
                 "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-neutral-dark">En 6 semanas recuperé la energía y perdí 7 kg de grasa.</strong> Le doy 4 estrellas porque me hubiera gustado más recetas de desayuno, pero el resto es excelente."
               </p>
               <div className="flex items-center gap-3 border-t border-gray-100 pt-4 mt-auto">
-                <img src="https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?auto=format&fit=crop&q=80&w=100&h=100" alt="Daniela R." className="h-10 w-10 rounded-full object-cover border-2 border-green-100" />
+                <div className="h-10 w-10 rounded-full bg-green-700 border-2 border-green-100 flex items-center justify-center text-[11px] font-bold text-white">DR</div>
                 <div>
                   <p className="text-xs font-bold text-neutral-dark">Daniela R.</p>
                   <p className="text-[10px] text-gray-400">Santiago, Chile · Mounjaro</p>
@@ -1173,7 +1165,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        Es exactamente para ti. El kit fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa al 97% de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
+                        Es exactamente para ti. El kit fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
                       </p>
                     </div>
                   </motion.div>
@@ -1263,7 +1255,7 @@ export default function App() {
       </footer>
 
       {/* Botón fijo mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur border-t border-gray-200 p-3 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur border-t border-gray-200 px-3 pt-3 pb-2 shadow-2xl">
         <a
           href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
           onClick={triggerCheckout}
@@ -1273,6 +1265,10 @@ export default function App() {
           <span>Comprar Ahora — US$ 9.90</span>
           <Lock className="h-3.5 w-3.5 opacity-70" />
         </a>
+        <p className="text-center text-[10px] text-gray-500 font-medium mt-1.5 flex items-center justify-center gap-1">
+          <Globe className="h-3 w-3 text-brand-green shrink-0" aria-hidden="true" />
+          Pagas en tu moneda local · Garantía de 7 días
+        </p>
       </div>
 
       <AnimatePresence>
