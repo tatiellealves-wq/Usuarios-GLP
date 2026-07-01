@@ -208,7 +208,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Quiero el protocolo completo — US$ 9,90
+                    Quiero el protocolo completo — US$ 9.90
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
@@ -374,7 +374,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Ver el protocolo completo — US$ 9,90</span>
+              <span>Ver el protocolo completo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -594,7 +594,7 @@ export default function App() {
                       onClick={triggerCheckout}
                       className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 min-h-[44px] rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
                     >
-                      <span>Cubrir mis {deficit > 0 ? deficit : 0}g de déficit — US$ 9,90</span>
+                      <span>Cubrir mis {deficit > 0 ? deficit : 0}g de déficit — US$ 9.90</span>
                       <ArrowRight className="h-3 w-3" />
                     </a>
                   </motion.div>
@@ -699,7 +699,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero el protocolo completo — US$ 9,90</span>
+              <span>Quiero el protocolo completo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -834,7 +834,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Quiero el protocolo completo — US$ 9,90</span>
+              <span>Quiero el protocolo completo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -918,7 +918,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero los mismos resultados — US$ 9,90</span>
+              <span>Quiero los mismos resultados — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
             <p className="text-xs text-gray-500 mt-3">Más de 2,450 pacientes · Garantía 7 días · Acceso inmediato</p>
@@ -977,12 +977,12 @@ export default function App() {
 
               <div className="flex flex-col items-center justify-center mb-6">
                 <span className="text-xs text-white/50 line-through tracking-wide">
-                  Valor Total: US$ 49,90
+                  Valor Total: US$ 49.90
                 </span>
                 <div className="flex items-baseline justify-center gap-1 mt-1">
                   <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
                   <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold tabular-nums">
-                    9,90
+                    9.90
                   </span>
                   <span className="text-sm font-semibold text-white/70 ml-1">Un pago único</span>
                 </div>
@@ -998,7 +998,7 @@ export default function App() {
                 className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
-                <span>Quiero el protocolo completo — US$ 9,90</span>
+                <span>Quiero el protocolo completo — US$ 9.90</span>
               </a>
 
               <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
@@ -1225,7 +1225,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero mi Kit GLP-1 — US$ 9,90</span>
+              <span>Quiero mi Kit GLP-1 — US$ 9.90</span>
             </a>
             <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
@@ -1270,7 +1270,7 @@ export default function App() {
           className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-green-vibrant/30 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
         >
           <ShoppingCart className="h-4 w-4" />
-          <span>Comprar Ahora — US$ 9,90</span>
+          <span>Comprar Ahora — US$ 9.90</span>
           <Lock className="h-3.5 w-3.5 opacity-70" />
         </a>
       </div>
