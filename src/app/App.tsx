@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Activity, BookOpen, Calendar, Check, ChevronDown, ChevronUp, Droplets,
+  Activity, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Droplets,
   Flame, Home, LineChart, Lock, Printer, Ruler, Search, ShoppingCart, Sparkles, Syringe, Utensils,
 } from 'lucide-react';
 import {
@@ -29,17 +29,21 @@ export default function App() {
 
   const perfil = estado.perfil;
   const hoy = hoyISO();
+  const pesoActual = estado.pesos.length
+    ? [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha)).at(-1)!.kg
+    : undefined;
+  const meta = metaProteina(perfil, pesoActual);
   const reg: RegistroDia = estado.registros[hoy] ?? { fecha: hoy, agua: 0, proteina: false };
   const setReg = (r: Partial<RegistroDia>) =>
     setEstado((e) => ({ ...e, registros: { ...e.registros, [hoy]: { ...reg, ...r, fecha: hoy } } }));
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
-      {tab === 'hoy' && <PantallaHoy perfil={perfil} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
+      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
         <PantallaPlan
-          perfil={perfil}
+          meta={meta}
           plan={estado.plan}
           comprasHechas={estado.comprasHechas}
           setPlan={(plan) => setEstado((e) => ({ ...e, plan }))}
@@ -172,8 +176,8 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 }
 
 /* ---------- Hoy ---------- */
-function PantallaHoy({ perfil, reg, setReg, registros, plan }: {
-  perfil: Perfil; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal;
+function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
+  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal;
 }) {
   const dosisHoy = esDiaDosis(perfil);
   const planHoy = plan[new Date().getDay()] ?? {};
@@ -205,7 +209,7 @@ function PantallaHoy({ perfil, reg, setReg, registros, plan }: {
         <div className="card">
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-bold">Tu menú de hoy</h2>
-            <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {metaProteina(perfil)} g</span>
+            <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {meta} g</span>
           </div>
           {comidasHoy.map(({ c, r }) => (
             <p key={c} className="text-sm text-gray-600 py-1 border-t border-gray-50 first:border-0">
@@ -242,7 +246,7 @@ function PantallaHoy({ perfil, reg, setReg, registros, plan }: {
           className={`w-full mt-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 border transition-colors ${reg.proteina ? 'bg-[#EAF4EC] border-[#CBE3D1] text-[#166534]' : 'bg-white border-gray-200 text-gray-500'}`}
         >
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
-          {reg.proteina ? `Proteína del día cumplida (~${metaProteina(perfil)} g) ✓` : `¿Cumpliste tu meta de ~${metaProteina(perfil)} g de proteína?`}
+          {reg.proteina ? `Proteína del día cumplida (~${meta} g) ✓` : `¿Cumpliste tu meta de ~${meta} g de proteína?`}
         </button>
       </div>
 
@@ -306,7 +310,7 @@ function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<
           <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-1.5">{fase}</p>
           {PASOS_INYECCION.filter((p) => p.fase === fase).map((p) => (
             <button key={p.id} onClick={() => toggle(p.id)} className="w-full flex items-start gap-2.5 text-left py-1.5">
-              <span className={`mt-0.5 h-4.5 w-4.5 min-w-4 h-4 w-4 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37]' : 'border-white/40'}`}>
+              <span className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37]' : 'border-white/40'}`}>
                 {hechos.includes(p.id) && <Check className="h-3 w-3 text-[#0D3320]" />}
               </span>
               <span className={`text-xs leading-snug ${hechos.includes(p.id) ? 'text-white/50 line-through' : 'text-white/90'}`}>{p.texto}</span>
@@ -392,8 +396,8 @@ const COMIDAS: { id: Comida; label: string; cats: Receta['cat'][] }[] = [
 ];
 const DIAS_CORTOS = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
 
-function PantallaPlan({ perfil, plan, setPlan, comprasHechas, toggleCompra }: {
-  perfil: Perfil; plan: PlanSemanal; setPlan: (p: PlanSemanal) => void;
+function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
+  meta: number; plan: PlanSemanal; setPlan: (p: PlanSemanal) => void;
   comprasHechas: string[]; toggleCompra: (item: string) => void;
 }) {
   const [dia, setDia] = useState(new Date().getDay());
@@ -405,7 +409,6 @@ function PantallaPlan({ perfil, plan, setPlan, comprasHechas, toggleCompra }: {
     const r = RECETAS.find((x) => x.id === planDia[c.id]);
     return s + (r?.proteina ?? 0);
   }, 0);
-  const meta = metaProteina(perfil);
   const falta = meta - proteinaDia;
 
   // Lista de compras: ingredientes de todas las recetas planificadas en la semana
@@ -592,11 +595,17 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
 
       <div className="card">
         <h2 className="font-bold mb-2">Náuseas y energía · últimos 14 días</h2>
-        <GraficoBarras datos={ultimos14} />
-        <div className="flex gap-4 mt-2 text-[10px] text-gray-500">
-          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#DC2626]" /> Náuseas</span>
-          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#16A34A]" /> Energía</span>
-        </div>
+        {ultimos14.some((d) => d.nauseas !== undefined || d.energia !== undefined) ? (
+          <>
+            <GraficoBarras datos={ultimos14} />
+            <div className="flex gap-4 mt-2 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#DC2626]" /> Náuseas</span>
+              <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#16A34A]" /> Energía</span>
+            </div>
+          </>
+        ) : (
+          <p className="text-xs text-gray-400">Registra náuseas y energía en la pestaña Hoy — en pocos días verás aquí tu patrón (y cómo mejora).</p>
+        )}
       </div>
 
       <div className="card">
@@ -644,7 +653,7 @@ function FotosProgreso() {
 
   return (
     <div className="card">
-      <h2 className="font-bold mb-1 flex items-center gap-2"><Search className="h-4 w-4 text-[#C9A035]" /> Fotos de progreso</h2>
+      <h2 className="font-bold mb-1 flex items-center gap-2"><Camera className="h-4 w-4 text-[#C9A035]" /> Fotos de progreso</h2>
       <p className="text-[11px] text-gray-400 mb-3">100% privadas: se guardan solo en tu teléfono, nunca salen de él. Una al mes, misma ropa, misma luz — el espejo del que sí te puedes fiar.</p>
       <label className="block w-full text-center bg-[#EAF4EC] border border-[#CBE3D1] text-[#166534] font-bold py-3 rounded-xl text-sm cursor-pointer">
         + Agregar foto de hoy
