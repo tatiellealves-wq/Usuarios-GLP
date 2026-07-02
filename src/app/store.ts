@@ -23,17 +23,23 @@ export type RegistroDia = {
 export type Peso = { fecha: string; kg: number };
 export type Medidas = { fecha: string; cintura?: number; cadera?: number; brazo?: number; muslo?: number };
 
+export type Comida = 'desayuno' | 'almuerzo' | 'cena' | 'snack';
+export type PlanDia = Partial<Record<Comida, number>>; // id de receta
+export type PlanSemanal = Record<number, PlanDia>; // 0=domingo … 6=sábado
+
 export type Estado = {
   activado: boolean;
   perfil?: Perfil;
   registros: Record<string, RegistroDia>;
   pesos: Peso[];
   medidas: Medidas[];
+  plan: PlanSemanal;
+  comprasHechas: string[]; // ítems marcados de la lista de compras
 };
 
 const KEY = 'glp1app-v1';
 
-const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [] };
+const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [] };
 
 function cargar(): Estado {
   try {
