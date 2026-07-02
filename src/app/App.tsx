@@ -4,14 +4,15 @@ import {
   Flame, Home, LineChart, Lock, Printer, Ruler, Search, ShoppingCart, Sparkles, Syringe, Utensils,
 } from 'lucide-react';
 import {
-  CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, type Receta,
+  CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, RUTINAS, type Receta, type Rutina,
 } from './data';
 import {
-  esDiaDosis, hoyISO, lbAKg, metaProteina, racha, tendenciaSemanal, useEstado,
-  type Comida, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
+  borrarFoto, comprimirImagen, esDiaDosis, guardarFoto, hoyISO, lbAKg, listarFotos,
+  metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
+  type Comida, type Foto, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
 } from './store';
 
-type Tab = 'hoy' | 'recetas' | 'plan' | 'progreso' | 'guia';
+type Tab = 'hoy' | 'recetas' | 'plan' | 'progreso' | 'mas';
 
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
@@ -57,7 +58,7 @@ export default function App() {
           onMedidas={(m) => setEstado((e) => ({ ...e, medidas: [...e.medidas.filter((x) => x.fecha !== m.fecha), m] }))}
         />
       )}
-      {tab === 'guia' && <PantallaGuia />}
+      {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} />}
       <TabBar tab={tab} setTab={setTab} />
     </div>
   );
@@ -249,7 +250,11 @@ function PantallaHoy({ perfil, reg, setReg, registros, plan }: {
         <div className="card flex items-center gap-3">
           <Syringe className="h-5 w-5 text-[#C9A035] shrink-0" />
           <p className="text-sm text-gray-600">
-            Tu próxima dosis: <b>{DIAS[perfil.diaDosis]}</b>. Ese día el app te guía paso a paso.
+            {(new Date().getDay() + 1) % 7 === perfil.diaDosis ? (
+              <><b>Mañana es tu día de dosis.</b> Deja lista una comida ligera y proteica para 2–3 h antes — mañana te guío paso a paso.</>
+            ) : (
+              <>Tu próxima dosis: <b>{DIAS[perfil.diaDosis]}</b>. Ese día el app te guía paso a paso.</>
+            )}
           </p>
         </div>
       )}
@@ -612,9 +617,59 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
         )}
       </div>
 
-      <button onClick={() => setVerInforme(true)} className="w-full bg-[#C9A035] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow">
+      <FotosProgreso />
+
+      <button onClick={() => setVerInforme(true)} className="w-full bg-[#C9A035] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow mb-4">
         <Printer className="h-4 w-4" /> Informe para mi médico
       </button>
+    </div>
+  );
+}
+
+function FotosProgreso() {
+  const [fotos, setFotos] = useState<Foto[]>([]);
+  const [cargado, setCargado] = useState(false);
+  const [grande, setGrande] = useState<Foto | null>(null);
+
+  React.useEffect(() => {
+    listarFotos().then((f) => { setFotos(f); setCargado(true); }).catch(() => setCargado(true));
+  }, []);
+
+  const agregar = async (file: File) => {
+    const data = await comprimirImagen(file);
+    const foto = { fecha: new Date().toISOString(), data };
+    await guardarFoto(foto);
+    setFotos((f) => [foto, ...f]);
+  };
+
+  return (
+    <div className="card">
+      <h2 className="font-bold mb-1 flex items-center gap-2"><Search className="h-4 w-4 text-[#C9A035]" /> Fotos de progreso</h2>
+      <p className="text-[11px] text-gray-400 mb-3">100% privadas: se guardan solo en tu teléfono, nunca salen de él. Una al mes, misma ropa, misma luz — el espejo del que sí te puedes fiar.</p>
+      <label className="block w-full text-center bg-[#EAF4EC] border border-[#CBE3D1] text-[#166534] font-bold py-3 rounded-xl text-sm cursor-pointer">
+        + Agregar foto de hoy
+        <input type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) agregar(f); e.target.value = ''; }} />
+      </label>
+      {cargado && fotos.length > 0 && (
+        <div className="grid grid-cols-3 gap-2 mt-3">
+          {fotos.map((f) => (
+            <button key={f.fecha} onClick={() => setGrande(f)} className="relative rounded-xl overflow-hidden aspect-[3/4] bg-gray-100">
+              <img src={f.data} alt="" className="w-full h-full object-cover" />
+              <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] font-semibold py-0.5 text-center">{f.fecha.slice(0, 10)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {grande && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4" onClick={() => setGrande(null)}>
+          <img src={grande.data} alt="" className="max-h-[75vh] rounded-2xl" />
+          <p className="text-white/70 text-xs mt-3">{grande.fecha.slice(0, 10)}</p>
+          <button
+            onClick={(e) => { e.stopPropagation(); borrarFoto(grande.fecha).then(() => { setFotos((f) => f.filter((x) => x.fecha !== grande.fecha)); setGrande(null); }); }}
+            className="mt-3 text-red-400 text-sm font-bold bg-white/10 rounded-xl px-5 py-2.5"
+          >Eliminar esta foto</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -714,13 +769,220 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
   );
 }
 
-/* ---------- Guía ---------- */
-function PantallaGuia() {
-  const [abierto, setAbierto] = useState<number | null>(null);
-  const [verSalida, setVerSalida] = useState(false);
+/* ---------- Más (menú) ---------- */
+function PantallaMas({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida'>('menu');
+
+  if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
+  if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
+  if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
+
+  const items = [
+    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía de bolsillo', sub: 'Los recordatorios esenciales del kit, offline' },
+    { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5 text-[#C9A035]" />, titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
+    { id: 'salida' as const, icon: <Sparkles className="h-5 w-5 text-[#C9A035]" />, titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
+  ];
 
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
+      <h1 className="text-2xl font-bold mb-4">Más herramientas</h1>
+      {items.map((it) => (
+        <button key={it.id} onClick={() => setVista(it.id)} className="card w-full text-left flex items-center gap-4">
+          <span className="h-11 w-11 rounded-xl bg-[#F7F0DF] flex items-center justify-center shrink-0">{it.icon}</span>
+          <span>
+            <span className="font-bold text-sm block">{it.titulo}</span>
+            <span className="text-xs text-gray-500">{it.sub}</span>
+          </span>
+        </button>
+      ))}
+      <p className="text-[10px] text-gray-400 text-center mt-4">
+        Recurso educativo · no sustituye a tu equipo de salud · soporte@guiaglp1.com
+      </p>
+    </div>
+  );
+}
+
+function ConVolver({ children, onVolver }: { children: React.ReactNode; onVolver: () => void }) {
+  return (
+    <div>
+      <div className="max-w-md mx-auto px-5 pt-5">
+        <button onClick={onVolver} className="text-sm font-bold text-gray-500">← Más herramientas</button>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ---------- Cuerpo Firme ---------- */
+function CuerpoFirme({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [activa, setActiva] = useState<Rutina | null>(null);
+  const hoy = hoyISO();
+  const semanaCount = estado.rutinasHechas.filter((r) => {
+    const [fecha] = r.split(':');
+    const d = new Date(fecha + 'T12:00:00');
+    const dif = (Date.now() - d.getTime()) / 86400000;
+    return dif >= 0 && dif < 7;
+  }).length;
+
+  if (activa) {
+    return (
+      <TimerRutina
+        rutina={activa}
+        onFin={() => {
+          setEstado((e) => ({ ...e, rutinasHechas: [...e.rutinasHechas, `${hoy}:${activa.id}`] }));
+          setActiva(null);
+        }}
+        onSalir={() => setActiva(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Cuerpo Firme</h1>
+      <p className="text-sm text-gray-500 mb-3">Proteger tu músculo es proteger tu metabolismo. 2–3 rutinas por semana, en casa, sin equipamiento.</p>
+      <div className={`rounded-xl px-4 py-3 mb-4 text-sm font-semibold ${semanaCount >= 2 ? 'bg-[#EAF4EC] text-[#166534]' : 'bg-[#FDF6E3] text-[#8A6D1C]'}`}>
+        {semanaCount >= 2 ? `¡${semanaCount} rutinas esta semana! Meta cumplida ✓` : `${semanaCount} de 2 rutinas esta semana`}
+      </div>
+      {RUTINAS.map((r) => (
+        <div key={r.id} className="card">
+          <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{r.foco}</p>
+          <p className="font-bold mb-1">{r.nombre}</p>
+          <p className="text-xs text-gray-500 mb-3">{r.ejercicios.map((e) => e.nombre).join(' · ')}</p>
+          <button onClick={() => setActiva(r)} className="w-full bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">Empezar rutina ▶</button>
+        </div>
+      ))}
+      <p className="text-[10px] text-gray-400 mt-1 mb-4">Consulta a tu médico antes de empezar ejercicio, especialmente si tienes limitaciones físicas. Detente si sientes mareo o dolor.</p>
+    </div>
+  );
+}
+
+function TimerRutina({ rutina, onFin, onSalir }: { rutina: Rutina; onFin: () => void; onSalir: () => void }) {
+  const [idx, setIdx] = useState(0);
+  const [fase, setFase] = useState<'trabajo' | 'descanso'>('trabajo');
+  const [seg, setSeg] = useState(rutina.ejercicios[0].seg);
+  const [pausa, setPausa] = useState(false);
+
+  React.useEffect(() => {
+    if (pausa) return;
+    const id = setInterval(() => setSeg((s) => s - 1), 1000);
+    return () => clearInterval(id);
+  }, [pausa, fase, idx]);
+
+  React.useEffect(() => {
+    if (seg > 0) return;
+    if (navigator.vibrate) navigator.vibrate(200);
+    if (fase === 'trabajo') {
+      if (idx === rutina.ejercicios.length - 1) { onFin(); return; }
+      setFase('descanso'); setSeg(20);
+    } else {
+      setIdx((i) => i + 1); setFase('trabajo'); setSeg(rutina.ejercicios[idx + 1].seg);
+    }
+  }, [seg]);
+
+  const ej = rutina.ejercicios[idx];
+  const siguiente = rutina.ejercicios[idx + 1];
+
+  return (
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-[#0A2A18] to-[#17452A] text-white flex flex-col items-center justify-center p-8 text-center">
+      <p className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-1">{rutina.nombre} · {idx + 1} de {rutina.ejercicios.length}</p>
+      <h2 className="text-2xl font-bold mb-2">{fase === 'trabajo' ? ej.nombre : 'Descansa 💨'}</h2>
+      <p className="text-sm text-green-100/70 mb-6 max-w-xs">{fase === 'trabajo' ? ej.nota : siguiente ? `Siguiente: ${siguiente.nombre}` : ''}</p>
+      <p className="text-7xl font-extrabold tabular-nums mb-8" style={{ color: fase === 'trabajo' ? '#fff' : '#D4AF37' }}>{seg}</p>
+      <div className="flex gap-3">
+        <button onClick={() => setPausa(!pausa)} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm">{pausa ? 'Continuar ▶' : 'Pausa ⏸'}</button>
+        <button onClick={onSalir} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm text-white/60">Salir</button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Plan de Salida interactivo ---------- */
+function PlanSalida({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const salida = estado.salida;
+
+  if (!salida) {
+    return (
+      <div className="max-w-md mx-auto px-5 pt-4">
+        <h1 className="text-2xl font-bold mb-1">Plan de Salida</h1>
+        <p className="text-sm text-gray-500 mb-4">Las 12 semanas que convierten tu resultado en tu nueva normalidad — para cuando tú y tu médico decidan finalizar el tratamiento.</p>
+        <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-6 mb-4">
+          <Lock className="h-8 w-8 text-[#D4AF37] mb-3" />
+          <p className="font-bold mb-1">Este plan se activa cuando llegue tu momento</p>
+          <p className="text-xs text-green-100/70 mb-4">La mayoría recupera el peso al dejar el GLP-1 porque nunca construyó el sistema que lo reemplace. Tú vas a tener el sistema.</p>
+          {FASES_SALIDA.map((f) => (
+            <p key={f.nombre} className="text-xs text-white/60 py-1 border-t border-white/10">🔒 {f.semanas} — {f.nombre}</p>
+          ))}
+        </div>
+        <button
+          onClick={() => {
+            if (confirm('¿Tu médico y tú decidieron finalizar o reducir el tratamiento? El plan de 12 semanas empieza hoy.')) {
+              setEstado((e) => ({ ...e, salida: { inicio: hoyISO(), checks: [] } }));
+            }
+          }}
+          className="w-full bg-[#C9A035] text-white font-bold py-4 rounded-xl"
+        >
+          Mi médico y yo decidimos terminar — activar el plan
+        </button>
+        <p className="text-[10px] text-gray-400 mt-2 mb-4">Nunca suspendas ni modifiques tu dosis por cuenta propia. Este plan acompaña la decisión médica — no la sustituye.</p>
+      </div>
+    );
+  }
+
+  const semana = semanaSalida(salida);
+  const faseActual = semana <= 4 ? 0 : semana <= 8 ? 1 : 2;
+  const toggle = (key: string) =>
+    setEstado((e) => ({
+      ...e,
+      salida: { ...salida, checks: salida.checks.includes(key) ? salida.checks.filter((x) => x !== key) : [...salida.checks, key] },
+    }));
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Plan de Salida</h1>
+      <p className="text-sm text-gray-500 mb-3">Empezaste el {new Date(salida.inicio + 'T12:00:00').toLocaleDateString('es-419')}.</p>
+      <div className="rounded-xl bg-[#F7F0DF] border border-[#E5D7B2] px-4 py-3 mb-4">
+        <p className="font-bold text-[#8A6D1C] text-sm">Semana {semana} de 12</p>
+        <div className="h-2 bg-white rounded-full mt-1.5"><div className="h-full bg-[#C9A035] rounded-full" style={{ width: `${(semana / 12) * 100}%` }} /></div>
+      </div>
+      {FASES_SALIDA.map((f, fi) => (
+        <div key={f.nombre} className={`card ${fi === faseActual ? 'ring-2 ring-[#C9A035]' : fi < faseActual ? 'opacity-70' : 'opacity-50'}`}>
+          <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{f.semanas}{fi === faseActual ? ' · estás aquí' : fi < faseActual ? ' · completada' : ''}</p>
+          <p className="font-bold text-sm mb-2">{f.nombre}</p>
+          {f.items.map((it) => {
+            const key = `f${fi}:${it.slice(0, 30)}`;
+            const hecho = salida.checks.includes(key);
+            return (
+              <button key={key} onClick={() => toggle(key)} className="w-full flex items-start gap-2.5 py-1.5 text-left">
+                <span className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                  {hecho && <Check className="h-3 w-3 text-white" />}
+                </span>
+                <span className={`text-xs leading-snug ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
+              </button>
+            );
+          })}
+        </div>
+      ))}
+      <button
+        onClick={() => { if (confirm('¿Desactivar el plan? Tu progreso de checks se perderá.')) setEstado((e) => ({ ...e, salida: undefined })); }}
+        className="w-full py-3 text-xs font-bold text-gray-400 mb-4"
+      >Desactivar el plan</button>
+    </div>
+  );
+}
+
+/* ---------- Guía ---------- */
+function PantallaGuia() {
+  const [abierto, setAbierto] = useState<number | null>(null);
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
       <h1 className="text-2xl font-bold mb-1">Tu guía de bolsillo</h1>
       <p className="text-sm text-gray-500 mb-4">
         Los recordatorios esenciales para consultar en segundos. El desarrollo completo — con las explicaciones, tablas y el paso a paso — está en tus <b>4 PDFs del kit</b>, que recibiste por correo.
@@ -741,24 +1003,8 @@ function PantallaGuia() {
         </div>
       ))}
 
-      <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-5 mt-2">
-        <p className="font-bold flex items-center gap-2 mb-1"><Sparkles className="h-4 w-4 text-[#D4AF37]" /> Plan de Salida · 12 semanas</p>
-        <p className="text-xs text-green-100/70 mb-3">Para cuando tú y tu médico decidan finalizar el tratamiento — el sistema para que el resultado se quede.</p>
-        <button onClick={() => setVerSalida(!verSalida)} className="text-xs font-bold text-[#D4AF37]">{verSalida ? 'Ocultar el plan ↑' : 'Ver el plan completo ↓'}</button>
-        {verSalida && FASES_SALIDA.map((f) => (
-          <div key={f.nombre} className="mt-3 bg-white/5 border border-white/10 rounded-xl p-3.5">
-            <p className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold">{f.semanas}</p>
-            <p className="font-bold text-sm mb-1.5">{f.nombre}</p>
-            <ul className="space-y-1">{f.items.map((it) => (
-              <li key={it} className="text-xs text-white/80 flex gap-2"><Check className="h-3.5 w-3.5 text-[#D4AF37] shrink-0 mt-0.5" />{it}</li>
-            ))}</ul>
-          </div>
-        ))}
-        <p className="text-[10px] text-white/40 mt-3">Nunca suspendas ni modifiques tu dosis por cuenta propia — este plan acompaña la decisión médica.</p>
-      </div>
-
       <p className="text-[10px] text-gray-400 text-center mt-4 mb-2">
-        Recurso educativo · no sustituye a tu equipo de salud · soporte@guiaglp1.com
+        El Plan de Salida interactivo está en Más herramientas → Plan de Salida.
       </p>
     </div>
   );
@@ -771,7 +1017,7 @@ function TabBar({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
     { id: 'recetas', icon: <Utensils className="h-5 w-5" />, label: 'Recetas' },
     { id: 'plan', icon: <Calendar className="h-5 w-5" />, label: 'Semana' },
     { id: 'progreso', icon: <LineChart className="h-5 w-5" />, label: 'Progreso' },
-    { id: 'guia', icon: <BookOpen className="h-5 w-5" />, label: 'Guía' },
+    { id: 'mas', icon: <Sparkles className="h-5 w-5" />, label: 'Más' },
   ];
   return (
     <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-gray-200 print:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>

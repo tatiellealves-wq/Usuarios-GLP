@@ -35,11 +35,13 @@ export type Estado = {
   medidas: Medidas[];
   plan: PlanSemanal;
   comprasHechas: string[]; // ítems marcados de la lista de compras
+  salida?: { inicio: string; checks: string[] };
+  rutinasHechas: string[]; // 'YYYY-MM-DD:rutinaId'
 };
 
 const KEY = 'glp1app-v1';
 
-const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [] };
+const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [], rutinasHechas: [] };
 
 function cargar(): Estado {
   try {
@@ -104,4 +106,69 @@ export function tendenciaSemanal(pesos: Peso[]): { etiqueta: string; kg: number 
     etiqueta: k.slice(8, 10) + '/' + k.slice(5, 7),
     kg: Math.round((v.reduce((a, b) => a + b, 0) / v.length) * 10) / 10,
   }));
+}
+
+// ---- Plan de Salida ----
+export type Salida = { inicio: string; checks: string[] };
+
+export function semanaSalida(salida: Salida): number {
+  const ms = Date.now() - new Date(salida.inicio + 'T00:00:00').getTime();
+  return Math.min(12, Math.max(1, Math.floor(ms / (7 * 86400000)) + 1));
+}
+
+// ---- Fotos de progreso (IndexedDB: demasiado grandes para localStorage) ----
+export type Foto = { fecha: string; data: string };
+
+function abrirDB(): Promise<IDBDatabase> {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('glp1app-fotos', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('fotos', { keyPath: 'fecha' });
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+export async function guardarFoto(foto: Foto): Promise<void> {
+  const db = await abrirDB();
+  await new Promise<void>((res, rej) => {
+    const tx = db.transaction('fotos', 'readwrite');
+    tx.objectStore('fotos').put(foto);
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+}
+
+export async function listarFotos(): Promise<Foto[]> {
+  const db = await abrirDB();
+  return new Promise((res, rej) => {
+    const req = db.transaction('fotos').objectStore('fotos').getAll();
+    req.onsuccess = () => res((req.result as Foto[]).sort((a, b) => b.fecha.localeCompare(a.fecha)));
+    req.onerror = () => rej(req.error);
+  });
+}
+
+export async function borrarFoto(fecha: string): Promise<void> {
+  const db = await abrirDB();
+  await new Promise<void>((res, rej) => {
+    const tx = db.transaction('fotos', 'readwrite');
+    tx.objectStore('fotos').delete(fecha);
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+}
+
+export function comprimirImagen(file: File, maxLado = 900): Promise<string> {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * escala);
+      c.height = Math.round(img.height * escala);
+      c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+      res(c.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = rej;
+    img.src = URL.createObjectURL(file);
+  });
 }
