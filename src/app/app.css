@@ -36,3 +36,8 @@
   nav, button { display: none !important; }
   .card { border: none; box-shadow: none; }
 }
+
+/* Identidad tipográfica: Poppins en títulos, autoalojada (funciona offline) */
+@font-face { font-family: 'Poppins'; font-weight: 600; font-display: swap; src: url('/app/fonts/Poppins-600.ttf'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; font-display: swap; src: url('/app/fonts/Poppins-700.ttf'); }
+h1, h2, h3 { font-family: 'Poppins', system-ui, sans-serif; }

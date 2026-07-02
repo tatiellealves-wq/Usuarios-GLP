@@ -1,5 +1,5 @@
 /* Service Worker — Guía GLP-1 App (scope /app/) */
-const VERSION = 'glp1-app-v3';
+const VERSION = 'glp1-app-v4';
 const APP_SHELL = ['/app/'];
 
 self.addEventListener('install', (event) => {

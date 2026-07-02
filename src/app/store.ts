@@ -66,8 +66,10 @@ export const hoyISO = () => {
 
 export const lbAKg = (lb: number) => Math.round(lb * 0.453592 * 10) / 10;
 
-export function metaProteina(perfil: Perfil): number {
-  return Math.round(perfil.pesoInicial * 1.7);
+// Meta de proteína recalculada con el peso más reciente (si existe):
+// al bajar de peso, la meta acompaña — como indica la guía (1.6–1.8 g/kg).
+export function metaProteina(perfil: Perfil, pesoActual?: number): number {
+  return Math.round((pesoActual ?? perfil.pesoInicial) * 1.7);
 }
 
 export function esDiaDosis(perfil: Perfil, fecha = new Date()): boolean {
