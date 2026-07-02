@@ -187,7 +187,7 @@ export default function App() {
               </p>
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 módulos en PDF</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 Módulos</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
               </div>
@@ -254,7 +254,7 @@ export default function App() {
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">4</p>
-            <p className="text-xs text-gray-600 mt-1 leading-snug">módulos en PDF<br className="hidden md:block" /> con acceso inmediato</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">módulos completos<br className="hidden md:block" /> con acceso inmediato</p>
           </div>
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-neutral-dark tabular-nums">35</p>
