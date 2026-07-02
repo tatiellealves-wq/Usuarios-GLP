@@ -1,15 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Activity, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Droplets,
-  Flame, Home, LineChart, Lock, Printer, Ruler, Search, ShoppingCart, Sparkles, Syringe, Utensils,
+  Activity, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Printer, Ruler, Search, ShieldCheck,
+  ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
 import {
-  CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, RUTINAS, type Receta, type Rutina,
+  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, PASOS_INYECCION,
+  RECETAS, RUTINAS, type Receta, type Rutina,
 } from './data';
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
-  borrarFoto, comprimirImagen, esDiaDosis, guardarFoto, hoyISO, lbAKg, listarFotos,
-  metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
+  borrarFoto, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, importarDatos,
+  lbAKg, listarFotos, metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
   type Comida, type Foto, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
 } from './store';
 
@@ -213,6 +215,9 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
             <h2 className="font-bold">Tu menú de hoy</h2>
             <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {meta} g</span>
           </div>
+          <div className="h-1.5 bg-gray-100 rounded-full mb-2 overflow-hidden">
+            <div className="h-full bg-[#166534] rounded-full transition-all" style={{ width: `${Math.min(100, Math.round((proteinaPlan / meta) * 100))}%` }} />
+          </div>
           {comidasHoy.map(({ c, r }) => (
             <p key={c} className="text-sm text-gray-600 py-1 border-t border-gray-50 first:border-0">
               <b className="capitalize text-[#1F2430]">{c}:</b> {r.nombre} <span className="text-xs text-gray-400">· {r.proteina} g · {r.min} min</span>
@@ -250,6 +255,18 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
           {reg.proteina ? `Proteína del día cumplida (~${meta} g) ✓` : `¿Cumpliste tu meta de ~${meta} g de proteína?`}
         </button>
+
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <p className="text-sm font-semibold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
+          <textarea
+            value={reg.nota ?? ''}
+            onChange={(e) => setReg({ nota: e.target.value })}
+            placeholder="¿Qué comiste? ¿Cómo te sentiste? Ej.: 'el yogur me cayó perfecto, la cena grasosa me dio náuseas'"
+            rows={2}
+            className="w-full bg-[#FBF9F5] border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#166534]/30"
+          />
+          <p className="text-[10px] text-gray-400 mt-1">Con el tiempo, tus notas revelan qué alimentos te caen bien y cuáles no — evidencia de oro para tu próxima consulta.</p>
+        </div>
       </div>
 
       {!dosisHoy && (
@@ -339,7 +356,11 @@ function PantallaRecetas() {
 
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
-      <h1 className="text-2xl font-bold mb-4">Recetas</h1>
+      <div className="flex items-baseline justify-between mb-1">
+        <h1 className="text-2xl font-bold">Recetas</h1>
+        <span className="text-xs font-bold text-[#8A6D1C]">{RECETAS.length} recetas</span>
+      </div>
+      <p className="text-xs text-gray-500 mb-4">Las 35 del kit + <b className="text-[#8A6D1C]">10 exclusivas del app ✦</b></p>
 
       <p className="text-xs font-semibold text-gray-500 mb-2">¿Cómo está tu estómago hoy?</p>
       <div className="flex gap-2 mb-3">
@@ -374,6 +395,7 @@ function PantallaRecetas() {
               <span className="tag bg-[#F7F0DF] text-[#8A6D1C]">{r.min} min</span>
               <span className="tag bg-gray-100 text-gray-500">{r.porciones} porción{r.porciones > 1 ? 'es' : ''}</span>
               {r.suave && <span className="tag bg-[#EAF1FB] text-[#28415E]">Suave</span>}
+              {r.exclusiva && <span className="tag bg-[#C9A035] text-white">✦ Solo App</span>}
             </div>
           </button>
           {abierta === r.id && (
@@ -451,7 +473,7 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
             })}
           </div>
         ))}
-        <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Los básicos de despensa completos están en tu Lista de Supermercado (Módulo 3).</p>
+        <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Los básicos de despensa completos están en Más → Lista de Supermercado Inteligente.</p>
       </div>
     );
   }
@@ -765,6 +787,15 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
           </tbody>
         </table>
 
+        {regs.some((r) => r.nota?.trim()) && (<>
+          <h2 className="font-bold text-sm mb-2">Notas del diario (últimas)</h2>
+          <div className="text-xs mb-4">
+            {regs.filter((r) => r.nota?.trim()).slice(-7).map((r) => (
+              <p key={r.fecha} className="border-t border-gray-100 py-1.5"><b>{r.fecha}</b> — {r.nota}</p>
+            ))}
+          </div>
+        </>)}
+
         {medidas.length > 0 && (<>
           <h2 className="font-bold text-sm mb-2">Medidas (cm)</h2>
           <table className="w-full text-xs mb-4">
@@ -784,16 +815,20 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
 function PantallaMas({ estado, setEstado }: {
   estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
 }) {
-  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida'>('menu');
+  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
 
   if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
   if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
+  if (vista === 'super') return <ConVolver onVolver={() => setVista('menu')}><PantallaSuper estado={estado} setEstado={setEstado} /></ConVolver>;
+  if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
-    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía de bolsillo', sub: 'Los recordatorios esenciales del kit, offline' },
+    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
+    { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5 text-[#C9A035]" />, titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5 text-[#C9A035]" />, titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
     { id: 'salida' as const, icon: <Sparkles className="h-5 w-5 text-[#C9A035]" />, titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
+    { id: 'respaldo' as const, icon: <ShieldCheck className="h-5 w-5 text-[#C9A035]" />, titulo: 'Copia de seguridad', sub: 'Respalda o restaura tus datos — todo queda contigo' },
   ];
 
   return (
@@ -988,15 +1023,141 @@ function PlanSalida({ estado, setEstado }: {
   );
 }
 
+/* ---------- Módulo 3: Lista de Supermercado Inteligente ---------- */
+function PantallaSuper({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [tab, setTab] = useState<'si' | 'no'>('si');
+  const hechos = estado.despensaHecha;
+  const total = LISTA_SUPER.reduce((s, c) => s + c.items.length, 0);
+  const toggle = (key: string) =>
+    setEstado((e) => ({
+      ...e,
+      despensaHecha: e.despensaHecha.includes(key) ? e.despensaHecha.filter((x) => x !== key) : [...e.despensaHecha, key],
+    }));
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Lista de Supermercado</h1>
+      <p className="text-sm text-gray-500 mb-4">Si el 80% de tu carrito sale de esta lista, la mitad del trabajo está hecho antes de cocinar.</p>
+
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setTab('si')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'si' ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-600'}`}>
+          <Check className="h-4 w-4" /> Sí llevar
+        </button>
+        <button onClick={() => setTab('no')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'no' ? 'bg-[#8C2F2F] text-white border-[#8C2F2F]' : 'bg-white border-gray-200 text-gray-600'}`}>
+          <X className="h-4 w-4" /> Mejor no
+        </button>
+      </div>
+
+      {tab === 'si' ? (
+        <>
+          <div className="rounded-xl bg-[#EAF4EC] border border-[#CBE3D1] px-4 py-3 mb-3 flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#166534]">{hechos.length} de {total} en tu despensa</p>
+            {hechos.length > 0 && (
+              <button onClick={() => setEstado((e) => ({ ...e, despensaHecha: [] }))} className="text-xs font-bold text-[#166534]/60">Desmarcar todo</button>
+            )}
+          </div>
+          {LISTA_SUPER.map((c) => (
+            <div key={c.categoria} className="card">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035] mb-1.5">{c.categoria}</p>
+              {c.items.map((it) => {
+                const key = `${c.categoria}::${it}`;
+                const hecho = hechos.includes(key);
+                return (
+                  <button key={key} onClick={() => toggle(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
+                    <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                      {hecho && <Check className="h-3 w-3 text-white" />}
+                    </span>
+                    <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <p className="text-xs text-gray-500 mb-3">No es prohibición — es información. Estos son los que más síntomas provocan con GLP-1, y el porqué:</p>
+          {ALIMENTOS_EVITAR.map((a) => (
+            <div key={a.nombre} className="card !border-[#F0D9D9] bg-[#FDF8F8]">
+              <p className="font-bold text-sm text-[#8C2F2F] flex items-start gap-2"><X className="h-4 w-4 mt-0.5 shrink-0" />{a.nombre}</p>
+              <p className="text-xs text-gray-600 mt-1 ml-6 leading-relaxed">{a.razon}</p>
+            </div>
+          ))}
+          <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Regla 80/20: si el 80% viene de la lista Sí, el 20% tiene espacio sin culpa.</p>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Copia de seguridad ---------- */
+function CopiaSeguridad({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null);
+
+  const restaurar = async (file: File) => {
+    try {
+      const nuevo = await importarDatos(file);
+      if (confirm('¿Restaurar este respaldo? Reemplazará los datos actuales del app en este dispositivo.')) {
+        setEstado(() => nuevo);
+        setMsg({ tipo: 'ok', texto: 'Respaldo restaurado correctamente ✓' });
+      }
+    } catch {
+      setMsg({ tipo: 'error', texto: 'No se pudo leer el archivo. Verifica que sea un respaldo del app (.json).' });
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Copia de seguridad</h1>
+      <p className="text-sm text-gray-500 mb-4">Tus datos viven solo en este dispositivo — esa es tu privacidad. Un respaldo te protege si cambias de teléfono o borras el navegador.</p>
+
+      <div className="card">
+        <p className="font-bold text-sm mb-1 flex items-center gap-2"><Download className="h-4 w-4 text-[#C9A035]" /> Descargar respaldo</p>
+        <p className="text-xs text-gray-500 mb-3">Registros, pesos, medidas, plan semanal y progreso — en un archivo que guardas donde quieras. (Las fotos no se incluyen: son demasiado pesadas.)</p>
+        <button onClick={() => { exportarDatos(estado); setMsg({ tipo: 'ok', texto: 'Respaldo descargado ✓' }); }} className="w-full bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">
+          Descargar mi respaldo
+        </button>
+      </div>
+
+      <div className="card">
+        <p className="font-bold text-sm mb-1 flex items-center gap-2"><Upload className="h-4 w-4 text-[#C9A035]" /> Restaurar respaldo</p>
+        <p className="text-xs text-gray-500 mb-3">En tu teléfono nuevo: activa el app con tu código y restaura aquí tu archivo de respaldo.</p>
+        <label className="block w-full text-center bg-[#F7F0DF] border border-[#E5D7B2] text-[#8A6D1C] font-bold py-3 rounded-xl text-sm cursor-pointer">
+          Elegir archivo de respaldo…
+          <input type="file" accept="application/json,.json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) restaurar(f); e.target.value = ''; }} />
+        </label>
+      </div>
+
+      {msg && (
+        <p className={`text-sm font-semibold text-center rounded-xl px-4 py-3 mb-3 ${msg.tipo === 'ok' ? 'bg-[#EAF4EC] text-[#166534]' : 'bg-red-50 text-red-600'}`}>{msg.texto}</p>
+      )}
+
+      {estado.codigoUsado && (
+        <div className="card flex items-center gap-3">
+          <KeyRound className="h-4 w-4 text-[#C9A035] shrink-0" />
+          <div>
+            <p className="text-xs text-gray-500">Tu código de activación (guárdalo para soporte)</p>
+            <p className="font-bold text-sm tracking-widest">{estado.codigoUsado}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------- Guía ---------- */
 function PantallaGuia() {
   const [abierto, setAbierto] = useState<number | null>(null);
 
   return (
     <div className="max-w-md mx-auto px-5 pt-4">
-      <h1 className="text-2xl font-bold mb-1">Tu guía de bolsillo</h1>
+      <h1 className="text-2xl font-bold mb-1">Tu guía completa</h1>
       <p className="text-sm text-gray-500 mb-4">
-        Los recordatorios esenciales para consultar en segundos. El desarrollo completo — con las explicaciones, tablas y el paso a paso — está en tus <b>4 PDFs del kit</b>, que recibiste por correo.
+        Los {GUIA_CAPITULOS.length} capítulos del método, siempre contigo y sin conexión. Consulta lo que necesites, cuando lo necesites.
       </p>
 
       {GUIA_CAPITULOS.map((c, i) => (
@@ -1008,7 +1169,6 @@ function PantallaGuia() {
           {abierto === i && (
             <div className="px-4 pb-4 border-t border-gray-100 pt-3">
               <p className="text-sm text-gray-600 leading-relaxed">{c.texto}</p>
-              <p className="text-[10px] text-[#C9A035] font-semibold mt-2">📖 Versión resumida — el capítulo completo está en tu Guía Médica (Módulo 1)</p>
             </div>
           )}
         </div>

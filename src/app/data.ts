@@ -10,6 +10,7 @@ export type Receta = {
   suave: boolean;
   ing: string;
   prep: string;
+  exclusiva?: boolean; // receta bonus solo disponible en el app
 };
 
 export const RECETAS: Receta[] = [
@@ -48,6 +49,41 @@ export const RECETAS: Receta[] = [
   { id: 33, nombre: 'Gelatina proteica con frutos rojos', cat: 'snack', proteina: 12, min: 5, porciones: 2, suave: true, ing: 'Gelatina sin azúcar, ½ scoop proteína, frutos rojos.', prep: 'Disuelve la proteína antes de refrigerar. Fría y suave para estómagos sensibles.' },
   { id: 34, nombre: 'Edamames al vapor con sal marina', cat: 'snack', proteina: 11, min: 6, porciones: 1, suave: false, ing: '1 taza edamames, sal marina.', prep: 'Proteína vegetal completa para picar sin culpa.' },
   { id: 35, nombre: 'Manzana asada con canela y yogur', cat: 'snack', proteina: 10, min: 8, porciones: 1, suave: true, ing: '1 manzana, canela, 100 g yogur griego.', prep: 'Hornea o microondea la manzana en gajos; sirve tibia con el yogur.' },
+  // ---- 10 recetas bonus exclusivas del app ----
+  { id: 36, nombre: 'Huevos al horno con espinacas y ricotta', cat: 'desayuno', proteina: 21, min: 14, porciones: 1, suave: true, exclusiva: true, ing: '2 huevos, 1 taza espinacas, 2 cdas ricotta, aceite de oliva.', prep: 'En un molde pequeño: espinacas, ricotta y los huevos encima. Hornea 10–12 min a 180 °C hasta que la clara cuaje.' },
+  { id: 37, nombre: 'Tortitas de cottage y avena', cat: 'desayuno', proteina: 26, min: 12, porciones: 2, suave: false, exclusiva: true, ing: '½ taza cottage, 2 huevos, ½ taza avena, vainilla, canela.', prep: 'Licúa todo y cocina tortitas pequeñas a fuego medio, 2 min por lado. Van bien con frutos rojos.' },
+  { id: 38, nombre: 'Vaso de kéfir con plátano y linaza', cat: 'desayuno', proteina: 14, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '250 ml kéfir natural, ½ plátano, 1 cda linaza molida.', prep: 'Mezcla y listo. Los fermentados del kéfir ayudan a la digestión lenta del GLP-1.' },
+  { id: 39, nombre: 'Albóndigas de pavo con puré de calabaza', cat: 'principal', proteina: 34, min: 30, porciones: 2, suave: true, exclusiva: true, ing: '250 g pavo molido, 1 huevo, 2 cdas avena, ½ calabaza, aceite de oliva.', prep: 'Forma albóndigas y hornéalas 20 min a 200 °C. Sirve sobre el puré de calabaza con un hilo de oliva.' },
+  { id: 40, nombre: 'Estofado suave de res con verduras', cat: 'principal', proteina: 30, min: 35, porciones: 3, suave: true, exclusiva: true, ing: '300 g res magra en cubos, zanahoria, papa, apio, caldo bajo en sodio.', prep: 'Sella la carne, añade verduras y caldo, cocina tapado 30 min a fuego bajo. Congela en porciones.' },
+  { id: 41, nombre: 'Pasta integral con atún y tomate', cat: 'principal', proteina: 28, min: 15, porciones: 1, suave: false, exclusiva: true, ing: '60 g pasta integral, 1 lata atún en agua, tomate triturado, ajo, orégano.', prep: 'Cocina la pasta; saltea el tomate con ajo, integra el atún y mezcla todo.' },
+  { id: 42, nombre: 'Crema de brócoli con cottage', cat: 'principal', proteina: 18, min: 20, porciones: 2, suave: true, exclusiva: true, ing: '1 brócoli, ½ taza cottage, cebolla, caldo de verduras.', prep: 'Cocina el brócoli con la cebolla en el caldo, licúa con el cottage y sirve tibia.' },
+  { id: 43, nombre: 'Rollitos de jamón de pavo con queso', cat: 'snack', proteina: 12, min: 2, porciones: 1, suave: true, exclusiva: true, ing: '3 fetas jamón de pavo, 2 bastones de queso bajo en grasa.', prep: 'Enrolla y listo. Proteína inmediata sin cocinar.' },
+  { id: 44, nombre: 'Batido de cacao y proteína', cat: 'snack', proteina: 25, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '1 scoop proteína chocolate, 250 ml leche, 1 cdta cacao puro, hielo.', prep: 'Licúa todo. Sabe a postre, alimenta como una comida.' },
+  { id: 45, nombre: 'Tostada de ricotta con fresas', cat: 'snack', proteina: 11, min: 4, porciones: 1, suave: true, exclusiva: true, ing: '1 pan integral, 3 cdas ricotta, fresas laminadas, miel opcional.', prep: 'Unta la ricotta, cubre con fresas y un toque de miel si quieres.' },
+];
+
+// ---- Módulo 3: Lista de Supermercado Inteligente ----
+export type CategoriaSuper = { categoria: string; items: string[] };
+
+export const LISTA_SUPER: CategoriaSuper[] = [
+  { categoria: 'Proteínas', items: ['Pechuga de pollo o pavo', 'Huevos (compra de a docena)', 'Pescado blanco (merluza, tilapia)', 'Salmón', 'Atún en agua (latas)', 'Res magra', 'Tofu firme', 'Legumbres (lentejas, garbanzos, alubias)', 'Proteína en polvo (whey o vegetal)'] },
+  { categoria: 'Lácteos y huevos', items: ['Yogur griego natural sin azúcar', 'Queso cottage', 'Ricotta', 'Queso fresco bajo en grasa', 'Kéfir natural', 'Leche o bebida vegetal sin azúcar'] },
+  { categoria: 'Verduras', items: ['Hojas verdes (espinaca, lechuga, rúcula)', 'Brócoli y coliflor', 'Zanahoria', 'Calabacín', 'Calabaza', 'Tomate', 'Pepino', 'Champiñones', 'Pimiento', 'Apio y cebolla'] },
+  { categoria: 'Frutas', items: ['Frutos rojos (frescos o congelados)', 'Plátano', 'Manzana', 'Pera o durazno', 'Limón', 'Aguacate'] },
+  { categoria: 'Carbohidratos de calidad', items: ['Avena', 'Arroz integral', 'Quinoa', 'Batata', 'Pan integral', 'Tortillas integrales', 'Pasta integral', 'Tostadas de arroz'] },
+  { categoria: 'Grasas saludables', items: ['Aceite de oliva extra virgen', 'Frutos secos (almendras, nueces)', 'Semillas (chía, linaza, calabaza)', 'Mantequilla de maní natural'] },
+  { categoria: 'Despensa y alivio digestivo', items: ['Caldo bajo en sodio', 'Jengibre fresco o en infusión', 'Menta en infusión', 'Canela', 'Especias suaves (orégano, comino)', 'Gelatina sin azúcar', 'Miel (uso ocasional)'] },
+];
+
+export const ALIMENTOS_EVITAR: { nombre: string; razon: string }[] = [
+  { nombre: 'Frituras y comida rápida', razon: 'La grasa retrasa aún más el vaciado gástrico: es el disparador #1 de náuseas con GLP-1.' },
+  { nombre: 'Bebidas gaseosas (incluso light)', razon: 'El gas distiende un estómago que ya vacía lento — provoca pesadez, reflujo y eructos.' },
+  { nombre: 'Alcohol', razon: 'Irrita el estómago, aporta calorías vacías y potencia el mareo. Especialmente riesgoso el día de la dosis.' },
+  { nombre: 'Embutidos grasos y carnes procesadas', razon: 'Grasa + sodio: digestión pesada y retención de líquidos que enmascara tu progreso real.' },
+  { nombre: 'Salsas cremosas y quesos muy grasos', razon: 'Pequeñas cantidades concentran mucha grasa: malestar desproporcionado a lo que comiste.' },
+  { nombre: 'Picantes intensos', razon: 'Con el vaciado lento, el picante permanece más tiempo en el estómago: acidez y reflujo.' },
+  { nombre: 'Bollería, dulces y azúcar líquida', razon: 'Pico de glucosa sin saciedad: desplazan la proteína que tu músculo necesita.' },
+  { nombre: 'Porciones grandes (de lo que sea)', razon: 'Con GLP-1 el estómago procesa lento: media porción ahora vale más que una entera con malestar.' },
 ];
 
 export const PASOS_INYECCION = [
@@ -103,6 +139,22 @@ export const GUIA_CAPITULOS = [
   {
     titulo: 'El plato estándar GLP-1',
     texto: 'Cuando no quieras pensar: ½ del plato de verduras sin almidón · ¼ de proteína magra · ¼ de carbohidrato de calidad · 1 cucharada de grasa saludable. Funciona para almuerzo y cena, todos los días.',
+  },
+  {
+    titulo: 'Comer fuera de casa y eventos sociales',
+    texto: 'Restaurante: elige proteína a la plancha o al horno + verduras; pide las salsas aparte; media porción o pide para llevar desde el inicio. Eventos: come tu proteína antes de salir para llegar sin hambre voraz; ten una bebida sin gas en la mano (agua con limón funciona); nadie nota lo que no comes. Si te preguntan, "estoy cuidando mi digestión" cierra el tema sin dar explicaciones.',
+  },
+  {
+    titulo: 'Estreñimiento y digestión lenta',
+    texto: 'El GLP-1 enlentece todo el tránsito — el estreñimiento es el efecto secundario más subestimado. Protocolo: 25–30 g de fibra al día (avena, legumbres, verduras, chía) + 2 L de agua (la fibra sin agua empeora el problema) + caminata de 15–20 min después de comer + kiwi o ciruela por la mañana. Si pasan más de 4 días sin evacuar o hay dolor, consulta a tu médico — no te automediques con laxantes de forma habitual.',
+  },
+  {
+    titulo: 'Suplementos: cuáles valen la pena',
+    texto: 'Con apetito reducido es difícil cubrir todo con comida. Los que suelen valer: proteína en polvo (la herramienta #1 en días de poco apetito), fibra en polvo si no llegas a 25 g, y un multivitamínico simple como red de seguridad. Consulta con tu médico antes de sumar cualquiera — especialmente vitamina D y B12, que se miden en sangre. Lo que NO necesitas: quemadores de grasa, detox, colágeno "adelgazante". Con GLP-1, el medicamento ya hace ese trabajo.',
+  },
+  {
+    titulo: 'Preguntas frecuentes',
+    texto: '"¿Puedo tomar café?" — Sí, con el estómago no vacío; en días sensibles cámbialo por descafeinado o infusión. · "¿Se me cae el pelo?" — La pérdida rápida de peso puede causarlo temporalmente; la proteína suficiente es tu mejor prevención. · "¿Qué hago si vomité?" — Hidrata con sorbos pequeños, vuelve a alimentos blandos y registra el episodio; si se repite, habla con tu médico sobre la dosis. · "¿Puedo saltarme comidas si no tengo hambre?" — Evítalo: comidas pequeñas mantienen el músculo y evitan el bajón de energía. La proteína no es opcional aunque el hambre no aparezca.',
   },
 ];
 
