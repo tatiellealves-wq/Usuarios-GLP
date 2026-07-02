@@ -106,6 +106,9 @@ export const GUIA_CAPITULOS = [
   },
 ];
 
+// Código maestro legado: sigue válido para compradores antiguos.
+// Los códigos nuevos (únicos por venta) se validan con src/app/codigos.ts
+// y se generan con tools/generador-codigos.html.
 export const CLAVE_ACCESO = 'GLP1-VIP-2026';
 
 export type Ejercicio = { nombre: string; seg: number; nota: string };

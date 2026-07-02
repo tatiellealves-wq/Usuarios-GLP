@@ -29,6 +29,7 @@ export type PlanSemanal = Record<number, PlanDia>; // 0=domingo … 6=sábado
 
 export type Estado = {
   activado: boolean;
+  codigoUsado?: string; // código de activación introducido (para soporte)
   perfil?: Perfil;
   registros: Record<string, RegistroDia>;
   pesos: Peso[];

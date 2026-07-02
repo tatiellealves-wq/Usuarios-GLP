@@ -6,6 +6,7 @@ import {
 import {
   CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, RUTINAS, type Receta, type Rutina,
 } from './data';
+import { normalizarCodigo, validarCodigo } from './codigos';
 import {
   borrarFoto, comprimirImagen, esDiaDosis, guardarFoto, hoyISO, lbAKg, listarFotos,
   metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
@@ -21,7 +22,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('hoy');
 
   if (!estado.activado) {
-    return <Activacion onOk={() => setEstado((e) => ({ ...e, activado: true }))} />;
+    return <Activacion onOk={(codigo) => setEstado((e) => ({ ...e, activado: true, codigoUsado: codigo }))} />;
   }
   if (!estado.perfil) {
     return <Onboarding onDone={(perfil) => setEstado((e) => ({ ...e, perfil }))} />;
@@ -69,7 +70,7 @@ export default function App() {
 }
 
 /* ---------- Activación ---------- */
-function Activacion({ onOk }: { onOk: () => void }) {
+function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
   const [clave, setClave] = useState('');
   const [error, setError] = useState(false);
   return (
@@ -83,7 +84,8 @@ function Activacion({ onOk }: { onOk: () => void }) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (clave.trim().toUpperCase() === CLAVE_ACCESO) onOk();
+            const esMaestro = normalizarCodigo(clave) === normalizarCodigo(CLAVE_ACCESO);
+            if (validarCodigo(clave) || esMaestro) onOk(clave.trim().toUpperCase());
             else setError(true);
           }}
         >
