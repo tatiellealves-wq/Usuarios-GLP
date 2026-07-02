@@ -183,28 +183,13 @@ export default function App() {
               </h1>
 
               <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">Este kit es ese protocolo.</strong>
+                El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">El Sistema de 4 Módulos es ese protocolo.</strong>
               </p>
 
-              <div className="mb-6 flex items-center gap-4 justify-center lg:justify-start">
-                <div className="flex -space-x-2">
-                  {[['VM', 'bg-emerald-600'], ['CB', 'bg-teal-600'], ['DR', 'bg-green-700']].map(([initials, bg]) => (
-                    <div key={initials} className={`h-10 w-10 rounded-full border-2 border-white ${bg} flex items-center justify-center text-[11px] font-bold text-white`}>
-                      {initials}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-left text-xs text-green-100">
-                  <div className="flex items-center text-amber-500 gap-0.5">
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <span className="font-bold text-white ml-1">4.9/5</span>
-                  </div>
-                  <p>Más de <strong className="text-white">2,450 pacientes</strong> ya usan el protocolo</p>
-                </div>
+              <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 módulos en PDF</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
               </div>
 
               <div className="w-full sm:max-w-md">
@@ -215,7 +200,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Quiero el protocolo completo — US$ 9.90
+                    Quiero comer sin miedo — US$ 9.90
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
@@ -268,21 +253,16 @@ export default function App() {
       <div className="border-y border-green-100 bg-green-50 py-6 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
           <div className="text-center px-2 md:px-6">
-            <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">2,450+</p>
-            <p className="text-xs text-gray-600 mt-1 leading-snug">pacientes optimizando<br className="hidden md:block" /> su tratamiento GLP-1</p>
+            <p className="text-2xl md:text-3xl font-extrabold text-brand-green tabular-nums">4</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">módulos en PDF<br className="hidden md:block" /> con acceso inmediato</p>
           </div>
           <div className="text-center px-2 md:px-6">
-            <div className="flex items-center justify-center gap-0.5 mb-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 text-amber-400 fill-current" />
-              ))}
-            </div>
-            <p className="text-2xl md:text-3xl font-extrabold text-neutral-dark tabular-nums">4.9<span className="text-base font-bold text-gray-400">/5</span></p>
-            <p className="text-xs text-gray-600 mt-0.5">valoración promedio</p>
+            <p className="text-2xl md:text-3xl font-extrabold text-neutral-dark tabular-nums">35</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">recetas anti-náusea<br className="hidden md:block" /> con proteína calculada</p>
           </div>
           <div className="text-center px-2 md:px-6">
-            <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">100%</p>
-            <p className="text-xs text-gray-600 mt-1 leading-snug">garantía de devolución<br className="hidden md:block" /> en 7 días</p>
+            <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">12</p>
+            <p className="text-xs text-gray-600 mt-1 leading-snug">semanas de plan de salida<br className="hidden md:block" /> contra el efecto rebote</p>
           </div>
         </div>
       </div>
@@ -358,8 +338,11 @@ export default function App() {
             <p className="text-white/80 text-base font-semibold mb-2">
               Estos 5 problemas tienen una causa en común:
             </p>
-            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-8">
+            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-4">
               Nadie te enseñó a comer mientras usas el GLP-1.
+            </p>
+            <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
+              Inviertes hasta <strong className="text-white">US$ 1,200 al mes</strong> en el medicamento. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y hace que cada dólar del tratamiento trabaje completo.
             </p>
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
@@ -605,7 +588,7 @@ export default function App() {
           
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              Un protocolo completo para cada problema real
+              El Sistema de 4 Módulos: una respuesta para cada problema real
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
               Cada pieza del kit ataca uno de los 5 problemas que el GLP-1 trae sin advertencia. No es una guía genérica — es la respuesta específica a lo que estás viviendo ahora mismo.
@@ -793,7 +776,7 @@ export default function App() {
 
                   <div className="p-6 bg-emerald-950/20 text-center relative">
                     <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-bold tracking-wider py-0.5 px-2 rounded-full">RECOMENDADO</div>
-                    <span className="text-xs font-bold text-emerald-400 tracking-wide uppercase block mb-3">GLP-1 + Kit Inteligente</span>
+                    <span className="text-xs font-bold text-emerald-400 tracking-wide uppercase block mb-3">GLP-1 + Sistema de 4 Módulos</span>
                     <ul className="space-y-4 text-xs text-left text-white/70">
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
@@ -846,7 +829,7 @@ export default function App() {
               Lo que dicen nuestros pacientes
             </h2>
             <p className="text-gray-600 text-sm leading-relaxed max-w-lg mx-auto">
-              Más de 2,450 pacientes ya combinan su tratamiento GLP-1 con nuestro protocolo nutricional.
+              Pacientes que ya combinan su tratamiento GLP-1 con el Sistema de 4 Módulos.
             </p>
           </div>
 
@@ -913,7 +896,7 @@ export default function App() {
               <span>Quiero los mismos resultados — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
-            <p className="text-xs text-gray-500 mt-3">Más de 2,450 pacientes · Garantía 7 días · Acceso inmediato</p>
+            <p className="text-xs text-gray-500 mt-3">4 módulos · 35 recetas · Garantía 7 días · Acceso inmediato</p>
           </div>
 
         </div>
@@ -1039,10 +1022,10 @@ export default function App() {
 
           <div className="text-center md:text-left">
             <h3 className="font-bold font-display text-neutral-dark text-xl md:text-2xl mb-3">
-              Garantía Total de 7 Días — sin preguntas.
+              Garantía "Léelo Todo" — 7 días, sin preguntas.
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Quien invierte en su salud merece tomar decisiones sin riesgo. Si en 7 días sientes que este kit no es para ti, te devolvemos cada centavo — sin preguntas, sin formularios, sin esperas. Así de seguros estamos de lo que tienes en tus manos.
+              Descarga los 4 módulos, prueba 3 recetas y sigue el protocolo en tu próxima inyección. Si al final de los 7 días no sientes diferencia, escribe un correo y te devolvemos el 100% — sin preguntas, sin formularios, sin esperas. Todo el riesgo lo tomamos nosotros.
             </p>
           </div>
 
@@ -1166,6 +1149,41 @@ export default function App() {
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
                         Es exactamente para ti. El kit fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
+              <button
+                type="button"
+                onClick={() => toggleFaq(5)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
+              >
+                <span className="font-bold text-white text-sm md:text-base pr-4">
+                  ¿Esto no lo encuentro gratis en Google?
+                </span>
+                {activeFaq === 5 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {activeFaq === 5 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-white/10"
+                  >
+                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
+                      <p>
+                        La información suelta, sí. Lo que no encontrarás gratis es el sistema: qué comer exactamente el día de la inyección, 35 recetas con la proteína ya calculada para tu objetivo, la lista de compras que evita los alimentos que agravan los síntomas y el plan de salida de 12 semanas — todo organizado, verificado y en un solo lugar. Pagas por no tener que armar el rompecabezas tú misma, con tu salud, entre miles de artículos que se contradicen.
                       </p>
                     </div>
                   </motion.div>
