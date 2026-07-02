@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Guía GLP-1 · Tu acompañamiento diario</title>
+    <meta name="description" content="El app que te acompaña todos los días de tu tratamiento GLP-1." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0D3320" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Guía GLP-1" />
+    <link rel="manifest" href="/app/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/app/icon-192.png" />
+    <link rel="icon" href="/app/icon-192.png" />
+  </head>
+  <body>
+    <div id="root">
+      <div style="min-height:100vh;background:#0D3320;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
+        <p style="color:#D4AF37;font-weight:600;letter-spacing:.1em">Cargando tu guía…</p>
+      </div>
+    </div>
+    <script type="module" src="/src/app/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' }));
+      }
+    </script>
+  </body>
+</html>
