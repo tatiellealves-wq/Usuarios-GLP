@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import {
   Activity, BookOpen, Calendar, Check, ChevronDown, ChevronUp, Droplets,
-  Flame, Home, LineChart, Lock, Printer, Ruler, Search, Sparkles, Syringe, Utensils,
+  Flame, Home, LineChart, Lock, Printer, Ruler, Search, ShoppingCart, Sparkles, Syringe, Utensils,
 } from 'lucide-react';
 import {
   CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, type Receta,
 } from './data';
 import {
   esDiaDosis, hoyISO, lbAKg, metaProteina, racha, tendenciaSemanal, useEstado,
-  type Medidas, type Perfil, type RegistroDia,
+  type Comida, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
 } from './store';
 
-type Tab = 'hoy' | 'recetas' | 'progreso' | 'guia';
+type Tab = 'hoy' | 'recetas' | 'plan' | 'progreso' | 'guia';
 
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
@@ -34,8 +34,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
-      {tab === 'hoy' && <PantallaHoy perfil={perfil} reg={reg} setReg={setReg} registros={estado.registros} />}
+      {tab === 'hoy' && <PantallaHoy perfil={perfil} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
       {tab === 'recetas' && <PantallaRecetas />}
+      {tab === 'plan' && (
+        <PantallaPlan
+          perfil={perfil}
+          plan={estado.plan}
+          comprasHechas={estado.comprasHechas}
+          setPlan={(plan) => setEstado((e) => ({ ...e, plan }))}
+          toggleCompra={(item) => setEstado((e) => ({
+            ...e,
+            comprasHechas: e.comprasHechas.includes(item)
+              ? e.comprasHechas.filter((x) => x !== item)
+              : [...e.comprasHechas, item],
+          }))}
+        />
+      )}
       {tab === 'progreso' && (
         <PantallaProgreso
           estado={estado}
@@ -157,10 +171,15 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 }
 
 /* ---------- Hoy ---------- */
-function PantallaHoy({ perfil, reg, setReg, registros }: {
-  perfil: Perfil; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>;
+function PantallaHoy({ perfil, reg, setReg, registros, plan }: {
+  perfil: Perfil; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal;
 }) {
   const dosisHoy = esDiaDosis(perfil);
+  const planHoy = plan[new Date().getDay()] ?? {};
+  const comidasHoy = (Object.entries(planHoy) as [Comida, number][])
+    .map(([c, id]) => ({ c, r: RECETAS.find((x) => x.id === id)! }))
+    .filter((x) => x.r);
+  const proteinaPlan = comidasHoy.reduce((s, x) => s + x.r.proteina, 0);
   const dias = racha(registros);
   const fecha = new Date().toLocaleDateString('es-419', { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -180,6 +199,20 @@ function PantallaHoy({ perfil, reg, setReg, registros }: {
       </div>
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
+
+      {comidasHoy.length > 0 && (
+        <div className="card">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="font-bold">Tu menú de hoy</h2>
+            <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {metaProteina(perfil)} g</span>
+          </div>
+          {comidasHoy.map(({ c, r }) => (
+            <p key={c} className="text-sm text-gray-600 py-1 border-t border-gray-50 first:border-0">
+              <b className="capitalize text-[#1F2430]">{c}:</b> {r.nombre} <span className="text-xs text-gray-400">· {r.proteina} g · {r.min} min</span>
+            </p>
+          ))}
+        </div>
+      )}
 
       <div className="card">
         <h2 className="font-bold mb-3">Registro de hoy</h2>
@@ -341,6 +374,159 @@ function PantallaRecetas() {
         </div>
       ))}
       {!lista.length && <p className="text-center text-sm text-gray-400 py-10">Ninguna receta coincide con la búsqueda.</p>}
+    </div>
+  );
+}
+
+/* ---------- Plan semanal ---------- */
+const COMIDAS: { id: Comida; label: string; cats: Receta['cat'][] }[] = [
+  { id: 'desayuno', label: 'Desayuno', cats: ['desayuno'] },
+  { id: 'almuerzo', label: 'Almuerzo', cats: ['principal'] },
+  { id: 'cena', label: 'Cena', cats: ['principal'] },
+  { id: 'snack', label: 'Merienda', cats: ['snack'] },
+];
+const DIAS_CORTOS = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+
+function PantallaPlan({ perfil, plan, setPlan, comprasHechas, toggleCompra }: {
+  perfil: Perfil; plan: PlanSemanal; setPlan: (p: PlanSemanal) => void;
+  comprasHechas: string[]; toggleCompra: (item: string) => void;
+}) {
+  const [dia, setDia] = useState(new Date().getDay());
+  const [eligiendo, setEligiendo] = useState<Comida | null>(null);
+  const [verCompras, setVerCompras] = useState(false);
+
+  const planDia = plan[dia] ?? {};
+  const proteinaDia = COMIDAS.reduce((s, c) => {
+    const r = RECETAS.find((x) => x.id === planDia[c.id]);
+    return s + (r?.proteina ?? 0);
+  }, 0);
+  const meta = metaProteina(perfil);
+  const falta = meta - proteinaDia;
+
+  // Lista de compras: ingredientes de todas las recetas planificadas en la semana
+  const compras = useMemo(() => {
+    const porReceta = new Map<string, string[]>();
+    for (let d = 0; d < 7; d++) {
+      for (const c of COMIDAS) {
+        const r = RECETAS.find((x) => x.id === plan[d]?.[c.id]);
+        if (r && !porReceta.has(r.nombre)) {
+          porReceta.set(r.nombre, r.ing.replace(/\.$/, '').split(', ').map((s) => s.trim()));
+        }
+      }
+    }
+    return [...porReceta.entries()];
+  }, [plan]);
+
+  if (verCompras) {
+    return (
+      <div className="max-w-md mx-auto px-5 pt-8">
+        <button onClick={() => setVerCompras(false)} className="text-sm font-bold text-gray-500 mb-4">← Volver al plan</button>
+        <h1 className="text-2xl font-bold mb-1">Lista de compras</h1>
+        <p className="text-sm text-gray-500 mb-4">Generada con las recetas de tu semana. Marca lo que ya tienes en casa.</p>
+        {!compras.length && <p className="text-sm text-gray-400 py-8 text-center">Aún no planificaste ninguna comida esta semana.</p>}
+        {compras.map(([receta, items]) => (
+          <div key={receta} className="card">
+            <p className="font-bold text-sm mb-2">{receta}</p>
+            {items.map((it) => {
+              const key = `${receta}::${it}`;
+              const hecho = comprasHechas.includes(key);
+              return (
+                <button key={key} onClick={() => toggleCompra(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
+                  <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                    {hecho && <Check className="h-3 w-3 text-white" />}
+                  </span>
+                  <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
+                </button>
+              );
+            })}
+          </div>
+        ))}
+        <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Los básicos de despensa completos están en tu Lista de Supermercado (Módulo 3).</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-8">
+      <h1 className="text-2xl font-bold mb-1">Mi semana</h1>
+      <p className="text-sm text-gray-500 mb-4">Planifica una vez y repite: tu semana tipo, siempre a mano.</p>
+
+      <div className="grid grid-cols-7 gap-1.5 mb-4">
+        {DIAS_CORTOS.map((d, i) => {
+          const tiene = Object.keys(plan[i] ?? {}).length > 0;
+          return (
+            <button key={i} onClick={() => setDia(i)} className={`py-2.5 rounded-xl text-sm font-bold border relative ${dia === i ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-500'}`}>
+              {d}
+              {tiene && <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full ${dia === i ? 'bg-[#D4AF37]' : 'bg-[#166534]'}`} />}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className={`rounded-xl px-4 py-3 mb-3 text-sm font-semibold ${falta <= 0 ? 'bg-[#EAF4EC] text-[#166534]' : proteinaDia > 0 ? 'bg-[#FDF6E3] text-[#8A6D1C]' : 'bg-gray-50 text-gray-400'}`}>
+        {proteinaDia === 0 ? `Meta del día: ~${meta} g de proteína` : falta <= 0 ? `¡${DIAS[dia]} completo! ~${proteinaDia} g de proteína ✓` : `Este ${DIAS[dia].toLowerCase()} te faltan ~${falta} g de proteína`}
+      </div>
+
+      {COMIDAS.map((c) => {
+        const r = RECETAS.find((x) => x.id === planDia[c.id]);
+        return (
+          <button key={c.id} onClick={() => setEligiendo(c.id)} className="card w-full text-left !mb-2.5 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{c.label}</p>
+              {r ? (
+                <p className="text-sm font-semibold">{r.nombre} <span className="text-xs text-gray-400 font-normal">· {r.proteina} g · {r.min} min</span></p>
+              ) : (
+                <p className="text-sm text-gray-400">Toca para elegir…</p>
+              )}
+            </div>
+            <ChevronDown className="h-4 w-4 text-gray-300 shrink-0" />
+          </button>
+        );
+      })}
+
+      <button onClick={() => setVerCompras(true)} className="w-full mt-3 bg-[#C9A035] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow">
+        <ShoppingCart className="h-4 w-4" /> Lista de compras de la semana
+      </button>
+
+      {eligiendo && (
+        <SelectorReceta
+          cats={COMIDAS.find((c) => c.id === eligiendo)!.cats}
+          onPick={(id) => {
+            setPlan({ ...plan, [dia]: { ...planDia, [eligiendo]: id } });
+            setEligiendo(null);
+          }}
+          onQuitar={() => {
+            const nuevo = { ...planDia }; delete nuevo[eligiendo];
+            setPlan({ ...plan, [dia]: nuevo });
+            setEligiendo(null);
+          }}
+          onCerrar={() => setEligiendo(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function SelectorReceta({ cats, onPick, onQuitar, onCerrar }: {
+  cats: Receta['cat'][]; onPick: (id: number) => void; onQuitar: () => void; onCerrar: () => void;
+}) {
+  const [soloSuaves, setSoloSuaves] = useState(false);
+  const lista = RECETAS.filter((r) => cats.includes(r.cat) && (!soloSuaves || r.suave));
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-end" onClick={onCerrar}>
+      <div className="bg-white w-full max-w-md mx-auto rounded-t-3xl p-5 max-h-[75vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="font-bold">Elige la receta</h2>
+          <button onClick={() => setSoloSuaves(!soloSuaves)} className={`text-xs font-bold px-3 py-1.5 rounded-full border ${soloSuaves ? 'bg-[#28415E] text-white border-[#28415E]' : 'border-gray-200 text-gray-500'}`}>Solo suaves</button>
+        </div>
+        {lista.map((r) => (
+          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-3 border-t border-gray-100">
+            <p className="text-sm font-semibold">{r.nombre}</p>
+            <p className="text-xs text-gray-400">{r.proteina} g proteína · {r.min} min{r.suave ? ' · suave' : ''}</p>
+          </button>
+        ))}
+        <button onClick={onQuitar} className="w-full mt-3 py-3 rounded-xl text-sm font-bold text-red-500 bg-red-50">Quitar de este día</button>
+      </div>
     </div>
   );
 }
@@ -583,12 +769,13 @@ function TabBar({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
   const items: { id: Tab; icon: React.ReactNode; label: string }[] = [
     { id: 'hoy', icon: <Home className="h-5 w-5" />, label: 'Hoy' },
     { id: 'recetas', icon: <Utensils className="h-5 w-5" />, label: 'Recetas' },
+    { id: 'plan', icon: <Calendar className="h-5 w-5" />, label: 'Semana' },
     { id: 'progreso', icon: <LineChart className="h-5 w-5" />, label: 'Progreso' },
-    { id: 'guia', icon: <Calendar className="h-5 w-5" />, label: 'Guía' },
+    { id: 'guia', icon: <BookOpen className="h-5 w-5" />, label: 'Guía' },
   ];
   return (
     <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-gray-200 print:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="max-w-md mx-auto grid grid-cols-4">
+      <div className="max-w-md mx-auto grid grid-cols-5">
         {items.map((it) => (
           <button key={it.id} onClick={() => setTab(it.id)} className={`flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-bold ${tab === it.id ? 'text-[#166534]' : 'text-gray-400'}`}>
             {it.icon}{it.label}
