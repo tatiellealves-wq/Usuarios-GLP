@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Activity, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
   Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Printer, Ruler, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
@@ -42,6 +42,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
+      <div key={tab} className="anim-screen">
       {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
@@ -66,8 +67,25 @@ export default function App() {
         />
       )}
       {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} />}
+      </div>
       <TabBar tab={tab} setTab={setTab} />
     </div>
+  );
+}
+
+/* ---------- Emblema botánico (la firma visual del kit) ---------- */
+function EmblemaBotanico({ className, color = '#D4AF37' }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" fill="none" className={`emblema ${className ?? ''}`} aria-hidden="true">
+      <path pathLength={1} d="M60 108 C58 82 62 50 60 16" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path pathLength={1} d="M60 90 Q42 86 33 94 Q45 102 60 90 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 90 Q78 86 87 94 Q75 102 60 90 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 66 Q44 61 36 68 Q47 76 60 66 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 66 Q76 61 84 68 Q73 76 60 66 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 44 Q47 38 41 45 Q51 52 60 44 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 44 Q73 38 79 45 Q69 52 60 44 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 16 Q53 25 60 32 Q67 25 60 16 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -75,37 +93,62 @@ export default function App() {
 function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
   const [clave, setClave] = useState('');
   const [error, setError] = useState(false);
+  const [ok, setOk] = useState(false);
+
+  const enviar = (e: React.FormEvent) => {
+    e.preventDefault();
+    const esMaestro = normalizarCodigo(clave) === normalizarCodigo(CLAVE_ACCESO);
+    if (validarCodigo(clave) || esMaestro) {
+      setOk(true);
+      setTimeout(() => onOk(clave.trim().toUpperCase()), 1200);
+    } else setError(true);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A2A18] via-[#10381F] to-[#17452A] flex items-center justify-center p-6">
-      <div className="w-full max-w-sm text-center">
-        <div className="mx-auto h-16 w-16 rounded-2xl bg-[#166534] flex items-center justify-center mb-5">
-          <Activity className="h-8 w-8 text-[#D4AF37]" />
-        </div>
-        <h1 className="text-white font-bold text-2xl mb-1">Guía GLP-1</h1>
-        <p className="text-green-200/70 text-sm mb-8">Tu acompañamiento diario del tratamiento</p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const esMaestro = normalizarCodigo(clave) === normalizarCodigo(CLAVE_ACCESO);
-            if (validarCodigo(clave) || esMaestro) onOk(clave.trim().toUpperCase());
-            else setError(true);
-          }}
-        >
-          <label className="block text-left text-xs font-semibold text-green-100 mb-2 uppercase tracking-wider">
-            Código de acceso
-          </label>
-          <input
-            value={clave}
-            onChange={(e) => { setClave(e.target.value); setError(false); }}
-            placeholder="Lo recibiste por correo con tu compra"
-            className="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 px-4 py-3.5 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-          />
-          {error && <p className="text-red-300 text-xs mt-2">Código no válido. Revisa el correo de tu compra.</p>}
-          <button type="submit" className="w-full mt-4 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2">
-            <Lock className="h-4 w-4" /> Activar mi app
-          </button>
-        </form>
-        <p className="text-white/40 text-[11px] mt-6">¿No encuentras tu código? Escribe a soporte@guiaglp1.com</p>
+    <div className="min-h-screen relative overflow-hidden bg-[#0A2A18] flex items-center justify-center p-6">
+      <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-[#D4AF37]/10 blur-3xl glow-drift" aria-hidden="true" />
+      <div className="absolute -bottom-40 -left-28 h-96 w-96 rounded-full bg-[#16A34A]/10 blur-3xl" aria-hidden="true" />
+
+      <div className="w-full max-w-sm text-center relative">
+        {ok ? (
+          <div className="anim-fade-up" role="status">
+            <div className="mx-auto h-20 w-20 rounded-full bg-[#D4AF37] flex items-center justify-center mb-5 anim-pop">
+              <Check className="h-10 w-10 text-[#0A2A18] stroke-[3px]" />
+            </div>
+            <h1 className="text-white font-bold text-2xl mb-1">Código verificado</h1>
+            <p className="text-[#D4AF37] text-sm">Preparando tu guía…</p>
+          </div>
+        ) : (
+          <>
+            <EmblemaBotanico className="mx-auto h-24 w-24 mb-1" />
+            <p className="anim-fade-up d1 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[.28em] mb-2">Bienvenida a tu kit digital</p>
+            <h1 className="anim-fade-up d2 text-white font-bold text-3xl leading-tight mb-2">
+              Guía GLP-1 <span className="text-[#D4AF37]">Inteligente</span>
+            </h1>
+            <p className="anim-fade-up d3 text-green-100/60 text-sm mb-2 leading-relaxed">
+              El acompañamiento premium de tu tratamiento —<br />cada día, en tu bolsillo.
+            </p>
+            <p className="anim-fade-up d3 text-white/30 text-[10px] uppercase tracking-[.18em] mb-8">
+              45 recetas ✦ Diario ✦ Plan de salida ✦ 100% offline
+            </p>
+            <form onSubmit={enviar} className="anim-fade-up d4">
+              <label className="block text-left text-xs font-semibold text-green-100 mb-2 uppercase tracking-wider">
+                Código de acceso <span className="text-white/40 normal-case tracking-normal font-normal">· llegó a tu correo</span>
+              </label>
+              <input
+                value={clave}
+                onChange={(e) => { setClave(e.target.value); setError(false); }}
+                placeholder="GLP1-XXXX-XXXX"
+                className="w-full rounded-2xl bg-white/[.08] border border-white/20 text-white placeholder-white/40 px-4 py-4 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+              />
+              {error && <p className="text-red-300 text-xs mt-2" role="alert">Código no válido. Revisa el correo de tu compra.</p>}
+              <button type="submit" className="w-full mt-4 bg-[#D4AF37] hover:bg-[#C9A035] text-[#0A2A18] font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20">
+                <Lock className="h-4 w-4" /> Activar mi app
+              </button>
+            </form>
+            <p className="anim-fade-up d5 text-white/35 text-[11px] mt-6">¿No encuentras tu código? Escribe a soporte@guiaglp1.com</p>
+          </>
+        )}
       </div>
     </div>
   );
@@ -126,9 +169,13 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
   return (
     <div className="min-h-screen bg-[#FBF9F5] p-6 flex flex-col justify-center">
       <div className="max-w-sm mx-auto w-full">
-        <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Bienvenida</p>
-        <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
-        <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
+        <div className="anim-fade-up">
+          <EmblemaBotanico className="h-14 w-14 -ml-1 mb-1" color="#166534" />
+          <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Bienvenida</p>
+          <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
+          <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
+        </div>
+        <div className="anim-fade-up d2">
 
         <label className="lbl">¿Cómo te llamas?</label>
         <input className="inp" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
@@ -174,6 +221,7 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         >
           Empezar mi acompañamiento
         </button>
+        </div>
       </div>
     </div>
   );
@@ -201,7 +249,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
         </div>
         {dias > 0 && (
           <div className="text-center bg-[#F7F0DF] border border-[#E5D7B2] rounded-xl px-3 py-1.5">
-            <p className="text-lg font-extrabold text-[#C9A035] leading-none flex items-center gap-1"><Flame className="h-4 w-4" />{dias}</p>
+            <p className="text-lg font-extrabold text-[#C9A035] leading-none flex items-center gap-1"><Flame className="h-4 w-4 anim-flame" />{dias}</p>
             <p className="text-[10px] text-[#8A6D1C] font-semibold">días seguidos</p>
           </div>
         )}
@@ -329,7 +377,7 @@ function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<
           <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-1.5">{fase}</p>
           {PASOS_INYECCION.filter((p) => p.fase === fase).map((p) => (
             <button key={p.id} onClick={() => toggle(p.id)} className="w-full flex items-start gap-2.5 text-left py-1.5">
-              <span className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37]' : 'border-white/40'}`}>
+              <span className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37] anim-pop' : 'border-white/40'}`}>
                 {hechos.includes(p.id) && <Check className="h-3 w-3 text-[#0D3320]" />}
               </span>
               <span className={`text-xs leading-snug ${hechos.includes(p.id) ? 'text-white/50 line-through' : 'text-white/90'}`}>{p.texto}</span>
@@ -406,7 +454,18 @@ function PantallaRecetas() {
           )}
         </div>
       ))}
-      {!lista.length && <p className="text-center text-sm text-gray-400 py-10">Ninguna receta coincide con la búsqueda.</p>}
+      {!lista.length && (
+        <div className="text-center py-10 anim-fade-up">
+          <svg viewBox="0 0 80 64" className="h-16 mx-auto mb-3" fill="none" aria-hidden="true">
+            <path d="M12 34 H68 A28 28 0 0 1 40 60 A28 28 0 0 1 12 34 Z" stroke="#C9A035" strokeWidth="2.2" strokeLinejoin="round" />
+            <path d="M28 24 Q31 17 28 10" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M40 26 Q43 19 40 12" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M52 24 Q55 17 52 10" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
+          <p className="text-sm text-gray-500 font-semibold">Ninguna receta coincide</p>
+          <p className="text-xs text-gray-400 mt-1">Prueba con otra palabra o quita los filtros.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -464,7 +523,7 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
               const hecho = comprasHechas.includes(key);
               return (
                 <button key={key} onClick={() => toggleCompra(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
-                  <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                  <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
                     {hecho && <Check className="h-3 w-3 text-white" />}
                   </span>
                   <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
@@ -606,7 +665,15 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
           )}
         </div>
         {tendencia.length >= 2 ? <GraficoLinea datos={tendencia} /> : (
-          <p className="text-xs text-gray-400 mb-3">Registra tu peso 2 veces por semana — aquí verás la tendencia semanal (más estable y honesta que el número diario).</p>
+          <div className="flex items-center gap-4 mb-3">
+            <svg viewBox="0 0 72 56" className="h-14 shrink-0" fill="none" aria-hidden="true">
+              <path d="M36 52 C35 42 37 34 36 26" stroke="#166534" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M36 36 Q26 33 21 38 Q28 43 36 36 Z" stroke="#166534" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M36 26 Q45 22 50 27 Q43 33 36 26 Z" stroke="#166534" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M10 20 Q28 26 40 14 Q52 4 64 8" stroke="#C9A035" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="1 6" />
+            </svg>
+            <p className="text-xs text-gray-400">Registra tu peso 2 veces por semana — aquí verás la tendencia semanal (más estable y honesta que el número diario).</p>
+          </div>
         )}
         <div className="flex gap-2 mt-2">
           <input value={pesoInput} onChange={(e) => setPesoInput(e.target.value)} type="number" inputMode="decimal" placeholder={`Peso de hoy (kg)`} className="inp flex-1 !mb-0" />
@@ -932,13 +999,24 @@ function TimerRutina({ rutina, onFin, onSalir }: { rutina: Rutina; onFin: () => 
 
   const ej = rutina.ejercicios[idx];
   const siguiente = rutina.ejercicios[idx + 1];
+  const total = fase === 'trabajo' ? ej.seg : 20;
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-[#0A2A18] to-[#17452A] text-white flex flex-col items-center justify-center p-8 text-center">
       <p className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-1">{rutina.nombre} · {idx + 1} de {rutina.ejercicios.length}</p>
       <h2 className="text-2xl font-bold mb-2">{fase === 'trabajo' ? ej.nombre : 'Descansa 💨'}</h2>
       <p className="text-sm text-green-100/70 mb-6 max-w-xs">{fase === 'trabajo' ? ej.nota : siguiente ? `Siguiente: ${siguiente.nombre}` : ''}</p>
-      <p className="text-7xl font-extrabold tabular-nums mb-8" style={{ color: fase === 'trabajo' ? '#fff' : '#D4AF37' }}>{seg}</p>
+      <div className="relative h-52 w-52 mb-8">
+        <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90">
+          <circle cx="100" cy="100" r="88" stroke="rgba(255,255,255,.12)" strokeWidth="7" fill="none" />
+          <circle
+            cx="100" cy="100" r="88" stroke="#D4AF37" strokeWidth="7" fill="none" strokeLinecap="round"
+            pathLength={1} strokeDasharray="1" strokeDashoffset={1 - Math.max(0, seg) / total}
+            style={{ transition: 'stroke-dashoffset 1s linear' }}
+          />
+        </svg>
+        <p className="absolute inset-0 flex items-center justify-center text-7xl font-extrabold tabular-nums" style={{ color: fase === 'trabajo' ? '#fff' : '#D4AF37' }}>{seg}</p>
+      </div>
       <div className="flex gap-3">
         <button onClick={() => setPausa(!pausa)} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm">{pausa ? 'Continuar ▶' : 'Pausa ⏸'}</button>
         <button onClick={onSalir} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm text-white/60">Salir</button>
@@ -1006,7 +1084,7 @@ function PlanSalida({ estado, setEstado }: {
             const hecho = salida.checks.includes(key);
             return (
               <button key={key} onClick={() => toggle(key)} className="w-full flex items-start gap-2.5 py-1.5 text-left">
-                <span className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                <span className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
                   {hecho && <Check className="h-3 w-3 text-white" />}
                 </span>
                 <span className={`text-xs leading-snug ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
@@ -1066,7 +1144,7 @@ function PantallaSuper({ estado, setEstado }: {
                 const hecho = hechos.includes(key);
                 return (
                   <button key={key} onClick={() => toggle(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
-                    <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                    <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
                       {hecho && <Check className="h-3 w-3 text-white" />}
                     </span>
                     <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
