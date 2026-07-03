@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>App Compañera Diaria — Guía GLP-1 Inteligente</title>
+<meta name="description" content="La guía te enseñó qué hacer. El app hace que lo hagas — cada día." />
+<style>
+  @font-face { font-family:'Poppins'; font-weight:600; font-display:swap; src:url('/app/fonts/Poppins-600.ttf'); }
+  @font-face { font-family:'Poppins'; font-weight:700; font-display:swap; src:url('/app/fonts/Poppins-700.ttf'); }
+
+  :root{
+    --verde-900:#0A2A18; --verde-800:#10381F; --verde-700:#17452A;
+    --oro:#D4AF37; --oro-h:#C9A035; --crema:#F4EFE2;
+    --tinta:#EAF3EC; --tenue:rgba(220,235,222,.62);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--verde-900);
+    color:var(--tinta);
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{font-family:'Poppins',system-ui,sans-serif;letter-spacing:-.01em;line-height:1.12}
+  .wrap{max-width:960px;margin:0 auto;padding:0 22px}
+
+  /* ---- fondo con brillo ---- */
+  .hero{
+    position:relative;
+    background:radial-gradient(120% 90% at 50% -10%, var(--verde-700), var(--verde-900) 62%);
+    padding:52px 0 40px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;pointer-events:none}
+  .glow.a{width:340px;height:340px;background:rgba(212,175,55,.22);top:-120px;right:-80px}
+  .glow.b{width:300px;height:300px;background:rgba(22,163,74,.20);bottom:-140px;left:-100px}
+
+  .emblema{width:56px;height:56px;margin:0 auto 14px;display:block}
+  .eyebrow{color:var(--oro);font:700 11px/1 'Poppins';text-transform:uppercase;letter-spacing:.24em;margin-bottom:16px}
+  h1{font-size:clamp(27px,6.4vw,44px);font-weight:700;color:#fff;max-width:16ch;margin:0 auto 8px}
+  h1 .g{color:var(--oro)}
+  .sub{color:var(--tenue);font-size:clamp(15px,3.6vw,18px);max-width:34ch;margin:0 auto 30px}
+
+  /* ---- teléfonos ---- */
+  .phones{display:flex;justify-content:center;align-items:flex-end;gap:16px;margin-bottom:34px}
+  .phone{
+    width:min(42vw,208px);
+    background:#05170D;
+    border-radius:30px;
+    padding:7px;
+    box-shadow:0 24px 60px -18px rgba(0,0,0,.7), 0 0 0 1px rgba(212,175,55,.18);
+  }
+  .phone img{width:100%;display:block;border-radius:24px}
+  .phone.tras{transform:translateY(16px) scale(.92);opacity:.9}
+
+  /* ---- CTA ---- */
+  .cta{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    background:var(--oro);color:var(--verde-900);
+    font:700 17px/1 'Poppins';
+    padding:18px 34px;border-radius:16px;text-decoration:none;
+    box-shadow:0 14px 30px -10px rgba(212,175,55,.55);
+    transition:transform .14s ease, background .14s ease;
+    max-width:400px;width:100%;
+  }
+  .cta:hover{background:var(--oro-h);transform:translateY(-2px)}
+  .cta:active{transform:translateY(0)}
+  .cta .arrow{font-size:20px;line-height:0}
+  .precio-linea{margin-top:14px;color:var(--tenue);font-size:13px}
+  .precio-linea b{color:#fff}
+
+  /* ---- beneficios ---- */
+  .beneficios{padding:48px 0 8px}
+  .beneficios h2{text-align:center;color:#fff;font-size:clamp(21px,5vw,28px);margin-bottom:6px}
+  .beneficios .lead{text-align:center;color:var(--tenue);font-size:15px;max-width:40ch;margin:0 auto 30px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:680px;margin:0 auto}
+  .item{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;padding:18px 18px 20px;
+  }
+  .item .chk{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:8px;background:rgba(212,175,55,.16);
+    color:var(--oro);font-size:15px;font-weight:700;margin-bottom:10px;
+  }
+  .item h3{font:700 15px/1.3 'Poppins';color:#fff;margin-bottom:4px}
+  .item p{color:var(--tenue);font-size:13.5px}
+
+  /* ---- cierre precio ---- */
+  .cierre{padding:44px 0 20px;text-align:center}
+  .card{
+    max-width:440px;margin:0 auto;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(212,175,55,.28);
+    border-radius:22px;padding:32px 26px;
+  }
+  .card .precio{font:700 46px/1 'Poppins';color:#fff}
+  .card .precio sup{font-size:20px;color:var(--oro);vertical-align:super;margin-right:2px}
+  .card .unico{color:var(--tenue);font-size:13px;margin:6px 0 22px;text-transform:uppercase;letter-spacing:.12em}
+  .trust{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:18px;color:var(--tenue);font-size:12.5px}
+  .trust span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--oro)}
+
+  footer{padding:30px 22px 40px;text-align:center;color:rgba(200,215,202,.4);font-size:11.5px;line-height:1.7}
+
+  @media (max-width:520px){
+    .grid{grid-template-columns:1fr}
+    .phone.tras{display:none}
+    .phone{width:64vw}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <span class="glow a"></span><span class="glow b"></span>
+    <div class="wrap">
+      <svg class="emblema" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <path d="M60 108 C58 82 62 50 60 16" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+        <path d="M60 90 Q42 86 33 94 Q45 102 60 90 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 90 Q78 86 87 94 Q75 102 60 90 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 66 Q44 61 36 68 Q47 76 60 66 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 66 Q76 61 84 68 Q73 76 60 66 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 44 Q47 38 41 45 Q51 52 60 44 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 44 Q73 38 79 45 Q69 52 60 44 Z" stroke="#D4AF37" stroke-width="1.8"/>
+        <path d="M60 16 Q53 25 60 32 Q67 25 60 16 Z" stroke="#D4AF37" stroke-width="1.8"/>
+      </svg>
+      <p class="eyebrow">Una oferta solo para ti</p>
+      <h1>La guía te enseñó qué hacer.<br /><span class="g">El app hace que lo hagas.</span></h1>
+      <p class="sub">Tu compañía diaria para el tratamiento con GLP-1 — cada día, sin pensar.</p>
+
+      <div class="phones">
+        <div class="phone tras"><img src="/oferta/app-2.webp" width="480" height="727" alt="Pantalla de progreso: curva de peso bajando" loading="lazy" /></div>
+        <div class="phone"><img src="/oferta/app-1.webp" width="480" height="727" alt="Pantalla de hoy con el día de dosis guiado" /></div>
+      </div>
+
+      <a class="cta" href="https://pay.hotmart.com/REEMPLAZAR-LINK-CHECKOUT?checkoutMode=10">
+        Quiero mi app — US$ 27 <span class="arrow">→</span>
+      </a>
+      <p class="precio-linea">Pago único · <b>acceso inmediato</b> · garantía de 7 días</p>
+    </div>
+  </section>
+
+  <section class="beneficios">
+    <div class="wrap">
+      <h2>Todo tu tratamiento, en un solo lugar</h2>
+      <p class="lead">No es más información. Es lo que hace que la información pase a la acción, todos los días.</p>
+      <div class="grid">
+        <div class="item">
+          <span class="chk">✓</span>
+          <h3>Registro en 2 minutos</h3>
+          <p>Náuseas, energía, agua y proteína — y el app te muestra tu patrón.</p>
+        </div>
+        <div class="item">
+          <span class="chk">✓</span>
+          <h3>Tu día de dosis, guiado</h3>
+          <p>El app sabe qué día es y abre solo el checklist de antes y después.</p>
+        </div>
+        <div class="item">
+          <span class="chk">✓</span>
+          <h3>45 recetas altas en proteína</h3>
+          <p>Las 35 del kit + 10 exclusivas del app, con filtro para días sensibles.</p>
+        </div>
+        <div class="item">
+          <span class="chk">✓</span>
+          <h3>Tu progreso, visible</h3>
+          <p>Curva de peso, fotos privadas e informe listo para tu médico.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cierre">
+    <div class="wrap">
+      <div class="card">
+        <div class="precio"><sup>US$</sup>27</div>
+        <p class="unico">Un solo pago · acceso de por vida</p>
+        <a class="cta" href="https://pay.hotmart.com/REEMPLAZAR-LINK-CHECKOUT?checkoutMode=10">
+          Activar mi app ahora <span class="arrow">→</span>
+        </a>
+        <div class="trust">
+          <span><span class="dot"></span> Pago 100% seguro</span>
+          <span><span class="dot"></span> Acceso inmediato</span>
+          <span><span class="dot"></span> Garantía 7 días</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    App Compañera Diaria · Guía GLP-1 Inteligente<br />
+    Recurso educativo · no sustituye a tu equipo de salud · soporte@guiaglp1.com
+  </footer>
+
+</body>
+</html>
