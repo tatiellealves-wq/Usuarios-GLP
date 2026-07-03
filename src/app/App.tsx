@@ -121,7 +121,7 @@ function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
         ) : (
           <>
             <EmblemaBotanico className="mx-auto h-24 w-24 mb-1" />
-            <p className="anim-fade-up d1 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[.28em] mb-2">Bienvenida a tu kit digital</p>
+            <p className="anim-fade-up d1 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[.28em] mb-2">Te damos la bienvenida a tu kit digital</p>
             <h1 className="anim-fade-up d2 text-white font-bold text-3xl leading-tight mb-2">
               Guía GLP-1 <span className="text-[#D4AF37]">Inteligente</span>
             </h1>
@@ -171,7 +171,7 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
       <div className="max-w-sm mx-auto w-full">
         <div className="anim-fade-up">
           <EmblemaBotanico className="h-14 w-14 -ml-1 mb-1" color="#166534" />
-          <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Bienvenida</p>
+          <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Te damos la bienvenida</p>
           <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
           <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
         </div>
@@ -872,7 +872,7 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
             ))}</tbody>
           </table>
         </>)}
-        <p className="text-[10px] text-gray-400">Registro personal de la paciente vía app Guía GLP-1 Inteligente. No constituye historial clínico.</p>
+        <p className="text-[10px] text-gray-400">Registro personal del o de la paciente vía app Guía GLP-1 Inteligente. No constituye historial clínico.</p>
       </div>
     </div>
   );
