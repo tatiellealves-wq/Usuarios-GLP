@@ -18,6 +18,7 @@ export type RegistroDia = {
   agua: number;
   proteina: boolean;
   pasosInyeccion?: string[];
+  nota?: string; // diario: qué comí, cómo me sentí
 };
 
 export type Peso = { fecha: string; kg: number };
@@ -29,19 +30,21 @@ export type PlanSemanal = Record<number, PlanDia>; // 0=domingo … 6=sábado
 
 export type Estado = {
   activado: boolean;
+  codigoUsado?: string; // código de activación introducido (para soporte)
   perfil?: Perfil;
   registros: Record<string, RegistroDia>;
   pesos: Peso[];
   medidas: Medidas[];
   plan: PlanSemanal;
   comprasHechas: string[]; // ítems marcados de la lista de compras
+  despensaHecha: string[]; // ítems marcados de la Lista de Supermercado (Módulo 3)
   salida?: { inicio: string; checks: string[] };
   rutinasHechas: string[]; // 'YYYY-MM-DD:rutinaId'
 };
 
 const KEY = 'glp1app-v1';
 
-const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [], rutinasHechas: [] };
+const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [], despensaHecha: [], rutinasHechas: [] };
 
 function cargar(): Estado {
   try {
@@ -57,6 +60,35 @@ export function useEstado() {
     localStorage.setItem(KEY, JSON.stringify(estado));
   }, [estado]);
   return [estado, setEstado] as const;
+}
+
+// ---- Copia de seguridad (las fotos viven en IndexedDB y no se incluyen) ----
+export function exportarDatos(estado: Estado): void {
+  const respaldo = { app: 'glp1app', version: 1, exportado: new Date().toISOString(), datos: estado };
+  const blob = new Blob([JSON.stringify(respaldo, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `guia-glp1-respaldo-${hoyISO()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+export function importarDatos(file: File): Promise<Estado> {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const json = JSON.parse(String(reader.result));
+        const datos = json?.app === 'glp1app' ? json.datos : json; // acepta respaldo o estado crudo
+        if (!datos || typeof datos !== 'object' || typeof datos.activado !== 'boolean') {
+          rej(new Error('archivo no reconocido')); return;
+        }
+        res({ ...inicial, ...datos });
+      } catch { rej(new Error('archivo dañado')); }
+    };
+    reader.onerror = () => rej(reader.error);
+    reader.readAsText(file);
+  });
 }
 
 export const hoyISO = () => {

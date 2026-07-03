@@ -1,14 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Activity, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Droplets,
-  Flame, Home, LineChart, Lock, Printer, Ruler, Search, ShoppingCart, Sparkles, Syringe, Utensils,
+  BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Printer, Ruler, Search, ShieldCheck,
+  ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
 import {
-  CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, PASOS_INYECCION, RECETAS, RUTINAS, type Receta, type Rutina,
+  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, PASOS_INYECCION,
+  RECETAS, RUTINAS, type Receta, type Rutina,
 } from './data';
+import { normalizarCodigo, validarCodigo } from './codigos';
 import {
-  borrarFoto, comprimirImagen, esDiaDosis, guardarFoto, hoyISO, lbAKg, listarFotos,
-  metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
+  borrarFoto, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, importarDatos,
+  lbAKg, listarFotos, metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
   type Comida, type Foto, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
 } from './store';
 
@@ -21,7 +24,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('hoy');
 
   if (!estado.activado) {
-    return <Activacion onOk={() => setEstado((e) => ({ ...e, activado: true }))} />;
+    return <Activacion onOk={(codigo) => setEstado((e) => ({ ...e, activado: true, codigoUsado: codigo }))} />;
   }
   if (!estado.perfil) {
     return <Onboarding onDone={(perfil) => setEstado((e) => ({ ...e, perfil }))} />;
@@ -39,6 +42,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
+      <div key={tab} className="anim-screen">
       {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
@@ -63,45 +67,88 @@ export default function App() {
         />
       )}
       {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} />}
+      </div>
       <TabBar tab={tab} setTab={setTab} />
     </div>
   );
 }
 
+/* ---------- Emblema botánico (la firma visual del kit) ---------- */
+function EmblemaBotanico({ className, color = '#D4AF37' }: { className?: string; color?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" fill="none" className={`emblema ${className ?? ''}`} aria-hidden="true">
+      <path pathLength={1} d="M60 108 C58 82 62 50 60 16" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path pathLength={1} d="M60 90 Q42 86 33 94 Q45 102 60 90 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 90 Q78 86 87 94 Q75 102 60 90 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 66 Q44 61 36 68 Q47 76 60 66 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 66 Q76 61 84 68 Q73 76 60 66 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 44 Q47 38 41 45 Q51 52 60 44 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 44 Q73 38 79 45 Q69 52 60 44 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path pathLength={1} d="M60 16 Q53 25 60 32 Q67 25 60 16 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /* ---------- Activación ---------- */
-function Activacion({ onOk }: { onOk: () => void }) {
+function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
   const [clave, setClave] = useState('');
   const [error, setError] = useState(false);
+  const [ok, setOk] = useState(false);
+
+  const enviar = (e: React.FormEvent) => {
+    e.preventDefault();
+    const esMaestro = normalizarCodigo(clave) === normalizarCodigo(CLAVE_ACCESO);
+    if (validarCodigo(clave) || esMaestro) {
+      setOk(true);
+      setTimeout(() => onOk(clave.trim().toUpperCase()), 1200);
+    } else setError(true);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A2A18] via-[#10381F] to-[#17452A] flex items-center justify-center p-6">
-      <div className="w-full max-w-sm text-center">
-        <div className="mx-auto h-16 w-16 rounded-2xl bg-[#166534] flex items-center justify-center mb-5">
-          <Activity className="h-8 w-8 text-[#D4AF37]" />
-        </div>
-        <h1 className="text-white font-bold text-2xl mb-1">Guía GLP-1</h1>
-        <p className="text-green-200/70 text-sm mb-8">Tu acompañamiento diario del tratamiento</p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (clave.trim().toUpperCase() === CLAVE_ACCESO) onOk();
-            else setError(true);
-          }}
-        >
-          <label className="block text-left text-xs font-semibold text-green-100 mb-2 uppercase tracking-wider">
-            Código de acceso
-          </label>
-          <input
-            value={clave}
-            onChange={(e) => { setClave(e.target.value); setError(false); }}
-            placeholder="Lo recibiste por correo con tu compra"
-            className="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 px-4 py-3.5 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
-          />
-          {error && <p className="text-red-300 text-xs mt-2">Código no válido. Revisa el correo de tu compra.</p>}
-          <button type="submit" className="w-full mt-4 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2">
-            <Lock className="h-4 w-4" /> Activar mi app
-          </button>
-        </form>
-        <p className="text-white/40 text-[11px] mt-6">¿No encuentras tu código? Escribe a soporte@guiaglp1.com</p>
+    <div className="min-h-screen relative overflow-hidden bg-[#0A2A18] flex items-center justify-center p-6">
+      <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-[#D4AF37]/10 blur-3xl glow-drift" aria-hidden="true" />
+      <div className="absolute -bottom-40 -left-28 h-96 w-96 rounded-full bg-[#16A34A]/10 blur-3xl" aria-hidden="true" />
+
+      <div className="w-full max-w-sm text-center relative">
+        {ok ? (
+          <div className="anim-fade-up" role="status">
+            <div className="mx-auto h-20 w-20 rounded-full bg-[#D4AF37] flex items-center justify-center mb-5 anim-pop">
+              <Check className="h-10 w-10 text-[#0A2A18] stroke-[3px]" />
+            </div>
+            <h1 className="text-white font-bold text-2xl mb-1">Código verificado</h1>
+            <p className="text-[#D4AF37] text-sm">Preparando tu guía…</p>
+          </div>
+        ) : (
+          <>
+            <EmblemaBotanico className="mx-auto h-24 w-24 mb-1" />
+            <p className="anim-fade-up d1 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[.28em] mb-2">Bienvenida a tu kit digital</p>
+            <h1 className="anim-fade-up d2 text-white font-bold text-3xl leading-tight mb-2">
+              Guía GLP-1 <span className="text-[#D4AF37]">Inteligente</span>
+            </h1>
+            <p className="anim-fade-up d3 text-green-100/60 text-sm mb-2 leading-relaxed">
+              El acompañamiento premium de tu tratamiento —<br />cada día, en tu bolsillo.
+            </p>
+            <p className="anim-fade-up d3 text-white/30 text-[10px] uppercase tracking-[.18em] mb-8">
+              45 recetas ✦ Diario ✦ Plan de salida ✦ 100% offline
+            </p>
+            <form onSubmit={enviar} className="anim-fade-up d4">
+              <label className="block text-left text-xs font-semibold text-green-100 mb-2 uppercase tracking-wider">
+                Código de acceso <span className="text-white/40 normal-case tracking-normal font-normal">· llegó a tu correo</span>
+              </label>
+              <input
+                value={clave}
+                onChange={(e) => { setClave(e.target.value); setError(false); }}
+                placeholder="GLP1-XXXX-XXXX"
+                className="w-full rounded-2xl bg-white/[.08] border border-white/20 text-white placeholder-white/40 px-4 py-4 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+              />
+              {error && <p className="text-red-300 text-xs mt-2" role="alert">Código no válido. Revisa el correo de tu compra.</p>}
+              <button type="submit" className="w-full mt-4 bg-[#D4AF37] hover:bg-[#C9A035] text-[#0A2A18] font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20">
+                <Lock className="h-4 w-4" /> Activar mi app
+              </button>
+            </form>
+            <p className="anim-fade-up d5 text-white/35 text-[11px] mt-6">¿No encuentras tu código? Escribe a soporte@guiaglp1.com</p>
+          </>
+        )}
       </div>
     </div>
   );
@@ -122,9 +169,13 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
   return (
     <div className="min-h-screen bg-[#FBF9F5] p-6 flex flex-col justify-center">
       <div className="max-w-sm mx-auto w-full">
-        <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Bienvenida</p>
-        <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
-        <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
+        <div className="anim-fade-up">
+          <EmblemaBotanico className="h-14 w-14 -ml-1 mb-1" color="#166534" />
+          <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Bienvenida</p>
+          <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
+          <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
+        </div>
+        <div className="anim-fade-up d2">
 
         <label className="lbl">¿Cómo te llamas?</label>
         <input className="inp" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
@@ -170,6 +221,7 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         >
           Empezar mi acompañamiento
         </button>
+        </div>
       </div>
     </div>
   );
@@ -197,7 +249,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
         </div>
         {dias > 0 && (
           <div className="text-center bg-[#F7F0DF] border border-[#E5D7B2] rounded-xl px-3 py-1.5">
-            <p className="text-lg font-extrabold text-[#C9A035] leading-none flex items-center gap-1"><Flame className="h-4 w-4" />{dias}</p>
+            <p className="text-lg font-extrabold text-[#C9A035] leading-none flex items-center gap-1"><Flame className="h-4 w-4 anim-flame" />{dias}</p>
             <p className="text-[10px] text-[#8A6D1C] font-semibold">días seguidos</p>
           </div>
         )}
@@ -210,6 +262,9 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-bold">Tu menú de hoy</h2>
             <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {meta} g</span>
+          </div>
+          <div className="h-1.5 bg-gray-100 rounded-full mb-2 overflow-hidden">
+            <div className="h-full bg-[#166534] rounded-full transition-all" style={{ width: `${Math.min(100, Math.round((proteinaPlan / meta) * 100))}%` }} />
           </div>
           {comidasHoy.map(({ c, r }) => (
             <p key={c} className="text-sm text-gray-600 py-1 border-t border-gray-50 first:border-0">
@@ -248,6 +303,18 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
           {reg.proteina ? `Proteína del día cumplida (~${meta} g) ✓` : `¿Cumpliste tu meta de ~${meta} g de proteína?`}
         </button>
+
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <p className="text-sm font-semibold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
+          <textarea
+            value={reg.nota ?? ''}
+            onChange={(e) => setReg({ nota: e.target.value })}
+            placeholder="¿Qué comiste? ¿Cómo te sentiste? Ej.: 'el yogur me cayó perfecto, la cena grasosa me dio náuseas'"
+            rows={2}
+            className="w-full bg-[#FBF9F5] border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#166534]/30"
+          />
+          <p className="text-[10px] text-gray-400 mt-1">Con el tiempo, tus notas revelan qué alimentos te caen bien y cuáles no — evidencia de oro para tu próxima consulta.</p>
+        </div>
       </div>
 
       {!dosisHoy && (
@@ -310,7 +377,7 @@ function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<
           <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-1.5">{fase}</p>
           {PASOS_INYECCION.filter((p) => p.fase === fase).map((p) => (
             <button key={p.id} onClick={() => toggle(p.id)} className="w-full flex items-start gap-2.5 text-left py-1.5">
-              <span className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37]' : 'border-white/40'}`}>
+              <span className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${hechos.includes(p.id) ? 'bg-[#D4AF37] border-[#D4AF37] anim-pop' : 'border-white/40'}`}>
                 {hechos.includes(p.id) && <Check className="h-3 w-3 text-[#0D3320]" />}
               </span>
               <span className={`text-xs leading-snug ${hechos.includes(p.id) ? 'text-white/50 line-through' : 'text-white/90'}`}>{p.texto}</span>
@@ -337,7 +404,11 @@ function PantallaRecetas() {
 
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
-      <h1 className="text-2xl font-bold mb-4">Recetas</h1>
+      <div className="flex items-baseline justify-between mb-1">
+        <h1 className="text-2xl font-bold">Recetas</h1>
+        <span className="text-xs font-bold text-[#8A6D1C]">{RECETAS.length} recetas</span>
+      </div>
+      <p className="text-xs text-gray-500 mb-4">Las 35 del kit + <b className="text-[#8A6D1C]">10 exclusivas del app ✦</b></p>
 
       <p className="text-xs font-semibold text-gray-500 mb-2">¿Cómo está tu estómago hoy?</p>
       <div className="flex gap-2 mb-3">
@@ -372,6 +443,7 @@ function PantallaRecetas() {
               <span className="tag bg-[#F7F0DF] text-[#8A6D1C]">{r.min} min</span>
               <span className="tag bg-gray-100 text-gray-500">{r.porciones} porción{r.porciones > 1 ? 'es' : ''}</span>
               {r.suave && <span className="tag bg-[#EAF1FB] text-[#28415E]">Suave</span>}
+              {r.exclusiva && <span className="tag bg-[#C9A035] text-white">✦ Solo App</span>}
             </div>
           </button>
           {abierta === r.id && (
@@ -382,7 +454,18 @@ function PantallaRecetas() {
           )}
         </div>
       ))}
-      {!lista.length && <p className="text-center text-sm text-gray-400 py-10">Ninguna receta coincide con la búsqueda.</p>}
+      {!lista.length && (
+        <div className="text-center py-10 anim-fade-up">
+          <svg viewBox="0 0 80 64" className="h-16 mx-auto mb-3" fill="none" aria-hidden="true">
+            <path d="M12 34 H68 A28 28 0 0 1 40 60 A28 28 0 0 1 12 34 Z" stroke="#C9A035" strokeWidth="2.2" strokeLinejoin="round" />
+            <path d="M28 24 Q31 17 28 10" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M40 26 Q43 19 40 12" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M52 24 Q55 17 52 10" stroke="#A9C0A9" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
+          <p className="text-sm text-gray-500 font-semibold">Ninguna receta coincide</p>
+          <p className="text-xs text-gray-400 mt-1">Prueba con otra palabra o quita los filtros.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -440,7 +523,7 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
               const hecho = comprasHechas.includes(key);
               return (
                 <button key={key} onClick={() => toggleCompra(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
-                  <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                  <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
                     {hecho && <Check className="h-3 w-3 text-white" />}
                   </span>
                   <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
@@ -449,7 +532,7 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
             })}
           </div>
         ))}
-        <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Los básicos de despensa completos están en tu Lista de Supermercado (Módulo 3).</p>
+        <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Los básicos de despensa completos están en Más → Lista de Supermercado Inteligente.</p>
       </div>
     );
   }
@@ -582,7 +665,15 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
           )}
         </div>
         {tendencia.length >= 2 ? <GraficoLinea datos={tendencia} /> : (
-          <p className="text-xs text-gray-400 mb-3">Registra tu peso 2 veces por semana — aquí verás la tendencia semanal (más estable y honesta que el número diario).</p>
+          <div className="flex items-center gap-4 mb-3">
+            <svg viewBox="0 0 72 56" className="h-14 shrink-0" fill="none" aria-hidden="true">
+              <path d="M36 52 C35 42 37 34 36 26" stroke="#166534" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M36 36 Q26 33 21 38 Q28 43 36 36 Z" stroke="#166534" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M36 26 Q45 22 50 27 Q43 33 36 26 Z" stroke="#166534" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M10 20 Q28 26 40 14 Q52 4 64 8" stroke="#C9A035" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="1 6" />
+            </svg>
+            <p className="text-xs text-gray-400">Registra tu peso 2 veces por semana — aquí verás la tendencia semanal (más estable y honesta que el número diario).</p>
+          </div>
         )}
         <div className="flex gap-2 mt-2">
           <input value={pesoInput} onChange={(e) => setPesoInput(e.target.value)} type="number" inputMode="decimal" placeholder={`Peso de hoy (kg)`} className="inp flex-1 !mb-0" />
@@ -763,6 +854,15 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
           </tbody>
         </table>
 
+        {regs.some((r) => r.nota?.trim()) && (<>
+          <h2 className="font-bold text-sm mb-2">Notas del diario (últimas)</h2>
+          <div className="text-xs mb-4">
+            {regs.filter((r) => r.nota?.trim()).slice(-7).map((r) => (
+              <p key={r.fecha} className="border-t border-gray-100 py-1.5"><b>{r.fecha}</b> — {r.nota}</p>
+            ))}
+          </div>
+        </>)}
+
         {medidas.length > 0 && (<>
           <h2 className="font-bold text-sm mb-2">Medidas (cm)</h2>
           <table className="w-full text-xs mb-4">
@@ -782,16 +882,20 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
 function PantallaMas({ estado, setEstado }: {
   estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
 }) {
-  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida'>('menu');
+  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
 
   if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
   if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
+  if (vista === 'super') return <ConVolver onVolver={() => setVista('menu')}><PantallaSuper estado={estado} setEstado={setEstado} /></ConVolver>;
+  if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
-    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía de bolsillo', sub: 'Los recordatorios esenciales del kit, offline' },
+    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
+    { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5 text-[#C9A035]" />, titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5 text-[#C9A035]" />, titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
     { id: 'salida' as const, icon: <Sparkles className="h-5 w-5 text-[#C9A035]" />, titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
+    { id: 'respaldo' as const, icon: <ShieldCheck className="h-5 w-5 text-[#C9A035]" />, titulo: 'Copia de seguridad', sub: 'Respalda o restaura tus datos — todo queda contigo' },
   ];
 
   return (
@@ -895,13 +999,24 @@ function TimerRutina({ rutina, onFin, onSalir }: { rutina: Rutina; onFin: () => 
 
   const ej = rutina.ejercicios[idx];
   const siguiente = rutina.ejercicios[idx + 1];
+  const total = fase === 'trabajo' ? ej.seg : 20;
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-[#0A2A18] to-[#17452A] text-white flex flex-col items-center justify-center p-8 text-center">
       <p className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-1">{rutina.nombre} · {idx + 1} de {rutina.ejercicios.length}</p>
       <h2 className="text-2xl font-bold mb-2">{fase === 'trabajo' ? ej.nombre : 'Descansa 💨'}</h2>
       <p className="text-sm text-green-100/70 mb-6 max-w-xs">{fase === 'trabajo' ? ej.nota : siguiente ? `Siguiente: ${siguiente.nombre}` : ''}</p>
-      <p className="text-7xl font-extrabold tabular-nums mb-8" style={{ color: fase === 'trabajo' ? '#fff' : '#D4AF37' }}>{seg}</p>
+      <div className="relative h-52 w-52 mb-8">
+        <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90">
+          <circle cx="100" cy="100" r="88" stroke="rgba(255,255,255,.12)" strokeWidth="7" fill="none" />
+          <circle
+            cx="100" cy="100" r="88" stroke="#D4AF37" strokeWidth="7" fill="none" strokeLinecap="round"
+            pathLength={1} strokeDasharray="1" strokeDashoffset={1 - Math.max(0, seg) / total}
+            style={{ transition: 'stroke-dashoffset 1s linear' }}
+          />
+        </svg>
+        <p className="absolute inset-0 flex items-center justify-center text-7xl font-extrabold tabular-nums" style={{ color: fase === 'trabajo' ? '#fff' : '#D4AF37' }}>{seg}</p>
+      </div>
       <div className="flex gap-3">
         <button onClick={() => setPausa(!pausa)} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm">{pausa ? 'Continuar ▶' : 'Pausa ⏸'}</button>
         <button onClick={onSalir} className="bg-white/10 border border-white/20 rounded-xl px-6 py-3 font-bold text-sm text-white/60">Salir</button>
@@ -969,7 +1084,7 @@ function PlanSalida({ estado, setEstado }: {
             const hecho = salida.checks.includes(key);
             return (
               <button key={key} onClick={() => toggle(key)} className="w-full flex items-start gap-2.5 py-1.5 text-left">
-                <span className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534]' : 'border-gray-300'}`}>
+                <span className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
                   {hecho && <Check className="h-3 w-3 text-white" />}
                 </span>
                 <span className={`text-xs leading-snug ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
@@ -986,15 +1101,141 @@ function PlanSalida({ estado, setEstado }: {
   );
 }
 
+/* ---------- Módulo 3: Lista de Supermercado Inteligente ---------- */
+function PantallaSuper({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [tab, setTab] = useState<'si' | 'no'>('si');
+  const hechos = estado.despensaHecha;
+  const total = LISTA_SUPER.reduce((s, c) => s + c.items.length, 0);
+  const toggle = (key: string) =>
+    setEstado((e) => ({
+      ...e,
+      despensaHecha: e.despensaHecha.includes(key) ? e.despensaHecha.filter((x) => x !== key) : [...e.despensaHecha, key],
+    }));
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Lista de Supermercado</h1>
+      <p className="text-sm text-gray-500 mb-4">Si el 80% de tu carrito sale de esta lista, la mitad del trabajo está hecho antes de cocinar.</p>
+
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setTab('si')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'si' ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-600'}`}>
+          <Check className="h-4 w-4" /> Sí llevar
+        </button>
+        <button onClick={() => setTab('no')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'no' ? 'bg-[#8C2F2F] text-white border-[#8C2F2F]' : 'bg-white border-gray-200 text-gray-600'}`}>
+          <X className="h-4 w-4" /> Mejor no
+        </button>
+      </div>
+
+      {tab === 'si' ? (
+        <>
+          <div className="rounded-xl bg-[#EAF4EC] border border-[#CBE3D1] px-4 py-3 mb-3 flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#166534]">{hechos.length} de {total} en tu despensa</p>
+            {hechos.length > 0 && (
+              <button onClick={() => setEstado((e) => ({ ...e, despensaHecha: [] }))} className="text-xs font-bold text-[#166534]/60">Desmarcar todo</button>
+            )}
+          </div>
+          {LISTA_SUPER.map((c) => (
+            <div key={c.categoria} className="card">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035] mb-1.5">{c.categoria}</p>
+              {c.items.map((it) => {
+                const key = `${c.categoria}::${it}`;
+                const hecho = hechos.includes(key);
+                return (
+                  <button key={key} onClick={() => toggle(key)} className="w-full flex items-center gap-2.5 py-1.5 text-left">
+                    <span className={`h-4 w-4 rounded border flex items-center justify-center shrink-0 ${hecho ? 'bg-[#166534] border-[#166534] anim-pop' : 'border-gray-300'}`}>
+                      {hecho && <Check className="h-3 w-3 text-white" />}
+                    </span>
+                    <span className={`text-sm ${hecho ? 'text-gray-300 line-through' : 'text-gray-600'}`}>{it}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <p className="text-xs text-gray-500 mb-3">No es prohibición — es información. Estos son los que más síntomas provocan con GLP-1, y el porqué:</p>
+          {ALIMENTOS_EVITAR.map((a) => (
+            <div key={a.nombre} className="card !border-[#F0D9D9] bg-[#FDF8F8]">
+              <p className="font-bold text-sm text-[#8C2F2F] flex items-start gap-2"><X className="h-4 w-4 mt-0.5 shrink-0" />{a.nombre}</p>
+              <p className="text-xs text-gray-600 mt-1 ml-6 leading-relaxed">{a.razon}</p>
+            </div>
+          ))}
+          <p className="text-[10px] text-gray-400 text-center mt-2 mb-4">Regla 80/20: si el 80% viene de la lista Sí, el 20% tiene espacio sin culpa.</p>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Copia de seguridad ---------- */
+function CopiaSeguridad({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null);
+
+  const restaurar = async (file: File) => {
+    try {
+      const nuevo = await importarDatos(file);
+      if (confirm('¿Restaurar este respaldo? Reemplazará los datos actuales del app en este dispositivo.')) {
+        setEstado(() => nuevo);
+        setMsg({ tipo: 'ok', texto: 'Respaldo restaurado correctamente ✓' });
+      }
+    } catch {
+      setMsg({ tipo: 'error', texto: 'No se pudo leer el archivo. Verifica que sea un respaldo del app (.json).' });
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Copia de seguridad</h1>
+      <p className="text-sm text-gray-500 mb-4">Tus datos viven solo en este dispositivo — esa es tu privacidad. Un respaldo te protege si cambias de teléfono o borras el navegador.</p>
+
+      <div className="card">
+        <p className="font-bold text-sm mb-1 flex items-center gap-2"><Download className="h-4 w-4 text-[#C9A035]" /> Descargar respaldo</p>
+        <p className="text-xs text-gray-500 mb-3">Registros, pesos, medidas, plan semanal y progreso — en un archivo que guardas donde quieras. (Las fotos no se incluyen: son demasiado pesadas.)</p>
+        <button onClick={() => { exportarDatos(estado); setMsg({ tipo: 'ok', texto: 'Respaldo descargado ✓' }); }} className="w-full bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">
+          Descargar mi respaldo
+        </button>
+      </div>
+
+      <div className="card">
+        <p className="font-bold text-sm mb-1 flex items-center gap-2"><Upload className="h-4 w-4 text-[#C9A035]" /> Restaurar respaldo</p>
+        <p className="text-xs text-gray-500 mb-3">En tu teléfono nuevo: activa el app con tu código y restaura aquí tu archivo de respaldo.</p>
+        <label className="block w-full text-center bg-[#F7F0DF] border border-[#E5D7B2] text-[#8A6D1C] font-bold py-3 rounded-xl text-sm cursor-pointer">
+          Elegir archivo de respaldo…
+          <input type="file" accept="application/json,.json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) restaurar(f); e.target.value = ''; }} />
+        </label>
+      </div>
+
+      {msg && (
+        <p className={`text-sm font-semibold text-center rounded-xl px-4 py-3 mb-3 ${msg.tipo === 'ok' ? 'bg-[#EAF4EC] text-[#166534]' : 'bg-red-50 text-red-600'}`}>{msg.texto}</p>
+      )}
+
+      {estado.codigoUsado && (
+        <div className="card flex items-center gap-3">
+          <KeyRound className="h-4 w-4 text-[#C9A035] shrink-0" />
+          <div>
+            <p className="text-xs text-gray-500">Tu código de activación (guárdalo para soporte)</p>
+            <p className="font-bold text-sm tracking-widest">{estado.codigoUsado}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------- Guía ---------- */
 function PantallaGuia() {
   const [abierto, setAbierto] = useState<number | null>(null);
 
   return (
     <div className="max-w-md mx-auto px-5 pt-4">
-      <h1 className="text-2xl font-bold mb-1">Tu guía de bolsillo</h1>
+      <h1 className="text-2xl font-bold mb-1">Tu guía completa</h1>
       <p className="text-sm text-gray-500 mb-4">
-        Los recordatorios esenciales para consultar en segundos. El desarrollo completo — con las explicaciones, tablas y el paso a paso — está en tus <b>4 PDFs del kit</b>, que recibiste por correo.
+        Los {GUIA_CAPITULOS.length} capítulos del método, siempre contigo y sin conexión. Consulta lo que necesites, cuando lo necesites.
       </p>
 
       {GUIA_CAPITULOS.map((c, i) => (
@@ -1006,7 +1247,6 @@ function PantallaGuia() {
           {abierto === i && (
             <div className="px-4 pb-4 border-t border-gray-100 pt-3">
               <p className="text-sm text-gray-600 leading-relaxed">{c.texto}</p>
-              <p className="text-[10px] text-[#C9A035] font-semibold mt-2">📖 Versión resumida — el capítulo completo está en tu Guía Médica (Módulo 1)</p>
             </div>
           )}
         </div>
