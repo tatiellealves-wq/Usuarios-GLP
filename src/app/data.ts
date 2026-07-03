@@ -173,7 +173,7 @@ export const RUTINAS: Rutina[] = [
     ejercicios: [
       { nombre: 'Sentadilla a la silla', seg: 40, nota: 'Baja hasta rozar la silla y sube. Piernas y glúteos firmes.' },
       { nombre: 'Flexiones en la pared', seg: 40, nota: 'Manos en la pared a la altura del pecho. Brazos y pecho.' },
-      { nombre: 'Puente de glúteos', seg: 40, nota: 'Acostada, eleva la cadera apretando glúteos 2 segundos arriba.' },
+      { nombre: 'Puente de glúteos', seg: 40, nota: 'Boca arriba, eleva la cadera apretando glúteos 2 segundos arriba.' },
       { nombre: 'Remo con botellas', seg: 40, nota: 'Inclínate y lleva las botellas (1–2 L) hacia las costillas. Espalda.' },
       { nombre: 'Elevación de talones', seg: 40, nota: 'De pie, sube a las puntas. Pantorrillas y estabilidad.' },
       { nombre: 'Plancha con rodillas', seg: 30, nota: 'Antebrazos y rodillas apoyados, abdomen apretado, espalda recta.' },
@@ -184,7 +184,7 @@ export const RUTINAS: Rutina[] = [
     ejercicios: [
       { nombre: 'Flexiones en la pared', seg: 40, nota: 'Versión inclinada si quieres más reto: manos en una mesa.' },
       { nombre: 'Curl con botellas', seg: 40, nota: 'Codos pegados al cuerpo, sube las botellas controlando la bajada.' },
-      { nombre: 'Press de hombros sentada', seg: 40, nota: 'Botellas desde los hombros hacia arriba, sin arquear la espalda.' },
+      { nombre: 'Press de hombros en la silla', seg: 40, nota: 'Botellas desde los hombros hacia arriba, sin arquear la espalda.' },
       { nombre: 'Remo con botellas', seg: 40, nota: 'El mejor amigo de tu postura.' },
       { nombre: 'Apertura de brazos', seg: 40, nota: 'Brazos en cruz, círculos pequeños hacia atrás.' },
     ],
@@ -195,7 +195,7 @@ export const RUTINAS: Rutina[] = [
       { nombre: 'Sentadilla a la silla', seg: 40, nota: 'El ejercicio más valioso del tratamiento.' },
       { nombre: 'Zancada corta apoyada', seg: 40, nota: 'Un paso al frente con la mano en la pared. Alterna piernas.' },
       { nombre: 'Puente de glúteos', seg: 40, nota: 'Aprieta arriba 2 segundos.' },
-      { nombre: 'Patada de glúteo de pie', seg: 40, nota: 'Apoyada en la silla, lleva el talón hacia atrás. Alterna.' },
+      { nombre: 'Patada de glúteo de pie', seg: 40, nota: 'Con apoyo en la silla, lleva el talón hacia atrás. Alterna.' },
       { nombre: 'Elevación de talones', seg: 40, nota: 'Termina sintiendo las pantorrillas despiertas.' },
     ],
   },
