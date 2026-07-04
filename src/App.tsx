@@ -236,6 +236,69 @@ export default function App() {
         </div>
       </section>
 
+      {/* Lo que recibes hoy — respuesta inmediata a "¿qué estoy comprando?" */}
+      <FadeIn>
+      <section className="py-14 px-6 bg-white border-b border-green-100">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-brand-green bg-green-50 border border-green-200/70 rounded-full px-3 py-1 mb-3">
+              <Check className="h-3.5 w-3.5" /> Acceso inmediato tras la compra
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-2">
+              Esto es lo que recibes hoy
+            </h2>
+            <p className="text-gray-500">Todo junto, en un solo acceso — sin esperas y sin envíos.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { t: 'App del Reto de 21 días', s: 'Tu plan día a día, guiado paso a paso en el celular', star: true },
+              { t: 'Guía nutricional completa', s: 'El método entero, capítulo por capítulo' },
+              { t: '35 recetas anti-náusea', s: 'Con la proteína de cada plato ya calculada' },
+              { t: 'Lista de compras inteligente', s: 'Qué sí llevar y qué evitar en el súper' },
+              { t: 'Plan de salida anti-rebote', s: '12 semanas para no recuperar el peso' },
+              { t: 'Diario alimentario', s: 'Registra cómo te sientes y descubre tus patrones' },
+              { t: 'Actualizaciones futuras', s: 'Nuevas recetas y mejoras, sin costo extra' },
+            ].map((it) => (
+              <div
+                key={it.t}
+                className={`flex items-start gap-3 rounded-2xl border p-4 ${it.star ? 'border-brand-green/40 bg-green-50/80 sm:col-span-2' : 'border-green-100 bg-green-50/30'}`}
+              >
+                <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-brand-green flex items-center justify-center">
+                  <Check className="h-4 w-4 text-white stroke-[3px]" />
+                </span>
+                <div>
+                  <p className="font-bold text-neutral-dark flex items-center gap-2 flex-wrap">
+                    {it.t}
+                    {it.star && (
+                      <span className="text-[10px] uppercase tracking-wide font-bold text-brand-green bg-white border border-brand-green/30 rounded-full px-2 py-0.5">
+                        Producto principal
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-sm text-gray-500 leading-snug">{it.s}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+              onClick={triggerCheckout}
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-brand-green-vibrant/20 transition-all duration-300 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/30"
+            >
+              Quiero todo esto — US$ 19.90 <ArrowRight className="h-5 w-5" />
+            </a>
+            <p className="text-xs text-gray-400 mt-3 flex items-center justify-center gap-4">
+              <span className="inline-flex items-center gap-1"><Lock className="h-3.5 w-3.5 text-brand-gold" /> Pago 100% seguro</span>
+              <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-brand-gold" /> 7 días de garantía</span>
+            </p>
+          </div>
+        </div>
+      </section>
+      </FadeIn>
+
       <FadeIn>
       <div className="border-y border-green-100 bg-green-50 py-6 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-gray-100">
