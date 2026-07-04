@@ -68,16 +68,24 @@ export default function App() {
   const [calcCurrentProtein, setCalcCurrentProtein] = useState<string>('low');
   const [isCalced, setIsCalced] = useState(false);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
+  const [variant, setVariant] = useState<'base' | 'reto'>('base');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const v = new URLSearchParams(window.location.search).get('v');
+      if (v === 'reto') setVariant('reto');
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'ViewContent', {
-        content_name: 'Guia GLP-1 Inteligente',
+        content_name: variant === 'reto' ? 'Guia GLP-1 Inteligente (Reto)' : 'Guia GLP-1 Inteligente',
         value: 9.9,
         currency: 'USD',
       });
     }
-  }, []);
+  }, [variant]);
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
@@ -110,7 +118,11 @@ export default function App() {
     }
 
     if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'InitiateCheckout', { value: 9.9, currency: 'USD' });
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: variant === 'reto' ? 'Guia GLP-1 Inteligente (Reto)' : 'Guia GLP-1 Inteligente',
+        value: 9.9,
+        currency: 'USD',
+      });
     }
 
     window.location.href = targetUrl;
@@ -174,23 +186,47 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
-                El manual de alimentación que tu médico nunca te entregó
-              </p>
+              {variant === 'reto' ? (
+                <>
+                  <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
+                    Un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro
+                  </p>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Este protocolo lo resuelve.</span>
-              </h1>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
+                    Reto GLP-1 de 21 días:<br /><span className="text-brand-gold">aprende a comer sin náuseas con tu tratamiento.</span>
+                  </h1>
 
-              <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">El Sistema de 4 Módulos es ese protocolo.</strong>
-              </p>
+                  <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
+                    21 días guiados, paso a paso, para dominar tu alimentación con el GLP-1: menos náuseas, sin perder músculo y sin efecto rebote. <strong className="text-brand-gold">Solo sigues el plan del día.</strong>
+                  </p>
 
-              <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 Módulos</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
-              </div>
+                  <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
+                    El manual de alimentación que tu médico nunca te entregó
+                  </p>
+
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
+                    Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Este protocolo lo resuelve.</span>
+                  </h1>
+
+                  <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
+                    El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">El Sistema de 4 Módulos es ese protocolo.</strong>
+                  </p>
+
+                  <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 Módulos</span>
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
+                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
+                  </div>
+                </>
+              )}
 
               <div className="w-full sm:max-w-md">
                 <a
@@ -200,7 +236,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Quiero comer sin miedo — US$ 9.90
+                    {variant === 'reto' ? 'Empezar mi Reto de 21 días — US$ 9.90' : 'Quiero comer sin miedo — US$ 9.90'}
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
