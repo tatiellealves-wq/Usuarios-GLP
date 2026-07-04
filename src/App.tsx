@@ -344,6 +344,43 @@ export default function App() {
             <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
               Inviertes hasta <strong className="text-white">US$ 1,200 al mes</strong> en el medicamento. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y hace que cada dólar del tratamiento trabaje completo.
             </p>
+
+            <div className="max-w-xl mx-auto mb-10 text-left">
+              <p className="text-center text-xs font-bold uppercase tracking-widest text-brand-gold mb-4">Lo que cuesta hacerlo bien</p>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">El medicamento GLP-1</p>
+                    <p className="text-white/40 text-xs">Hace su parte — pero no te enseña a comer</p>
+                  </div>
+                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$800–1,200<span className="text-white/40 font-normal">/mes</span></span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">Consulta nutricional privada</p>
+                    <p className="text-white/40 text-xs">Útil, pero cara y puntual</p>
+                  </div>
+                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$40–80<span className="text-white/40 font-normal">/sesión</span></span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">Improvisar por tu cuenta</p>
+                    <p className="text-white/40 text-xs">Náuseas, pérdida de músculo y efecto rebote</p>
+                  </div>
+                  <span className="text-red-400/80 font-bold text-sm whitespace-nowrap">El más caro</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-brand-green-vibrant/15 border-2 border-brand-gold/50 px-4 py-3.5 relative">
+                  <span className="absolute -top-2.5 left-4 bg-brand-gold text-neutral-dark text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">La opción inteligente</span>
+                  <div>
+                    <p className="text-white text-sm font-bold">Guía GLP-1 Inteligente</p>
+                    <p className="text-brand-gold/90 text-xs">El protocolo completo — para siempre</p>
+                  </div>
+                  <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 9.90</span>
+                </div>
+              </div>
+              <p className="text-center text-white/40 text-xs mt-3">Un pago único · acceso inmediato · en tu moneda local</p>
+            </div>
+
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
