@@ -1,12 +1,32 @@
 /* Utilidades del app (complementan Tailwind) */
 .card {
   background: #fff;
-  border: 1px solid #ECE7DD;
-  border-radius: 16px;
+  border: 2px solid #ECE7DD;
+  border-radius: 20px;
   padding: 1.1rem;
   margin-bottom: 0.85rem;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+  box-shadow: 0 2px 0 #ECE7DD;
 }
+
+/* ---- Estilo "3D" tipo Duolingo: botón chunky con borde inferior ---- */
+.btn3d {
+  border: none;
+  border-radius: 16px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: #16A34A;
+  box-shadow: 0 4px 0 #107636;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.btn3d:active { transform: translateY(4px); box-shadow: 0 0 0 #107636; }
+.btn3d-gold { background: #E7B93B; box-shadow: 0 4px 0 #B0862180; color: #3A2E07; }
+.btn3d-gold:active { box-shadow: 0 0 0 #B08621; }
+.btn3d-blue { background: #38BDF8; box-shadow: 0 4px 0 #0C87C4; }
+.btn3d-blue:active { box-shadow: 0 0 0 #0C87C4; }
+.btn3d-soft { background: #fff; color: #16A34A; box-shadow: 0 3px 0 #DCE5DD; border: 2px solid #DCE5DD; }
+.btn3d-soft:active { box-shadow: 0 0 0 #DCE5DD; }
+.btn3d-lock { background: #EBEDF0; color: #9AA3AE; box-shadow: 0 4px 0 #D3D7DD; }
 .lbl {
   display: block;
   font-size: 0.72rem;
