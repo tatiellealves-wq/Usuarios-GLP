@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
-import mockupImage from './assets/images/glp1_guide_mockup_1781632222712.jpg';
+import mockupImage from './assets/images/app_hero_mockup.jpg';
 
 function FadeIn({
   children,
@@ -67,7 +67,7 @@ export default function App() {
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'ViewContent', {
         content_name: 'Guia GLP-1 Inteligente',
-        value: 14.9,
+        value: 19.9,
         currency: 'USD',
       });
     }
@@ -101,7 +101,7 @@ export default function App() {
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'InitiateCheckout', {
         content_name: 'Guia GLP-1 Inteligente',
-        value: 14.9,
+        value: 19.9,
         currency: 'USD',
       });
     }
@@ -151,7 +151,7 @@ export default function App() {
             <span className="font-poppins-bold uppercase select-none flex items-center gap-2 flex-wrap justify-center">
               PRECIO DE LANZAMIENTO:
               <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 text-brand-gold tabular-nums normal-case text-sm">
-                US$ 14.90 <span className="text-white/50 line-through ml-1">US$ 49.90</span>
+                US$ 19.90 <span className="text-white/50 line-through ml-1">US$ 49.90</span>
               </span>
             </span>
           </div>
@@ -187,7 +187,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Empezar mi Reto de 21 días — US$ 14.90
+                    Empezar mi Reto de 21 días — US$ 19.90
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
@@ -215,18 +215,18 @@ export default function App() {
                 <div className="bg-white border border-white/20 shadow-2xl shadow-black/30 rounded-3xl overflow-hidden p-3">
                   <img
                     src={mockupImage}
-                    alt="Kit de Sobrevivencia GLP-1 Inteligente"
-                    width={900}
-                    height={672}
+                    alt="App del Reto GLP-1 de 21 días con las guías incluidas"
+                    width={1100}
+                    height={738}
                     fetchPriority="high"
                     className="w-full h-auto rounded-2xl shadow-md object-cover transform hover:scale-[1.02] transition-transform duration-300"
                     referrerPolicy="no-referrer"
                   />
                   <div className="p-4 pt-4 text-center">
                     <span className="text-[10px] uppercase font-semibold tracking-widest text-green-700 bg-green-50 px-3 py-1 rounded-full inline-block mb-1 border border-green-200/50">
-                      Kit Digital Multidispositivo
+                      App + Biblioteca de 4 Guías
                     </span>
-                    <p className="text-xs text-gray-500 font-medium">Compatible con Celulares, Tablets y Computadoras</p>
+                    <p className="text-xs text-gray-500 font-medium">Tu plan día a día en el celular · compatible con cualquier dispositivo</p>
                   </div>
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function App() {
                     <p className="text-white text-sm font-bold">Guía GLP-1 Inteligente</p>
                     <p className="text-brand-gold/90 text-xs">El protocolo completo — para siempre</p>
                   </div>
-                  <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 14.90</span>
+                  <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 19.90</span>
                 </div>
               </div>
               <p className="text-center text-white/40 text-xs mt-3">Un pago único · acceso inmediato · en tu moneda local</p>
@@ -373,7 +373,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Ver el protocolo completo — US$ 14.90</span>
+              <span>Ver el protocolo completo — US$ 19.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -386,85 +386,153 @@ export default function App() {
       <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto rounded-2xl p-8 md:p-12 bg-green-50/25 border border-green-100/60">
           
-          <div className="text-center mb-16">
+          <div className="text-center mb-14">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-4 inline-block">
+              Tu reto, guiado día a día
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
-              El Sistema de 4 Módulos: una respuesta para cada problema real
+              Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              Cada pieza del kit ataca uno de los 5 problemas que el GLP-1 trae sin advertencia. No es una guía genérica — es la respuesta específica a lo que estás viviendo ahora mismo.
+              Nada de adivinar. Abres la app y ves exactamente qué comer hoy, registras cómo te sientes y avanzas día a día — con toda la biblioteca de guías incluida dentro.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
-              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                <BookOpen className="h-6 w-6 text-brand-green" />
-              </div>
-              <div>
-                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  1. Guía Médica de Alimentación
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Resuelve el "¿qué como hoy?" para siempre. Te da la estructura exacta de platos que funciona con la fisiología del GLP-1: qué comer, en qué momento, en qué cantidad — para que nunca más improvises.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: "No sé qué comer"
-                </span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-14">
+
+            {/* Mockup del app: plan día a día */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-[280px] rounded-[2.2rem] bg-[#0D3320] p-3 shadow-2xl shadow-brand-green/30 ring-1 ring-black/10">
+                <div className="rounded-[1.7rem] overflow-hidden bg-[#0D3320]">
+                  <div className="px-5 pt-5 pb-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-lg bg-brand-gold/20 flex items-center justify-center">
+                          <Activity className="h-4 w-4 text-brand-gold" />
+                        </div>
+                        <span className="text-white font-bold text-sm">Reto GLP-1</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-brand-gold bg-white/10 px-2 py-1 rounded-full tabular-nums">Día 7 / 21</span>
+                    </div>
+
+                    <div className="flex justify-between mt-4">
+                      {['L','M','X','J','V','S','D'].map((d, i) => (
+                        <div key={d + i} className={`h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-bold ${i < 3 ? 'bg-brand-green-vibrant text-white' : i === 3 ? 'bg-brand-gold text-[#0D3320] ring-2 ring-white/40' : 'bg-white/10 text-white/50'}`}>
+                          {i < 3 ? <Check className="h-3.5 w-3.5 stroke-[3px]" /> : d}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-t-[1.4rem] px-5 pt-5 pb-6 space-y-3">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-green">Plan de hoy</p>
+
+                    <div className="flex items-center gap-3 bg-green-50 rounded-xl p-3">
+                      <Utensils className="h-4 w-4 text-brand-green shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 font-semibold uppercase">Desayuno</p>
+                        <p className="text-xs font-bold text-neutral-dark truncate">Huevos revueltos + avena</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-green-50 rounded-xl p-3">
+                      <Utensils className="h-4 w-4 text-brand-green shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-gray-400 font-semibold uppercase">Almuerzo</p>
+                        <p className="text-xs font-bold text-neutral-dark truncate">Pollo + puré de calabaza</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div className="bg-brand-green/5 border border-brand-green/10 rounded-xl p-2.5 text-center">
+                        <p className="text-lg font-black text-brand-green tabular-nums leading-none">102g</p>
+                        <p className="text-[9px] text-gray-500 font-semibold mt-1">Proteína meta</p>
+                      </div>
+                      <div className="bg-brand-green/5 border border-brand-green/10 rounded-xl p-2.5 text-center">
+                        <p className="text-lg font-black text-brand-green tabular-nums leading-none">6/8</p>
+                        <p className="text-[9px] text-gray-500 font-semibold mt-1">Vasos de agua</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-brand-gold/10 border border-brand-gold/30 rounded-xl p-2.5">
+                      <Thermometer className="h-4 w-4 text-brand-gold shrink-0" />
+                      <span className="text-[11px] font-bold text-[#0D3320]">Hoy toca inyección — protocolo anti-náusea activo</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
-              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                <Utensils className="h-6 w-6 text-brand-green" />
-              </div>
-              <div>
-                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  2. Recetario Anti-Náusea de Alta Proteína
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  35 recetas diseñadas para cuando casi no tienes hambre y cualquier olor puede disparar el malestar. Fáciles, rápidas (15 min), con los alimentos específicos que el GLP-1 tolera mejor — y que preservan tu músculo.
+            {/* Qué hace la app */}
+            <div className="lg:col-span-7">
+              <ul className="space-y-4">
+                {[
+                  ['El plan de cada día, listo', 'Qué comer, cuánta proteína y cuánta agua — sin improvisar ni una comida.'],
+                  ['35 recetas anti-náusea a un toque', 'Fáciles, rápidas y pensadas para cuando casi no tienes hambre.'],
+                  ['Seguimiento de síntomas, peso y energía', 'Registras en segundos y descubres qué te cae bien y qué no.'],
+                  ['Progreso visual + plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
+                  ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
+                ].map(([t, d]) => (
+                  <li key={t} className="flex gap-4">
+                    <div className="h-9 w-9 shrink-0 rounded-xl bg-brand-green-vibrant/15 flex items-center justify-center">
+                      <CheckCircle2 className="h-5 w-5 text-brand-green-vibrant" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-neutral-dark text-base">{t}</h3>
+                      <p className="text-sm text-gray-600 leading-relaxed">{d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-6 flex items-start gap-2 bg-green-50 border border-green-200/60 rounded-xl p-4">
+                <Award className="h-5 w-5 text-brand-green shrink-0 mt-0.5" />
+                <p className="text-sm text-neutral-dark leading-relaxed">
+                  <strong>Sin mensualidad.</strong> Apps como BetterMe cobran cada mes. Aquí pagas <strong>una sola vez</strong> y el Reto es tuyo para siempre.
                 </p>
-                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: náuseas + pérdida de músculo
-                </span>
               </div>
             </div>
+          </div>
 
-            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
-              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                <ShoppingBag className="h-6 w-6 text-brand-green" />
-              </div>
-              <div>
-                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  3. Lista de Supermercado Inteligente
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Lo que sí llevar y lo que NO. Los alimentos que disparan el reflujo y los que agravan la náusea ya no entran a tu casa. Lista lista para imprimir o llevar en el celular — sin pensar, sin dudar.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: alimentos que empeoran los síntomas
-                </span>
-              </div>
+          {/* Bonos: los 4 PDFs (lo que entregábamos antes) + guía de instalación */}
+          <div className="border-t border-green-100 pt-12">
+            <div className="text-center mb-8">
+              <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-brand-gold/10 border border-brand-gold/30 px-3.5 py-1 rounded-full mb-3 inline-block">
+                + 4 Bonos gratis incluidos
+              </span>
+              <h3 className="text-xl md:text-2xl font-bold font-display tracking-tight text-neutral-dark mb-2">
+                Y además, las 4 guías completas de regalo
+              </h3>
+              <p className="text-gray-600 text-sm max-w-xl mx-auto">
+                Las mismas guías en PDF que vendíamos por separado — hoy van <strong>gratis dentro de tu Reto</strong>, para leer, imprimir o consultar cuando quieras.
+              </p>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-xl p-8 hover:shadow-md hover:border-green-200/50 transition-all duration-200 flex gap-5">
-              <div className="h-12 w-12 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                <ClipboardList className="h-6 w-6 text-brand-green" />
-              </div>
-              <div>
-                <h3 className="font-bold text-neutral-dark text-lg md:text-xl mb-3">
-                  4. Diario de Síntomas y Progreso
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Registra qué comiste, cómo te sentiste y tu nivel de energía día a día. Identifica qué alimentos te caen bien y cuáles no — y lleva evidencia real a tu próxima consulta médica para ajustar el tratamiento.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-xs text-brand-green font-bold mt-4">
-                  <Check className="h-4 w-4 stroke-[3px] shrink-0" aria-hidden="true" /> Resuelve: fatiga y falta de control sobre el proceso
-                </span>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                [BookOpen, 'Guía Médica de Alimentación', 'La estructura exacta de platos que funciona con la fisiología del GLP-1: qué comer, cuándo y cuánto.'],
+                [Utensils, 'Recetario Anti-Náusea de Alta Proteína', '35 recetas de 15 min con los alimentos que el GLP-1 tolera mejor y que preservan tu músculo.'],
+                [ShoppingBag, 'Lista de Supermercado Inteligente', 'Lo que sí y lo que NO llevar. Los alimentos que agravan los síntomas ya no entran a tu casa.'],
+                [ClipboardList, 'Diario de Síntomas y Progreso', 'Registra y lleva evidencia real a tu próxima consulta para ajustar el tratamiento.'],
+              ].map(([Icon, title, desc]: any) => (
+                <div key={title} className="relative bg-white border border-gray-100 rounded-xl p-5 flex gap-4 hover:border-brand-gold/40 transition-colors">
+                  <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded-full">Bono</span>
+                  <div className="h-10 w-10 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-brand-green" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-neutral-dark text-sm mb-1 flex items-center gap-2">
+                      {title} <FileText className="h-3.5 w-3.5 text-gray-300" />
+                    </h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
 
+            <p className="text-center text-xs text-gray-500 mt-6 flex items-center justify-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-brand-green shrink-0" />
+              Incluye una guía paso a paso para instalar y abrir el app en tu celular en 2 minutos.
+            </p>
           </div>
 
           <div className="text-center mt-12">
@@ -474,7 +542,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero el protocolo completo — US$ 14.90</span>
+              <span>Empezar mi Reto — US$ 19.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -609,7 +677,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Quiero el protocolo completo — US$ 14.90</span>
+              <span>Quiero el protocolo completo — US$ 19.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -693,7 +761,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero los mismos resultados — US$ 14.90</span>
+              <span>Quiero los mismos resultados — US$ 19.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
             <p className="text-xs text-gray-500 mt-3">4 módulos · 35 recetas · Garantía 7 días · Acceso inmediato</p>
@@ -732,32 +800,43 @@ export default function App() {
               </h3>
               
               <div className="space-y-3 mt-4 mb-6 text-left border-b border-white/10 pb-6 text-white/90">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu producto</p>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor regular $19.90)</span></span>
+                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — tu plan día a día + seguimiento <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
+                </div>
+
+                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis</p>
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Recetario Anti-Náusea de Alta Proteína <span className="text-white/50 font-medium">(Valor regular $14.90)</span></span>
+                  <span>Recetario Anti-Náusea de Alta Proteína <span className="text-white/50 font-medium">(Valor $14.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Lista de Supermercado Inteligente <span className="text-white/50 font-medium">(Valor regular $9.90)</span></span>
+                  <span>Lista de Supermercado Inteligente <span className="text-white/50 font-medium">(Valor $9.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Diario de Síntomas y Progreso GLP-1 <span className="text-white/50 font-medium">(Valor regular $5.20)</span></span>
+                  <span>Diario de Síntomas y Progreso GLP-1 <span className="text-white/50 font-medium">(Valor $5.20)</span></span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                  <span>Guía de instalación del app paso a paso <span className="text-brand-gold/80 font-medium">(Gratis)</span></span>
                 </div>
               </div>
 
               <div className="flex flex-col items-center justify-center mb-6">
                 <span className="text-xs text-white/50 line-through tracking-wide">
-                  Valor Total: US$ 49.90
+                  Valor Total: US$ 89.90
                 </span>
                 <div className="flex items-baseline justify-center gap-1 mt-1">
                   <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
                   <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold tabular-nums">
-                    14.90
+                    19.90
                   </span>
                   <span className="text-sm font-semibold text-white/70 ml-1">Un pago único</span>
                 </div>
@@ -773,7 +852,7 @@ export default function App() {
                 className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
               >
                 <ShoppingCart className="h-5 w-5 text-white" />
-                <span>Quiero el protocolo completo — US$ 14.90</span>
+                <span>Quiero el protocolo completo — US$ 19.90</span>
               </a>
 
               <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
@@ -913,7 +992,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        Inmediatamente. En el momento en que se confirma tu pago, Hotmart te envía un correo con el acceso directo a los 4 PDFs. No necesitas crear cuenta, esperar revisiones ni descargar ninguna app. En menos de 3 minutos tienes el kit en tu pantalla — y puedes empezar la Guía de Alimentación esta misma noche.
+                        Inmediatamente. En el momento en que se confirma tu pago, Hotmart te envía un correo con el acceso al app del Reto y a los 4 PDFs. El app no se descarga de ninguna tienda: se abre desde tu navegador y se instala en la pantalla de inicio en 2 minutos — incluimos una guía paso a paso para hacerlo. En menos de 3 minutos ya estás en el Día 1 del Reto.
                       </p>
                     </div>
                   </motion.div>
@@ -1035,7 +1114,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero mi Kit GLP-1 — US$ 14.90</span>
+              <span>Quiero mi Kit GLP-1 — US$ 19.90</span>
             </a>
             <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
@@ -1080,7 +1159,7 @@ export default function App() {
           className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-green-vibrant/30 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
         >
           <ShoppingCart className="h-4 w-4" />
-          <span>Comprar Ahora — US$ 14.90</span>
+          <span>Comprar Ahora — US$ 19.90</span>
           <Lock className="h-3.5 w-3.5 opacity-70" />
         </a>
         <p className="text-center text-[10px] text-gray-500 font-medium mt-1.5 flex items-center justify-center gap-1">
@@ -1103,7 +1182,7 @@ export default function App() {
                     <p>Bienvenido a Guía GLP-1 Inteligente, comercializado con fines divulgativos de estilo de vida saludable.</p>
                     <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el Kit está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa o redistribución no autorizada.</p>
                     <p><strong>2. Uso del Contenido:</strong> El material se vende como material educativo suplementario y no constituye un canal terapéutico presencial.</p>
-                    <p><strong>3. Políticas de Envío:</strong> Los archivos PDF se entregan automáticamente por correo tras procesarse el pago de US$ 14.90.</p>
+                    <p><strong>3. Políticas de Envío:</strong> Los archivos PDF se entregan automáticamente por correo tras procesarse el pago de US$ 19.90.</p>
                   </div>
                 </div>
               ) : (
