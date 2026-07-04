@@ -142,7 +142,7 @@ function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
                 className="w-full rounded-2xl bg-white/[.08] border border-white/20 text-white placeholder-white/40 px-4 py-4 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
               />
               {error && <p className="text-red-300 text-xs mt-2" role="alert">Código no válido. Revisa el correo de tu compra.</p>}
-              <button type="submit" className="w-full mt-4 bg-[#D4AF37] hover:bg-[#C9A035] text-[#0A2A18] font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#D4AF37]/20">
+              <button type="submit" className="btn3d btn3d-gold w-full mt-4 py-4 rounded-2xl flex items-center justify-center gap-2">
                 <Lock className="h-4 w-4" /> Activar mi app
               </button>
             </form>
@@ -240,78 +240,130 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
   const dias = racha(registros);
   const fecha = new Date().toLocaleDateString('es-419', { weekday: 'long', day: 'numeric', month: 'long' });
 
+  const diaReto = Math.min(21, Math.max(1, Math.floor((Date.now() - new Date(perfil.fechaInicio + 'T00:00:00').getTime()) / 86400000) + 1));
+  const pctReto = Math.round((diaReto / 21) * 100);
+  const proteinaPct = Math.min(100, Math.round((proteinaPlan / meta) * 100));
+
+  const pathRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    (pathRef.current?.querySelector('[data-now="1"]') as HTMLElement | null)?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, []);
+
   return (
-    <div className="max-w-md mx-auto px-5 pt-8">
-      <div className="flex items-start justify-between mb-6">
+    <div className="max-w-md mx-auto px-5 pt-7">
+      {/* Encabezado + racha */}
+      <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-sm text-gray-500 capitalize">{fecha}</p>
-          <h1 className="text-2xl font-bold">Hola, {perfil.nombre} 👋</h1>
+          <p className="text-[11px] font-extrabold uppercase tracking-widest text-[#16A34A] capitalize">{fecha}</p>
+          <h1 className="text-2xl font-extrabold">¡Hola, {perfil.nombre}! 👋</h1>
         </div>
-        {dias > 0 && (
-          <div className="text-center bg-[#F7F0DF] border border-[#E5D7B2] rounded-xl px-3 py-1.5">
-            <p className="text-lg font-extrabold text-[#C9A035] leading-none flex items-center gap-1"><Flame className="h-4 w-4 anim-flame" />{dias}</p>
-            <p className="text-[10px] text-[#8A6D1C] font-semibold">días seguidos</p>
+        <div className="flex items-center gap-1.5 rounded-2xl px-3 py-1.5 bg-[#FFF4D6] border-2 border-[#F1DE9E]" style={{ boxShadow: '0 3px 0 #F1DE9E' }}>
+          <Flame className="h-5 w-5 text-[#E7B93B] anim-flame" />
+          <div className="leading-none text-center">
+            <p className="text-lg font-extrabold text-[#B08621] tabular-nums">{dias}</p>
+            <p className="text-[9px] font-bold text-[#B08621]/70 -mt-0.5">racha</p>
           </div>
-        )}
+        </div>
+      </div>
+
+      {/* Progreso del reto */}
+      <div className="flex items-center justify-between mb-1.5">
+        <p className="text-sm font-extrabold text-[#1F2430]">Día {diaReto} <span className="text-gray-400 font-bold">de 21</span></p>
+        <span className="text-xs font-extrabold text-[#16A34A]">{pctReto}%</span>
+      </div>
+      <div className="h-3 rounded-full bg-[#ECE7DD] overflow-hidden mb-4">
+        <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: `${pctReto}%` }} />
+      </div>
+
+      {/* Camino de 21 días (estilo Duolingo) */}
+      <div ref={pathRef} className="flex gap-2.5 overflow-x-auto pb-3 -mx-5 px-5 mb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {Array.from({ length: 21 }).map((_, i) => {
+          const d = i + 1;
+          const st = d < diaReto ? 'done' : d === diaReto ? 'now' : 'lock';
+          return (
+            <div key={d} data-now={st === 'now' ? '1' : undefined} className="shrink-0 flex flex-col items-center gap-1.5">
+              <div
+                className={`h-12 w-12 rounded-full flex items-center justify-center font-extrabold text-sm ${
+                  st === 'done' ? 'bg-[#16A34A] text-white'
+                    : st === 'now' ? 'bg-[#E7B93B] text-[#3A2E07] scale-110 ring-4 ring-[#E7B93B]/25'
+                    : 'bg-[#EBEDF0] text-[#9AA3AE]'
+                }`}
+                style={{ boxShadow: st === 'done' ? '0 3px 0 #107636' : st === 'now' ? '0 3px 0 #B08621' : '0 3px 0 #D3D7DD' }}
+              >
+                {st === 'done' ? <Check className="h-5 w-5 stroke-[3px]" /> : st === 'lock' ? <Lock className="h-4 w-4" /> : d}
+              </div>
+              <span className={`text-[9px] font-bold ${st === 'now' ? 'text-[#B08621]' : 'text-gray-400'}`}>{st === 'now' ? 'Hoy' : `Día ${d}`}</span>
+            </div>
+          );
+        })}
       </div>
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
 
       {comidasHoy.length > 0 && (
         <div className="card">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="font-bold">Tu menú de hoy</h2>
-            <span className="tag bg-[#EAF4EC] text-[#166534]">~{proteinaPlan} g de {meta} g</span>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="font-extrabold flex items-center gap-2"><Utensils className="h-4 w-4 text-[#16A34A]" /> Tu menú de hoy</h2>
+            <span className="tag bg-[#EAF4EC] text-[#166534]">{proteinaPlan}/{meta} g</span>
           </div>
-          <div className="h-1.5 bg-gray-100 rounded-full mb-2 overflow-hidden">
-            <div className="h-full bg-[#166534] rounded-full transition-all" style={{ width: `${Math.min(100, Math.round((proteinaPlan / meta) * 100))}%` }} />
+          <div className="h-2.5 bg-[#ECE7DD] rounded-full mb-3 overflow-hidden">
+            <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: `${proteinaPct}%` }} />
           </div>
-          {comidasHoy.map(({ c, r }) => (
-            <p key={c} className="text-sm text-gray-600 py-1 border-t border-gray-50 first:border-0">
-              <b className="capitalize text-[#1F2430]">{c}:</b> {r.nombre} <span className="text-xs text-gray-400">· {r.proteina} g · {r.min} min</span>
-            </p>
-          ))}
+          <div className="space-y-2">
+            {comidasHoy.map(({ c, r }) => (
+              <div key={c} className="flex items-center gap-3 rounded-2xl bg-[#F7F5EF] border-2 border-[#ECE7DD] px-3 py-2.5">
+                <span className="h-9 w-9 rounded-xl bg-white border-2 border-[#ECE7DD] flex items-center justify-center shrink-0">
+                  <Utensils className="h-4 w-4 text-[#16A34A]" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[9px] uppercase tracking-widest font-bold text-[#C9A035] capitalize">{c}</p>
+                  <p className="text-sm font-bold text-[#1F2430] truncate">{r.nombre}</p>
+                </div>
+                <span className="text-xs font-extrabold text-[#16A34A] shrink-0">{r.proteina}g</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       <div className="card">
-        <h2 className="font-bold mb-3">Registro de hoy</h2>
+        <h2 className="font-extrabold mb-3">Registro de hoy</h2>
         <Escala titulo="Náuseas" valor={reg.nauseas} onSet={(v) => setReg({ nauseas: v })} colores={['#16A34A', '#84CC16', '#F59E0B', '#DC2626']} />
         <Escala titulo="Energía" valor={reg.energia} onSet={(v) => setReg({ energia: v })} colores={['#DC2626', '#F59E0B', '#84CC16', '#16A34A']} />
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center gap-2">
             <Droplets className="h-5 w-5 text-sky-500" />
-            <span className="text-sm font-semibold">Agua</span>
+            <span className="text-sm font-bold">Agua</span>
             <span className="text-xs text-gray-400">{reg.agua} de 8 vasos</span>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setReg({ agua: Math.max(0, reg.agua - 1) })} className="h-9 w-9 rounded-full bg-gray-100 font-bold text-gray-600">−</button>
-            <button onClick={() => setReg({ agua: Math.min(15, reg.agua + 1) })} className="h-9 w-9 rounded-full bg-sky-500 text-white font-bold">+</button>
+            <button onClick={() => setReg({ agua: Math.max(0, reg.agua - 1) })} className="btn3d btn3d-soft h-10 w-10 rounded-full text-lg flex items-center justify-center">−</button>
+            <button onClick={() => setReg({ agua: Math.min(15, reg.agua + 1) })} className="btn3d btn3d-blue h-10 w-10 rounded-full text-lg flex items-center justify-center">+</button>
           </div>
         </div>
-        <div className="mt-2 flex gap-1">
+        <div className="mt-2.5 flex gap-1.5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full ${i < reg.agua ? 'bg-sky-400' : 'bg-gray-100'}`} />
+            <div key={i} className={`h-2.5 flex-1 rounded-full ${i < reg.agua ? 'bg-sky-400' : 'bg-[#ECE7DD]'}`} />
           ))}
         </div>
 
         <button
           onClick={() => setReg({ proteina: !reg.proteina })}
-          className={`w-full mt-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 border transition-colors ${reg.proteina ? 'bg-[#EAF4EC] border-[#CBE3D1] text-[#166534]' : 'bg-white border-gray-200 text-gray-500'}`}
+          className={`btn3d w-full mt-4 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 ${reg.proteina ? '' : 'btn3d-soft'}`}
         >
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
-          {reg.proteina ? `Proteína del día cumplida (~${meta} g) ✓` : `¿Cumpliste tu meta de ~${meta} g de proteína?`}
+          {reg.proteina ? `Proteína cumplida (~${meta} g) ✓` : `¿Cumpliste tus ~${meta} g de proteína?`}
         </button>
 
         <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-sm font-semibold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
+          <p className="text-sm font-bold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
           <textarea
             value={reg.nota ?? ''}
             onChange={(e) => setReg({ nota: e.target.value })}
             placeholder="¿Qué comiste? ¿Cómo te sentiste? Ej.: 'el yogur me cayó perfecto, la cena grasosa me dio náuseas'"
             rows={2}
-            className="w-full bg-[#FBF9F5] border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#166534]/30"
+            className="w-full bg-[#FBF9F5] border-2 border-[#ECE7DD] rounded-2xl px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#166534]/30"
           />
           <p className="text-[10px] text-gray-400 mt-1">Con el tiempo, tus notas revelan qué alimentos te caen bien y cuáles no — evidencia de oro para tu próxima consulta.</p>
         </div>
@@ -1269,13 +1321,19 @@ function TabBar({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
     { id: 'mas', icon: <Sparkles className="h-5 w-5" />, label: 'Más' },
   ];
   return (
-    <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-gray-200 print:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="max-w-md mx-auto grid grid-cols-5">
-        {items.map((it) => (
-          <button key={it.id} onClick={() => setTab(it.id)} className={`flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-bold ${tab === it.id ? 'text-[#166534]' : 'text-gray-400'}`}>
-            {it.icon}{it.label}
-          </button>
-        ))}
+    <nav className="fixed bottom-0 inset-x-0 bg-white border-t-2 border-[#ECE7DD] print:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <div className="max-w-md mx-auto grid grid-cols-5 px-2 py-1.5">
+        {items.map((it) => {
+          const activo = tab === it.id;
+          return (
+            <button key={it.id} onClick={() => setTab(it.id)} className="flex flex-col items-center gap-0.5 py-1.5">
+              <span className={`flex items-center justify-center h-9 w-14 rounded-2xl transition-colors ${activo ? 'bg-[#E7F6EC] text-[#16A34A]' : 'text-gray-400'}`}>
+                {it.icon}
+              </span>
+              <span className={`text-[10px] font-extrabold ${activo ? 'text-[#16A34A]' : 'text-gray-400'}`}>{it.label}</span>
+            </button>
+          );
+        })}
       </div>
     </nav>
   );
