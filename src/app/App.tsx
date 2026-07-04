@@ -69,6 +69,7 @@ export default function App() {
       {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} />}
       </div>
       <TabBar tab={tab} setTab={setTab} />
+      <CelebracionHost />
     </div>
   );
 }
@@ -87,6 +88,88 @@ function EmblemaBotanico({ className, color = '#D4AF37' }: { className?: string;
       <path pathLength={1} d="M60 16 Q53 25 60 32 Q67 25 60 16 Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
     </svg>
   );
+}
+
+/* ---------- Mascota "Avo" (aguacate amistoso) ---------- */
+function Mascota({ className, feliz = false }: { className?: string; feliz?: boolean }) {
+  return (
+    <svg viewBox="0 0 100 116" fill="none" className={className} aria-hidden="true">
+      {/* cuerpo */}
+      <path d="M50 6c19 0 33 16 33 40 0 30-16 64-33 64S17 76 17 46C17 22 31 6 50 6Z" fill="#16A34A" />
+      <path d="M50 18c13 0 23 12 23 30 0 25-11 50-23 50S27 73 27 48c0-18 10-30 23-30Z" fill="#EAF7EC" />
+      {/* hueso */}
+      <ellipse cx="50" cy="58" rx="17" ry="19" fill="#E7B93B" />
+      {/* ojos */}
+      <g className="mascota-ojo">
+        <circle cx="42" cy="52" r="4.4" fill="#1F2430" />
+        <circle cx="58" cy="52" r="4.4" fill="#1F2430" />
+        <circle cx="43.4" cy="50.6" r="1.4" fill="#fff" />
+        <circle cx="59.4" cy="50.6" r="1.4" fill="#fff" />
+      </g>
+      {/* cachetes + boca */}
+      <circle cx="36" cy="62" r="3" fill="#F4A9A0" opacity=".7" />
+      <circle cx="64" cy="62" r="3" fill="#F4A9A0" opacity=".7" />
+      {feliz
+        ? <path d="M42 61q8 9 16 0" stroke="#7A5B0A" strokeWidth="2.6" strokeLinecap="round" fill="none" />
+        : <path d="M44 62q6 5 12 0" stroke="#7A5B0A" strokeWidth="2.6" strokeLinecap="round" fill="none" />}
+    </svg>
+  );
+}
+
+/* ---------- Celebración (confeti + mascota) — el gran momento Duolingo ---------- */
+const COLORES_CONFETI = ['#16A34A', '#E7B93B', '#38BDF8', '#F4A9A0', '#A855F7', '#F97316'];
+
+function Celebracion({ titulo, sub, onCerrar }: { titulo: string; sub?: string; onCerrar: () => void }) {
+  React.useEffect(() => {
+    if (navigator.vibrate) navigator.vibrate([12, 40, 12]);
+    const t = setTimeout(onCerrar, 3200);
+    return () => clearTimeout(t);
+  }, [onCerrar]);
+
+  const piezas = React.useMemo(() =>
+    Array.from({ length: 46 }).map((_, i) => ({
+      left: Math.random() * 100,
+      delay: Math.random() * 0.5,
+      dur: 1.6 + Math.random() * 1,
+      color: COLORES_CONFETI[i % COLORES_CONFETI.length],
+      rot: Math.random() * 360,
+    })), []);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6" onClick={onCerrar} role="status">
+      <div className="absolute inset-0 bg-[#0A2A18]/45 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        {piezas.map((p, i) => (
+          <span
+            key={i}
+            className="confetti-piece"
+            style={{ left: `${p.left}%`, background: p.color, animationDelay: `${p.delay}s`, animationDuration: `${p.dur}s`, transform: `rotate(${p.rot}deg)` }}
+          />
+        ))}
+      </div>
+      <div className="relative text-center celebrate-pop">
+        <Mascota className="h-32 w-32 mx-auto mb-3 anim-float drop-shadow-xl" feliz />
+        <h2 className="text-white font-extrabold text-2xl mb-1 drop-shadow">{titulo}</h2>
+        {sub && <p className="text-green-100/90 text-sm max-w-xs mx-auto">{sub}</p>}
+        <button onClick={onCerrar} className="btn3d btn3d-gold mt-5 px-8 py-3 rounded-2xl">¡Seguir! ✦</button>
+      </div>
+    </div>
+  );
+}
+
+function celebrar(titulo: string, sub?: string) {
+  window.dispatchEvent(new CustomEvent('glp1-celebra', { detail: { titulo, sub } }));
+}
+
+function CelebracionHost() {
+  const [c, setC] = useState<{ titulo: string; sub?: string } | null>(null);
+  React.useEffect(() => {
+    const h = (e: Event) => setC((e as CustomEvent).detail);
+    window.addEventListener('glp1-celebra', h);
+    return () => window.removeEventListener('glp1-celebra', h);
+  }, []);
+  if (!c) return null;
+  return <Celebracion titulo={c.titulo} sub={c.sub} onCerrar={() => setC(null)} />;
 }
 
 /* ---------- Activación ---------- */
@@ -184,14 +267,14 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         <div className="flex gap-2">
           <input className="inp flex-1" type="number" inputMode="decimal" value={peso} onChange={(e) => setPeso(e.target.value)} placeholder={unidad === 'kg' ? 'Ej. 75' : 'Ej. 165'} />
           {(['kg', 'lb'] as const).map((u) => (
-            <button key={u} onClick={() => setUnidad(u)} className={`px-4 rounded-xl font-bold text-sm border ${unidad === u ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-500'}`}>{u.toUpperCase()}</button>
+            <button key={u} onClick={() => setUnidad(u)} className={`seg px-4 text-sm ${unidad === u ? 'seg-on' : ''}`}>{u.toUpperCase()}</button>
           ))}
         </div>
 
         <label className="lbl">Tu medicamento</label>
         <div className="grid grid-cols-2 gap-2">
           {(['Ozempic', 'Wegovy', 'Mounjaro', 'Otro'] as const).map((m) => (
-            <button key={m} onClick={() => setMedicamento(m)} className={`py-3 rounded-xl font-semibold text-sm border ${medicamento === m ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-600'}`}>{m}</button>
+            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-sm ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
           ))}
         </div>
 
@@ -217,9 +300,9 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
             objetivo: objetivo ? (unidad === 'lb' ? lbAKg(Number(objetivo)) : Number(objetivo)) : undefined,
             fechaInicio: hoyISO(),
           })}
-          className="w-full mt-6 bg-[#16A34A] disabled:bg-gray-300 text-white font-bold py-4 rounded-xl"
+          className="btn3d w-full mt-6 py-4 rounded-2xl text-base"
         >
-          Empezar mi acompañamiento
+          Empezar mi acompañamiento →
         </button>
         </div>
       </div>
@@ -252,12 +335,15 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
   return (
     <div className="max-w-md mx-auto px-5 pt-7">
       {/* Encabezado + racha */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <p className="text-[11px] font-extrabold uppercase tracking-widest text-[#16A34A] capitalize">{fecha}</p>
-          <h1 className="text-2xl font-extrabold">¡Hola, {perfil.nombre}! 👋</h1>
+      <div className="flex items-center justify-between mb-4 anim-bounce-in">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Mascota className="h-14 w-14 shrink-0 anim-float" feliz={dias > 0} />
+          <div className="min-w-0">
+            <p className="text-[11px] font-extrabold uppercase tracking-widest text-[#16A34A] capitalize">{fecha}</p>
+            <h1 className="text-2xl font-extrabold truncate">¡Hola, {perfil.nombre}!</h1>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 rounded-2xl px-3 py-1.5 bg-[#FFF4D6] border-2 border-[#F1DE9E]" style={{ boxShadow: '0 3px 0 #F1DE9E' }}>
+        <div className="flex items-center gap-1.5 rounded-2xl px-3 py-1.5 bg-[#FFF4D6] border-2 border-[#F1DE9E] shrink-0" style={{ boxShadow: '0 3px 0 #F1DE9E' }}>
           <Flame className="h-5 w-5 text-[#E7B93B] anim-flame" />
           <div className="leading-none text-center">
             <p className="text-lg font-extrabold text-[#B08621] tabular-nums">{dias}</p>
@@ -271,8 +357,8 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
         <p className="text-sm font-extrabold text-[#1F2430]">Día {diaReto} <span className="text-gray-400 font-bold">de 21</span></p>
         <span className="text-xs font-extrabold text-[#16A34A]">{pctReto}%</span>
       </div>
-      <div className="h-3 rounded-full bg-[#ECE7DD] overflow-hidden mb-4">
-        <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: `${pctReto}%` }} />
+      <div className="barra h-3.5 bg-[#ECE7DD] mb-4">
+        <div className="barra-fill bg-[#16A34A]" style={{ width: `${pctReto}%` }} />
       </div>
 
       {/* Camino de 21 días (estilo Duolingo) */}
@@ -281,11 +367,11 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           const d = i + 1;
           const st = d < diaReto ? 'done' : d === diaReto ? 'now' : 'lock';
           return (
-            <div key={d} data-now={st === 'now' ? '1' : undefined} className="shrink-0 flex flex-col items-center gap-1.5">
+            <div key={d} data-now={st === 'now' ? '1' : undefined} className={`shrink-0 flex flex-col items-center gap-1.5 ${st === 'now' ? 'anim-float' : ''}`}>
               <div
                 className={`h-12 w-12 rounded-full flex items-center justify-center font-extrabold text-sm ${
                   st === 'done' ? 'bg-[#16A34A] text-white'
-                    : st === 'now' ? 'bg-[#E7B93B] text-[#3A2E07] scale-110 ring-4 ring-[#E7B93B]/25'
+                    : st === 'now' ? 'bg-[#E7B93B] text-[#3A2E07] scale-110 ring-4 ring-[#E7B93B]/30'
                     : 'bg-[#EBEDF0] text-[#9AA3AE]'
                 }`}
                 style={{ boxShadow: st === 'done' ? '0 3px 0 #107636' : st === 'now' ? '0 3px 0 #B08621' : '0 3px 0 #D3D7DD' }}
@@ -306,8 +392,8 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
             <h2 className="font-extrabold flex items-center gap-2"><Utensils className="h-4 w-4 text-[#16A34A]" /> Tu menú de hoy</h2>
             <span className="tag bg-[#EAF4EC] text-[#166534]">{proteinaPlan}/{meta} g</span>
           </div>
-          <div className="h-2.5 bg-[#ECE7DD] rounded-full mb-3 overflow-hidden">
-            <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: `${proteinaPct}%` }} />
+          <div className="barra h-2.5 bg-[#ECE7DD] mb-3">
+            <div className="barra-fill bg-[#16A34A]" style={{ width: `${proteinaPct}%` }} />
           </div>
           <div className="space-y-2">
             {comidasHoy.map(({ c, r }) => (
@@ -339,7 +425,14 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           </div>
           <div className="flex gap-2">
             <button onClick={() => setReg({ agua: Math.max(0, reg.agua - 1) })} className="btn3d btn3d-soft h-10 w-10 rounded-full text-lg flex items-center justify-center">−</button>
-            <button onClick={() => setReg({ agua: Math.min(15, reg.agua + 1) })} className="btn3d btn3d-blue h-10 w-10 rounded-full text-lg flex items-center justify-center">+</button>
+            <button
+              onClick={() => {
+                const n = Math.min(15, reg.agua + 1);
+                setReg({ agua: n });
+                if (n === 8 && reg.agua === 7) celebrar('¡8 vasos de agua! 💧', 'Hidratación al 100% — tu digestión lo agradece.');
+              }}
+              className="btn3d btn3d-blue h-10 w-10 rounded-full text-lg flex items-center justify-center"
+            >+</button>
           </div>
         </div>
         <div className="mt-2.5 flex gap-1.5">
@@ -349,7 +442,11 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
         </div>
 
         <button
-          onClick={() => setReg({ proteina: !reg.proteina })}
+          onClick={() => {
+            const nuevo = !reg.proteina;
+            setReg({ proteina: nuevo });
+            if (nuevo) celebrar('¡Proteína cumplida! 💪', `Tus ~${meta} g de hoy: así proteges tu músculo con el GLP-1.`);
+          }}
           className={`btn3d w-full mt-4 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 ${reg.proteina ? '' : 'btn3d-soft'}`}
         >
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
@@ -413,8 +510,13 @@ function Escala({ titulo, valor, onSet, colores }: { titulo: string; valor?: num
 
 function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void }) {
   const hechos = reg.pasosInyeccion ?? [];
-  const toggle = (id: string) =>
-    setReg({ pasosInyeccion: hechos.includes(id) ? hechos.filter((x) => x !== id) : [...hechos, id] });
+  const toggle = (id: string) => {
+    const nuevo = hechos.includes(id) ? hechos.filter((x) => x !== id) : [...hechos, id];
+    setReg({ pasosInyeccion: nuevo });
+    if (nuevo.length === PASOS_INYECCION.length && hechos.length < PASOS_INYECCION.length) {
+      celebrar('¡Día de dosis dominado! 🎉', 'Seguiste todos los pasos — así se pasa el día de la inyección sin molestias.');
+    }
+  };
   const pct = Math.round((hechos.length / PASOS_INYECCION.length) * 100);
 
   return (
@@ -423,7 +525,7 @@ function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<
         <p className="font-bold flex items-center gap-2"><Syringe className="h-4 w-4 text-[#D4AF37]" /> Hoy es día de dosis</p>
         <span className="text-xs font-bold text-[#D4AF37]">{hechos.length}/{PASOS_INYECCION.length}</span>
       </div>
-      <div className="h-1.5 bg-white/15 rounded-full mb-4"><div className="h-full bg-[#D4AF37] rounded-full transition-all" style={{ width: `${pct}%` }} /></div>
+      <div className="barra h-2 bg-white/15 mb-4"><div className="barra-fill bg-[#D4AF37]" style={{ width: `${pct}%` }} /></div>
       {['Antes de la dosis', 'Primeras 24 h'].map((fase) => (
         <div key={fase} className="mb-2">
           <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-1.5">{fase}</p>
@@ -464,8 +566,8 @@ function PantallaRecetas() {
 
       <p className="text-xs font-semibold text-gray-500 mb-2">¿Cómo está tu estómago hoy?</p>
       <div className="flex gap-2 mb-3">
-        <button onClick={() => setFiltro('suaves')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border ${filtro === 'suaves' ? 'bg-[#28415E] text-white border-[#28415E]' : 'bg-white border-gray-200 text-gray-600'}`}>Sensible 🫧</button>
-        <button onClick={() => setFiltro('todas')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border ${filtro === 'todas' ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-600'}`}>Normal</button>
+        <button onClick={() => setFiltro('suaves')} className={`seg flex-1 py-2.5 text-sm ${filtro === 'suaves' ? 'seg-blue' : ''}`}>Sensible 🫧</button>
+        <button onClick={() => setFiltro('todas')} className={`seg flex-1 py-2.5 text-sm ${filtro === 'todas' ? 'seg-on' : ''}`}>Normal</button>
       </div>
 
       <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
@@ -598,9 +700,9 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
         {DIAS_CORTOS.map((d, i) => {
           const tiene = Object.keys(plan[i] ?? {}).length > 0;
           return (
-            <button key={i} onClick={() => setDia(i)} className={`py-2.5 rounded-xl text-sm font-bold border relative ${dia === i ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-500'}`}>
+            <button key={i} onClick={() => setDia(i)} className={`seg py-2.5 text-sm relative ${dia === i ? 'seg-on' : ''}`}>
               {d}
-              {tiene && <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full ${dia === i ? 'bg-[#D4AF37]' : 'bg-[#166534]'}`} />}
+              {tiene && <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full ${dia === i ? 'bg-[#E7B93B]' : 'bg-[#16A34A]'}`} />}
             </button>
           );
         })}
@@ -627,7 +729,7 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
         );
       })}
 
-      <button onClick={() => setVerCompras(true)} className="w-full mt-3 bg-[#C9A035] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow">
+      <button onClick={() => setVerCompras(true)} className="btn3d btn3d-gold w-full mt-3 py-4 rounded-2xl flex items-center justify-center gap-2">
         <ShoppingCart className="h-4 w-4" /> Lista de compras de la semana
       </button>
 
@@ -731,7 +833,7 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
           <input value={pesoInput} onChange={(e) => setPesoInput(e.target.value)} type="number" inputMode="decimal" placeholder={`Peso de hoy (kg)`} className="inp flex-1 !mb-0" />
           <button
             onClick={() => { const v = Number(pesoInput); if (v >= 30 && v <= 300) { onPeso(v); setPesoInput(''); } }}
-            className="bg-[#166534] text-white font-bold px-5 rounded-xl text-sm"
+            className="btn3d px-5 rounded-2xl text-sm"
           >Guardar</button>
         </div>
       </div>
@@ -759,7 +861,7 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
             <input key={k} type="number" inputMode="decimal" placeholder={`${l} (cm)`} value={med[k] ?? ''} onChange={(e) => setMed({ ...med, [k]: e.target.value ? Number(e.target.value) : undefined })} className="inp !mb-0" />
           ))}
         </div>
-        <button onClick={() => { onMedidas({ ...med, fecha: hoyISO() }); setMed({ fecha: hoyISO() }); }} className="w-full mt-3 bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">Guardar medidas</button>
+        <button onClick={() => { onMedidas({ ...med, fecha: hoyISO() }); setMed({ fecha: hoyISO() }); }} className="btn3d w-full mt-3 py-3 rounded-2xl text-sm">Guardar medidas</button>
         {estado.medidas.length > 0 && (
           <div className="mt-3 text-xs text-gray-600 space-y-1">
             {[...estado.medidas].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 3).map((m) => (
@@ -771,7 +873,7 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
 
       <FotosProgreso />
 
-      <button onClick={() => setVerInforme(true)} className="w-full bg-[#C9A035] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow mb-4">
+      <button onClick={() => setVerInforme(true)} className="btn3d btn3d-gold w-full py-4 rounded-2xl flex items-center justify-center gap-2 mb-4">
         <Printer className="h-4 w-4" /> Informe para mi médico
       </button>
     </div>
@@ -880,7 +982,7 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
     <div className="max-w-md mx-auto px-5 pt-8 print:pt-2">
       <div className="flex justify-between items-center mb-4 print:hidden">
         <button onClick={onCerrar} className="text-sm font-bold text-gray-500">← Volver</button>
-        <button onClick={() => window.print()} className="bg-[#166534] text-white text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2"><Printer className="h-4 w-4" /> Imprimir / PDF</button>
+        <button onClick={() => window.print()} className="btn3d text-sm px-4 py-2.5 rounded-2xl flex items-center gap-2"><Printer className="h-4 w-4" /> Imprimir / PDF</button>
       </div>
       <div className="card">
         <p className="text-[#C9A035] font-bold text-[10px] uppercase tracking-widest">Guía GLP-1 Inteligente</p>
@@ -943,11 +1045,11 @@ function PantallaMas({ estado, setEstado }: {
   if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
-    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5 text-[#C9A035]" />, titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
-    { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5 text-[#C9A035]" />, titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
-    { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5 text-[#C9A035]" />, titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
-    { id: 'salida' as const, icon: <Sparkles className="h-5 w-5 text-[#C9A035]" />, titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
-    { id: 'respaldo' as const, icon: <ShieldCheck className="h-5 w-5 text-[#C9A035]" />, titulo: 'Copia de seguridad', sub: 'Respalda o restaura tus datos — todo queda contigo' },
+    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
+    { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5" />, bg: '#FDF3D8', fg: '#B08621', titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
+    { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5" />, bg: '#FCE7E4', fg: '#EF4444', titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
+    { id: 'salida' as const, icon: <Sparkles className="h-5 w-5" />, bg: '#E7F1FC', fg: '#0C87C4', titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
+    { id: 'respaldo' as const, icon: <ShieldCheck className="h-5 w-5" />, bg: '#F0EAFB', fg: '#A855F7', titulo: 'Copia de seguridad', sub: 'Respalda o restaura tus datos — todo queda contigo' },
   ];
 
   return (
@@ -955,11 +1057,12 @@ function PantallaMas({ estado, setEstado }: {
       <h1 className="text-2xl font-bold mb-4">Más herramientas</h1>
       {items.map((it) => (
         <button key={it.id} onClick={() => setVista(it.id)} className="card w-full text-left flex items-center gap-4">
-          <span className="h-11 w-11 rounded-xl bg-[#F7F0DF] flex items-center justify-center shrink-0">{it.icon}</span>
-          <span>
+          <span className="h-12 w-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: it.bg, color: it.fg }}>{it.icon}</span>
+          <span className="min-w-0">
             <span className="font-bold text-sm block">{it.titulo}</span>
             <span className="text-xs text-gray-500">{it.sub}</span>
           </span>
+          <ChevronDown className="h-4 w-4 text-gray-300 shrink-0 -rotate-90 ml-auto" />
         </button>
       ))}
       <p className="text-[10px] text-gray-400 text-center mt-4">
@@ -1000,6 +1103,7 @@ function CuerpoFirme({ estado, setEstado }: {
         onFin={() => {
           setEstado((e) => ({ ...e, rutinasHechas: [...e.rutinasHechas, `${hoy}:${activa.id}`] }));
           setActiva(null);
+          celebrar('¡Rutina completada! 🔥', `${activa.nombre} — músculo protegido, metabolismo activo.`);
         }}
         onSalir={() => setActiva(null)}
       />
@@ -1018,7 +1122,7 @@ function CuerpoFirme({ estado, setEstado }: {
           <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{r.foco}</p>
           <p className="font-bold mb-1">{r.nombre}</p>
           <p className="text-xs text-gray-500 mb-3">{r.ejercicios.map((e) => e.nombre).join(' · ')}</p>
-          <button onClick={() => setActiva(r)} className="w-full bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">Empezar rutina ▶</button>
+          <button onClick={() => setActiva(r)} className="btn3d w-full py-3.5 rounded-2xl text-sm">Empezar rutina ▶</button>
         </div>
       ))}
       <p className="text-[10px] text-gray-400 mt-1 mb-4">Consulta a tu médico antes de empezar ejercicio, especialmente si tienes limitaciones físicas. Detente si sientes mareo o dolor.</p>
@@ -1102,7 +1206,7 @@ function PlanSalida({ estado, setEstado }: {
               setEstado((e) => ({ ...e, salida: { inicio: hoyISO(), checks: [] } }));
             }
           }}
-          className="w-full bg-[#C9A035] text-white font-bold py-4 rounded-xl"
+          className="btn3d btn3d-gold w-full py-4 rounded-2xl"
         >
           Mi médico y yo decidimos terminar — activar el plan
         </button>
@@ -1125,7 +1229,7 @@ function PlanSalida({ estado, setEstado }: {
       <p className="text-sm text-gray-500 mb-3">Empezaste el {new Date(salida.inicio + 'T12:00:00').toLocaleDateString('es-419')}.</p>
       <div className="rounded-xl bg-[#F7F0DF] border border-[#E5D7B2] px-4 py-3 mb-4">
         <p className="font-bold text-[#8A6D1C] text-sm">Semana {semana} de 12</p>
-        <div className="h-2 bg-white rounded-full mt-1.5"><div className="h-full bg-[#C9A035] rounded-full" style={{ width: `${(semana / 12) * 100}%` }} /></div>
+        <div className="barra h-2.5 bg-white mt-1.5"><div className="barra-fill bg-[#E7B93B]" style={{ width: `${(semana / 12) * 100}%` }} /></div>
       </div>
       {FASES_SALIDA.map((f, fi) => (
         <div key={f.nombre} className={`card ${fi === faseActual ? 'ring-2 ring-[#C9A035]' : fi < faseActual ? 'opacity-70' : 'opacity-50'}`}>
@@ -1172,10 +1276,10 @@ function PantallaSuper({ estado, setEstado }: {
       <p className="text-sm text-gray-500 mb-4">Si el 80% de tu carrito sale de esta lista, la mitad del trabajo está hecho antes de cocinar.</p>
 
       <div className="flex gap-2 mb-4">
-        <button onClick={() => setTab('si')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'si' ? 'bg-[#166534] text-white border-[#166534]' : 'bg-white border-gray-200 text-gray-600'}`}>
+        <button onClick={() => setTab('si')} className={`seg flex-1 py-2.5 text-sm flex items-center justify-center gap-1.5 ${tab === 'si' ? 'seg-on' : ''}`}>
           <Check className="h-4 w-4" /> Sí llevar
         </button>
-        <button onClick={() => setTab('no')} className={`flex-1 py-2.5 rounded-xl text-sm font-bold border flex items-center justify-center gap-1.5 ${tab === 'no' ? 'bg-[#8C2F2F] text-white border-[#8C2F2F]' : 'bg-white border-gray-200 text-gray-600'}`}>
+        <button onClick={() => setTab('no')} className={`seg flex-1 py-2.5 text-sm flex items-center justify-center gap-1.5 ${tab === 'no' ? 'seg-red' : ''}`}>
           <X className="h-4 w-4" /> Mejor no
         </button>
       </div>
@@ -1248,7 +1352,7 @@ function CopiaSeguridad({ estado, setEstado }: {
       <div className="card">
         <p className="font-bold text-sm mb-1 flex items-center gap-2"><Download className="h-4 w-4 text-[#C9A035]" /> Descargar respaldo</p>
         <p className="text-xs text-gray-500 mb-3">Registros, pesos, medidas, plan semanal y progreso — en un archivo que guardas donde quieras. (Las fotos no se incluyen: son demasiado pesadas.)</p>
-        <button onClick={() => { exportarDatos(estado); setMsg({ tipo: 'ok', texto: 'Respaldo descargado ✓' }); }} className="w-full bg-[#166534] text-white font-bold py-3 rounded-xl text-sm">
+        <button onClick={() => { exportarDatos(estado); setMsg({ tipo: 'ok', texto: 'Respaldo descargado ✓' }); }} className="btn3d w-full py-3.5 rounded-2xl text-sm">
           Descargar mi respaldo
         </button>
       </div>
