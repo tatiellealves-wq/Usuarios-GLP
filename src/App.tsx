@@ -17,7 +17,6 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Scale,
   Clock,
   CheckCircle2,
   HelpCircle,
@@ -62,38 +61,20 @@ function FadeIn({
 
 export default function App() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [calcWeight, setCalcWeight] = useState<number>(75);
-  const [calcWeightUnit, setCalcWeightUnit] = useState<'kg' | 'lb'>('kg');
-  const [calcMed, setCalcMed] = useState<string>('Ozempic');
-  const [calcCurrentProtein, setCalcCurrentProtein] = useState<string>('low');
-  const [isCalced, setIsCalced] = useState(false);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
-  const [variant, setVariant] = useState<'base' | 'reto'>('base');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const v = new URLSearchParams(window.location.search).get('v');
-      if (v === 'reto') setVariant('reto');
-    }
-  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'ViewContent', {
-        content_name: variant === 'reto' ? 'Guia GLP-1 Inteligente (Reto)' : 'Guia GLP-1 Inteligente',
+        content_name: 'Guia GLP-1 Inteligente',
         value: 9.9,
         currency: 'USD',
       });
     }
-  }, [variant]);
+  }, []);
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
-  };
-
-  const handleCalculator = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsCalced(true);
   };
 
   const triggerCheckout = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -119,7 +100,7 @@ export default function App() {
 
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'InitiateCheckout', {
-        content_name: variant === 'reto' ? 'Guia GLP-1 Inteligente (Reto)' : 'Guia GLP-1 Inteligente',
+        content_name: 'Guia GLP-1 Inteligente',
         value: 9.9,
         currency: 'USD',
       });
@@ -127,12 +108,6 @@ export default function App() {
 
     window.location.href = targetUrl;
   };
-
-  const weightInKg = calcWeightUnit === 'lb' ? Math.round(calcWeight * 0.453592) : calcWeight;
-  const recommendedProtein = Math.round(weightInKg * 1.8);
-  const estimatedCurrent = calcCurrentProtein === 'low' ? 40 : calcCurrentProtein === 'med' ? 65 : 90;
-  const deficit = recommendedProtein - estimatedCurrent;
-  const muscleLossRisk = deficit > 40 ? 'Crítico' : deficit > 15 ? 'Moderado' : 'Seguro';
 
   return (
     <div className="min-h-screen bg-premium-wellness bg-smart-grid text-neutral-dark font-sans selection:bg-brand-green/10 selection:text-brand-green overflow-x-hidden antialiased">
@@ -186,47 +161,23 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              {variant === 'reto' ? (
-                <>
-                  <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
-                    Un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro
-                  </p>
+              <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
+                Un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro
+              </p>
 
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                    Reto GLP-1 de 21 días:<br /><span className="text-brand-gold">aprende a comer sin náuseas con tu tratamiento.</span>
-                  </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
+                Reto GLP-1 de 21 días:<br /><span className="text-brand-gold">aprende a comer sin náuseas con tu tratamiento.</span>
+              </h1>
 
-                  <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                    21 días guiados, paso a paso, para dominar tu alimentación con el GLP-1: menos náuseas, sin perder músculo y sin efecto rebote. <strong className="text-brand-gold">Solo sigues el plan del día.</strong>
-                  </p>
+              <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
+                21 días guiados, paso a paso, para dominar tu alimentación con el GLP-1: menos náuseas, sin perder músculo y sin efecto rebote. <strong className="text-brand-gold">Solo sigues el plan del día.</strong>
+              </p>
 
-                  <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
-                    El manual de alimentación que tu médico nunca te entregó
-                  </p>
-
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                    Tomas Ozempic. Tienes náuseas. No sabes qué comer.<br /><span className="text-brand-gold">Este protocolo lo resuelve.</span>
-                  </h1>
-
-                  <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                    El GLP-1 funciona — pero exige un protocolo de alimentación que casi ningún médico explica. Sin él: pérdida de músculo, náuseas innecesarias y efecto rebote. <strong className="text-brand-gold">El Sistema de 4 Módulos es ese protocolo.</strong>
-                  </p>
-
-                  <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">4 Módulos</span>
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                    <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
-                  </div>
-                </>
-              )}
+              <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
+              </div>
 
               <div className="w-full sm:max-w-md">
                 <a
@@ -236,7 +187,7 @@ export default function App() {
                   className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    {variant === 'reto' ? 'Empezar mi Reto de 21 días — US$ 9.90' : 'Quiero comer sin miedo — US$ 9.90'}
+                    Empezar mi Reto de 21 días — US$ 9.90
                     <ArrowRight className="h-5 w-5" />
                   </span>
                   <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
@@ -427,230 +378,6 @@ export default function App() {
             </a>
           </div>
 
-        </div>
-      </section>
-      </FadeIn>
-
-      <FadeIn>
-      <section className="bg-green-50/40 py-16 px-6 border-y border-green-100/50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold font-display tracking-tight text-neutral-dark mb-3">
-              ¿Cuánta proteína está perdiendo tu cuerpo?
-            </h2>
-            <p className="text-sm text-gray-600 max-w-xl mx-auto">
-              La falta de proteína mientras usas GLP-1 acelera la pérdida de músculo y flacidez. Calcula tu déficit en 30 segundos:
-            </p>
-          </div>
-
-          <div className="bg-white border border-gray-200/60 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12">
-            
-            <form onSubmit={handleCalculator} className="p-6 md:p-8 md:col-span-7 border-r border-gray-100">
-              <h3 className="font-bold text-gray-800 text-lg mb-6 flex items-center gap-2">
-                <Scale className="h-5 w-5 text-brand-green" />
-                Ingresa tus datos de tratamiento
-              </h3>
-
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Tu Peso Actual
-                  </label>
-                  <div className="flex rounded-xl overflow-hidden border border-gray-300 shadow-sm focus-within:ring-2 focus-within:ring-brand-green-hover focus-within:border-transparent">
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      aria-label="Tu peso actual"
-                      value={calcWeight}
-                      onChange={(e) => setCalcWeight(Number(e.target.value))}
-                      className="w-full px-4 py-3 text-gray-800 font-semibold tabular-nums focus:outline-none placeholder-gray-400"
-                      placeholder="Ej. 75"
-                      min="30"
-                      max="250"
-                      required
-                    />
-                    <div className="flex border-l border-gray-200 bg-gray-50 rounded-r-xl">
-                      <button
-                        type="button"
-                        onClick={() => setCalcWeightUnit('kg')}
-                        aria-pressed={calcWeightUnit === 'kg'}
-                        className={`px-4 min-h-[44px] text-xs font-bold cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green ${calcWeightUnit === 'kg' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-600 hover:text-gray-900'}`}
-                      >
-                        KG
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setCalcWeightUnit('lb')}
-                        aria-pressed={calcWeightUnit === 'lb'}
-                        className={`px-4 min-h-[44px] text-xs font-bold cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green ${calcWeightUnit === 'lb' ? 'bg-brand-green text-white shadow-inner' : 'text-gray-600 hover:text-gray-900'}`}
-                      >
-                        LB
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    Fármaco Utilizado
-                  </label>
-                  <select 
-                    value={calcMed}
-                    onChange={(e) => setCalcMed(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent text-gray-800 font-medium"
-                  >
-                    <option value="Ozempic">Ozempic® (Semaglutida)</option>
-                    <option value="Wegovy">Wegovy® (Semaglutida)</option>
-                    <option value="Mounjaro">Mounjaro® (Tirzepatida)</option>
-                    <option value="Otros">Otro Análogo GLP-1 / Liraglutida</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                    ¿Cuánta proteína estimas comer diario?
-                  </label>
-                  <div className="grid grid-cols-1 gap-3">
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'low' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
-                      <input 
-                        type="radio" 
-                        name="protein" 
-                        value="low"
-                        checked={calcCurrentProtein === 'low'}
-                        onChange={() => setCalcCurrentProtein('low')}
-                        className="text-brand-green focus:ring-brand-green h-4 w-4"
-                      />
-                      <span className="text-xs">Baja (Solo carne/huevos en 1 comida de tamaño pequeño - ~40g)</span>
-                    </label>
-                    
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'med' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
-                      <input 
-                        type="radio" 
-                        name="protein" 
-                        value="med"
-                        checked={calcCurrentProtein === 'med'}
-                        onChange={() => setCalcCurrentProtein('med')}
-                        className="text-brand-green focus:ring-brand-green h-4 w-4"
-                      />
-                      <span className="text-xs">Moderada (Proteínas en 2 comidas en porciones normales - ~65g)</span>
-                    </label>
-
-                    <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${calcCurrentProtein === 'high' ? 'border-brand-green bg-green-50 font-semibold text-brand-green' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
-                      <input 
-                        type="radio" 
-                        name="protein" 
-                        value="high"
-                        checked={calcCurrentProtein === 'high'}
-                        onChange={() => setCalcCurrentProtein('high')}
-                        className="text-brand-green focus:ring-brand-green h-4 w-4"
-                      />
-                      <span className="text-xs">Alta (Proteína dosificada en todas las comidas conscientes - ~90g)</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <button 
-                type="submit"
-                className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-3.5 px-6 min-h-[44px] rounded-xl transition-colors duration-200 shadow-lg shadow-brand-green-vibrant/20 flex items-center justify-center gap-2 text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-              >
-                <Activity className="h-4 w-4 text-brand-gold" />
-                VER MI DIAGNÓSTICO METABÓLICO
-              </button>
-            </form>
-
-            <div className="bg-green-50/40 p-6 md:p-8 md:col-span-5 flex flex-col justify-center text-center md:text-left relative">
-              <AnimatePresence mode='wait'>
-                {!isCalced ? (
-                  <motion.div 
-                    key="not-calculated"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex flex-col items-center justify-center h-full py-10"
-                  >
-                    <HelpCircle className="h-12 w-12 text-gray-300 mb-3" />
-                    <p className="text-xs text-gray-500 max-w-[220px] text-center font-medium">
-                      Completa los datos de la izquierda para generar tu diagnóstico de riesgo.
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="calculated"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-5"
-                  >
-                    <span className="inline-block text-[10px] uppercase font-bold tracking-wider bg-brand-green/10 text-brand-green px-2.5 py-1 rounded-full">
-                      Resultado Personalizado
-                    </span>
-
-                    <div>
-                      <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
-                        Tu requerimiento diario mínimo con GLP-1:
-                      </p>
-                      <h4 className="text-3xl font-extrabold text-neutral-dark flex items-baseline gap-1 tabular-nums">
-                        {recommendedProtein} <span className="text-sm font-medium text-gray-500">gramos</span>
-                      </h4>
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
-                        Tu Déficit Proteico Estimado:
-                      </p>
-                      <h4 className={`text-2xl font-extrabold tabular-nums ${deficit > 15 ? 'text-red-600' : 'text-emerald-600'} flex items-baseline gap-1`}>
-                        {deficit <= 0 ? 0 : deficit} <span className="text-sm font-medium text-gray-500">g de déficit / día</span>
-                      </h4>
-                    </div>
-
-                    <div className="border-t border-gray-200/80 pt-4 mt-2">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-xs font-bold text-gray-500 uppercase">Riesgo de Flacidez &amp; Catabolismo:</span>
-                        <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
-                          muscleLossRisk === 'Crítico' ? 'bg-red-100 text-red-700 animate-pulse' : 
-                          muscleLossRisk === 'Moderado' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'
-                        }`}>
-                          {muscleLossRisk}
-                        </span>
-                      </div>
-                      
-                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-1">
-                        <div 
-                          className={`h-full rounded-full transition-all duration-1000 ${
-                            muscleLossRisk === 'Crítico' ? 'bg-red-600' : 
-                            muscleLossRisk === 'Moderado' ? 'bg-amber-500' : 'bg-emerald-500'
-                          }`}
-                          style={{ width: `${Math.min(100, Math.max(15, (deficit / 100) * 100))}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      {muscleLossRisk === 'Crítico' ? (
-                        <strong className="text-red-700 flex items-center gap-1">
-                          <ShieldAlert className="h-4 w-4 shrink-0" /> Alerta: Estás degradando músculo activo.
-                        </strong>
-                      ) : (
-                        <span className="text-gray-700">Tu masa muscular necesita estimulación diaria.</span>
-                      )}{" "}
-                      Para proteger tu elasticidad cutánea y acelerar el gasto calórico basal en reposo, debes incorporar los protocolos de nuestro <strong>Recetario de Alta Proteína</strong> de inmediato.
-                    </p>
-
-                    <a
-                      href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-                      onClick={triggerCheckout}
-                      className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover shadow-lg shadow-brand-green-vibrant/25 text-white text-xs font-bold py-3.5 px-4 min-h-[44px] rounded-xl transition-colors duration-200 flex items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-                    >
-                      <span>Cubrir mis {deficit > 0 ? deficit : 0}g de déficit — US$ 9.90</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </a>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-          </div>
         </div>
       </section>
       </FadeIn>
