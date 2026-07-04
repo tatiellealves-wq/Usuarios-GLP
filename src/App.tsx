@@ -29,8 +29,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
-import mockupImage from './assets/images/app_hero_mockup.jpg';
-
 function FadeIn({
   children,
   delay = 0,
@@ -56,6 +54,54 @@ function FadeIn({
     >
       {children}
     </motion.div>
+  );
+}
+
+/* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
+function MockupDispositivos() {
+  return (
+    <div className="relative w-full" style={{ aspectRatio: '5 / 4' }}>
+      {/* Tablet (atrás, asomando a la izquierda) */}
+      <div className="absolute" style={{ width: '32%', left: '-4%', bottom: '3%', zIndex: 10, transform: 'rotate(-5deg)' }}>
+        <div className="rounded-[14px] bg-[#16171b] p-[5px] shadow-xl shadow-black/40">
+          <div className="rounded-[9px] overflow-hidden bg-[#FBF9F5] flex justify-center" style={{ aspectRatio: '3 / 4' }}>
+            <img src="/hero/screen-progreso.webp" alt="Pantalla de progreso de la app" className="h-full w-auto object-cover" loading="lazy" />
+          </div>
+        </div>
+      </div>
+
+      {/* Notebook (centro, el ancla grande) */}
+      <div className="absolute" style={{ width: '84%', left: '3%', top: '3%', zIndex: 20 }}>
+        <div className="rounded-t-[13px] bg-[#17181c] px-[6px] pt-[6px] shadow-2xl shadow-black/50">
+          <div className="rounded-t-[8px] overflow-hidden bg-[#FBF9F5]" style={{ aspectRatio: '16 / 10' }}>
+            {/* barra del navegador */}
+            <div className="h-[11%] min-h-[15px] bg-white border-b border-gray-200 flex items-center gap-[5px] px-[2.5%]">
+              <span className="h-[6px] w-[6px] rounded-full bg-[#FF5F57] shrink-0" />
+              <span className="h-[6px] w-[6px] rounded-full bg-[#FEBC2E] shrink-0" />
+              <span className="h-[6px] w-[6px] rounded-full bg-[#28C840] shrink-0" />
+              <span className="ml-[4%] flex-1 max-w-[60%] rounded-full bg-gray-100 text-[8px] leading-none text-gray-400 flex items-center h-[58%] px-2 truncate">guiaglp1.com/app</span>
+            </div>
+            {/* app centrada sobre fondo crema (así se ve la PWA en el navegador) */}
+            <div className="relative flex justify-center overflow-hidden bg-[#FBF9F5]" style={{ height: '89%' }}>
+              <img src="/hero/screen-recetas.webp" alt="La app abierta en el navegador de la computadora" className="h-full w-auto object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+        {/* base / bisagra */}
+        <div className="relative mx-[-5%] h-[11px] bg-gradient-to-b from-[#d6d9dd] to-[#9ea3aa] rounded-b-[7px] rounded-t-[2px] shadow-md">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] w-[15%] bg-[#868b92] rounded-b-full" />
+        </div>
+      </div>
+
+      {/* Teléfono (frente, protagonista) */}
+      <div className="absolute" style={{ width: '26%', right: '0%', bottom: '-2%', zIndex: 30, transform: 'rotate(3deg)' }}>
+        <div className="rounded-[18px] bg-[#0e0f13] p-[5px] shadow-2xl shadow-black/50 ring-1 ring-white/10">
+          <div className="relative rounded-[13px] overflow-hidden bg-black">
+            <img src="/hero/screen-hoy.webp" alt="Pantalla Hoy de la app: reto de 21 días" className="w-full block" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -161,16 +207,16 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <p className="text-sm text-green-300/70 mb-4 font-medium tracking-wide">
-                Un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro
+              <p className="text-base md:text-lg text-green-200/80 mb-4 font-medium tracking-wide italic max-w-2xl">
+                Mientras otros luchan con náuseas y no saben qué comer…
               </p>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
-                Reto GLP-1 de 21 días:<br /><span className="text-brand-gold">aprende a comer sin náuseas con tu tratamiento.</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
+                Aprende <span className="text-brand-gold">exactamente qué comer cada día</span> para aprovechar tu tratamiento GLP-1.
               </h1>
 
               <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                21 días guiados, paso a paso, para dominar tu alimentación con el GLP-1: menos náuseas, sin perder músculo y sin efecto rebote. <strong className="text-brand-gold">Solo sigues el plan del día.</strong>
+                Sin perder músculo, sin náuseas innecesarias y sin efecto rebote. <strong className="text-brand-gold">Solo abres la app y sigues el plan del día</strong> — un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro.
               </p>
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
@@ -209,25 +255,16 @@ export default function App() {
             </div>
 
             <div className="lg:col-span-5 flex flex-col justify-center">
-              <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand-green/20 to-brand-gold/20 blur-2xl opacity-70 group-hover:opacity-100 transition duration-1000 -z-10" />
-                
-                <div className="bg-white border border-white/20 shadow-2xl shadow-black/30 rounded-3xl overflow-hidden p-3">
-                  <img
-                    src={mockupImage}
-                    alt="App del Reto GLP-1 de 21 días con las guías incluidas"
-                    width={1100}
-                    height={738}
-                    fetchPriority="high"
-                    className="w-full h-auto rounded-2xl shadow-md object-cover transform hover:scale-[1.02] transition-transform duration-300"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="p-4 pt-4 text-center">
-                    <span className="text-[10px] uppercase font-semibold tracking-widest text-green-700 bg-green-50 px-3 py-1 rounded-full inline-block mb-1 border border-green-200/50">
-                      App + Biblioteca de 4 Guías
-                    </span>
-                    <p className="text-xs text-gray-500 font-medium">Tu plan día a día en el celular · compatible con cualquier dispositivo</p>
-                  </div>
+              <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-green/25 to-brand-gold/25 blur-3xl opacity-70 -z-10 scale-90" />
+
+                <MockupDispositivos />
+
+                <div className="mt-5 text-center">
+                  <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
+                    <Check className="h-3 w-3" /> App + Biblioteca de 4 Guías
+                  </span>
+                  <p className="text-xs text-green-100/70 font-medium mt-2">Celular, tablet o computadora — tu plan te sigue a todos lados</p>
                 </div>
               </div>
             </div>
