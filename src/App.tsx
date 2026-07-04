@@ -57,6 +57,21 @@ function FadeIn({
   );
 }
 
+/* Eyebrow editorial: rótulo entre finas reglas doradas — la firma visual de la página */
+function Eyebrow({ children, tone = 'green', className = '' }: {
+  children: React.ReactNode; tone?: 'green' | 'gold' | 'dark'; className?: string;
+}) {
+  const text = tone === 'green' ? 'text-brand-green' : 'text-brand-gold';
+  const rule = tone === 'dark' ? 'bg-brand-gold/50' : 'bg-brand-gold/70';
+  return (
+    <span className={`inline-flex items-center gap-3 mb-5 ${className}`}>
+      <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
+      <span className={`text-[11px] font-bold uppercase tracking-[0.24em] ${text}`}>{children}</span>
+      <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
+    </span>
+  );
+}
+
 /* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
 function MockupDispositivos() {
   return (
@@ -275,12 +290,10 @@ export default function App() {
 
       {/* Lo que recibes hoy — respuesta inmediata a "¿qué estoy comprando?" */}
       <FadeIn>
-      <section className="py-14 px-6 bg-white border-b border-green-100">
+      <section className="py-16 px-6 bg-[#FAF8F2] border-b border-green-100/70">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-brand-green bg-green-50 border border-green-200/70 rounded-full px-3 py-1 mb-3">
-              <Check className="h-3.5 w-3.5" /> Acceso inmediato tras la compra
-            </span>
+            <Eyebrow>Acceso inmediato tras la compra</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-2">
               Esto es lo que recibes hoy
             </h2>
@@ -356,10 +369,11 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-slate-950 border-t border-white/5">
+      <section className="py-20 px-6 bg-[#0B1C13] border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold font-display text-white tracking-tight mb-4">
+            <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
+            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
               Nadie te avisó que el medicamento<br className="hidden md:block" /> viene con 5 problemas que nadie resuelve.
             </h2>
             <p className="text-green-200/70 text-base max-w-xl mx-auto">
@@ -483,13 +497,11 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-6xl mx-auto rounded-2xl p-8 md:p-12 bg-green-50/25 border border-green-100/60">
-          
+      <section className="py-20 px-6 bg-[#FAF8F2]">
+        <div className="max-w-6xl mx-auto rounded-3xl p-8 md:p-12 bg-white border border-green-100/70 shadow-[0_1px_40px_-12px_rgba(22,101,52,0.12)]">
+
           <div className="text-center mb-14">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-4 inline-block">
-              Tu reto, guiado día a día
-            </span>
+            <Eyebrow>Tu reto, guiado día a día</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Tu Reto de 21 días vive en una app
             </h2>
@@ -596,9 +608,7 @@ export default function App() {
           {/* Bonos: los 4 PDFs (lo que entregábamos antes) + guía de instalación */}
           <div className="border-t border-green-100 pt-12">
             <div className="text-center mb-8">
-              <span className="text-xs font-bold uppercase tracking-widest text-brand-gold bg-brand-gold/10 border border-brand-gold/30 px-3.5 py-1 rounded-full mb-3 inline-block">
-                + 4 Bonos gratis incluidos
-              </span>
+              <Eyebrow tone="gold">+ 4 Bonos gratis incluidos</Eyebrow>
               <h3 className="text-xl md:text-2xl font-bold font-display tracking-tight text-neutral-dark mb-2">
                 Y además, las 4 guías completas de regalo
               </h3>
@@ -652,10 +662,11 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-slate-950 border-t border-white/5">
+      <section className="py-20 px-6 bg-[#0B1C13] border-t border-white/5">
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-16">
+            <Eyebrow tone="dark">El método</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-white mb-4">
               ¿Por qué este método es diferente?
             </h2>
@@ -790,9 +801,7 @@ export default function App() {
       <section className="py-20 px-6 bg-green-50/40 border-t border-green-100/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
-              Resultados Reales
-            </span>
+            <Eyebrow>Resultados reales</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Lo que dicen nuestros pacientes
             </h2>
@@ -876,9 +885,7 @@ export default function App() {
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green bg-green-100/70 px-3.5 py-1 rounded-full mb-3 inline-block">
-              Oferta Especial de Lanzamiento
-            </span>
+            <Eyebrow>Oferta especial de lanzamiento</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
               Tu medicamento hace su parte.<br className="hidden md:block" /> Este kit hace la tuya.
             </h2>
@@ -1013,7 +1020,7 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-slate-950 border-t border-white/5">
+      <section className="py-20 px-6 bg-[#0B1C13] border-t border-white/5">
         <div className="max-w-4xl mx-auto">
 
           <div className="text-center mb-12">
@@ -1223,7 +1230,7 @@ export default function App() {
       </section>
       </FadeIn>
 
-      <footer className="bg-slate-950 text-white/70 py-16 pb-32 md:pb-16 px-6 text-center border-t border-white/5">
+      <footer className="bg-[#0B1C13] text-white/70 py-16 pb-32 md:pb-16 px-6 text-center border-t border-white/5">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="flex items-center gap-2">
