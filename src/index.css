@@ -74,6 +74,27 @@
   text-shadow: 0 0 10px rgba(217, 119, 6, 0.25);
 }
 
+/* Doble marco tipo certificado, usado en tarjetas insignia (sello, oferta) */
+.frame-certificate {
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  outline: 1px solid rgba(212, 175, 55, 0.18);
+  outline-offset: 4px;
+}
+
+@keyframes seal-shine {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.seal-shine {
+  animation: seal-shine 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal-shine {
+    animation: none !important;
+  }
+}
+
 .bg-premium-wellness {
   background-color: #FAF8F2;
   background-image:

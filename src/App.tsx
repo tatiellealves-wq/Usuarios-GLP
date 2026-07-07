@@ -25,7 +25,8 @@ import {
   Thermometer,
   TrendingDown,
   ZapOff,
-  RotateCcw
+  RotateCcw,
+  Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -69,6 +70,26 @@ function Eyebrow({ children, tone = 'green', className = '' }: {
       <span className={`text-[11px] font-bold uppercase tracking-[0.24em] ${text}`}>{children}</span>
       <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
     </span>
+  );
+}
+
+/* Sello insignia "App Completa" — el elemento de firma de la página: certifica que el producto es la app, no solo PDFs */
+function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; rotate?: number; className?: string }) {
+  return (
+    <div
+      className={`relative shrink-0 select-none ${className}`}
+      style={{ width: size, height: size, transform: `rotate(${rotate}deg)` }}
+      aria-hidden="true"
+    >
+      <div className="absolute inset-0 rounded-full border border-brand-gold/50" />
+      <div className="absolute inset-[5px] rounded-full border border-dashed border-brand-gold/35 seal-shine" />
+      <div className="absolute inset-[9px] rounded-full bg-gradient-to-b from-[#1c3d28] to-[#0A2016] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center text-center px-1.5 ring-1 ring-black/20">
+        <Smartphone className="h-4 w-4 text-brand-gold mb-1" strokeWidth={2.25} />
+        <span className="text-[7.5px] font-black uppercase tracking-[0.1em] text-brand-gold leading-[1.15]">
+          App<br />Completa
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -275,9 +296,11 @@ export default function App() {
 
                 <MockupDispositivos />
 
+                <AppSeal className="absolute -top-3 right-[6%] z-40 hidden sm:block" />
+
                 <div className="mt-5 text-center">
                   <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
-                    <Check className="h-3 w-3" /> App + Biblioteca de 4 Guías
+                    <Check className="h-3 w-3" /> App completa + Biblioteca de 4 Guías
                   </span>
                   <p className="text-xs text-green-100/70 font-medium mt-2">Celular, tablet o computadora — tu plan te sigue a todos lados</p>
                 </div>
@@ -894,26 +917,34 @@ export default function App() {
             </p>
           </div>
 
-          <div className="bg-brand-green rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white ring-1 ring-white/10">
-            <div className="bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+          <div className="frame-certificate rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white bg-gradient-to-b from-[#155230] via-brand-green to-[#0E3520]">
+            <div className="absolute -top-10 -right-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
               <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
                 ¡PACK DIGITAL CON ACCESO INMEDIATO!
               <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
             </div>
 
-            <div className="p-8 md:p-10 text-center">
-              <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest mb-2">
-                Guía GLP-1 Inteligente Completo
-              </h3>
-              
+            <div className="relative p-8 md:p-10 text-center">
+              <div className="flex flex-col items-center mb-2">
+                <AppSeal size={64} rotate={0} className="mb-3" />
+                <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest">
+                  Guía GLP-1 Inteligente Completo
+                </h3>
+              </div>
+
               <div className="space-y-3 mt-4 mb-6 text-left border-b border-white/10 pb-6 text-white/90">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu producto</p>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu app principal</p>
+                <div className="flex items-center gap-3 text-xs bg-white/10 border border-brand-gold/30 rounded-xl px-3 py-3">
+                  <span className="h-8 w-8 shrink-0 rounded-lg bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
+                    <Smartphone className="h-4 w-4 text-brand-gold" />
+                  </span>
                   <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — tu plan día a día + seguimiento <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
                 </div>
 
-                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
                   <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>
