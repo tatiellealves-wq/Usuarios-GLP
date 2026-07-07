@@ -296,7 +296,7 @@ export default function App() {
 
                 <MockupDispositivos />
 
-                <AppSeal className="absolute -top-3 right-[6%] z-40 hidden sm:block" />
+                <AppSeal size={96} className="absolute -bottom-4 left-[2%] z-40 hidden sm:block drop-shadow-xl" />
 
                 <div className="mt-5 text-center">
                   <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
@@ -323,9 +323,35 @@ export default function App() {
             <p className="text-gray-500">Todo junto, en un solo acceso — sin esperas y sin envíos.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3">
+          {/* Producto principal: la app, presentada como el héroe del entregable */}
+          <div className="relative overflow-hidden rounded-3xl p-5 md:p-6 bg-gradient-to-br from-[#134029] via-brand-green to-[#0D3320] ring-1 ring-brand-gold/30 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
+            <div className="absolute -top-12 -right-12 h-44 w-44 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
+            <div className="relative flex items-center gap-4 md:gap-6">
+              {/* miniatura real de la app dentro de un marco de teléfono */}
+              <div className="shrink-0 w-[76px] md:w-[96px] rounded-[1.1rem] bg-[#0A2016] p-1.5 ring-1 ring-white/10 shadow-lg">
+                <div className="rounded-[0.8rem] overflow-hidden bg-white">
+                  <img src="/hero/screen-hoy.webp" alt="Pantalla Hoy de la app del Reto GLP-1" className="w-full block" loading="lazy" />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold bg-white/10 border border-brand-gold/30 rounded-full px-2.5 py-1 mb-2">
+                  <Smartphone className="h-3 w-3" /> Producto principal · App
+                </span>
+                <h3 className="text-white font-bold font-display text-xl md:text-2xl leading-tight">App del Reto de 21 días</h3>
+                <p className="text-green-100/90 text-sm md:text-base leading-snug mt-1">
+                  Tu plan día a día, guiado paso a paso — abres la app y sabes exactamente qué comer hoy.
+                </p>
+              </div>
+              <AppSeal size={72} rotate={-6} className="hidden md:block -mr-1" />
+            </div>
+          </div>
+
+          {/* Lo que viene incluido dentro de la app */}
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-green/80 mt-8 mb-3 text-center">
+            Y todo esto, incluido dentro
+          </p>
+          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
             {[
-              { t: 'App del Reto de 21 días', s: 'Tu plan día a día, guiado paso a paso en el celular', star: true },
               { t: 'Guía nutricional completa', s: 'El método entero, capítulo por capítulo' },
               { t: '35 recetas anti-náusea', s: 'Con la proteína de cada plato ya calculada' },
               { t: 'Lista de compras inteligente', s: 'Qué sí llevar y qué evitar en el súper' },
@@ -333,23 +359,13 @@ export default function App() {
               { t: 'Diario alimentario', s: 'Registra cómo te sientes y descubre tus patrones' },
               { t: 'Actualizaciones futuras', s: 'Nuevas recetas y mejoras, sin costo extra' },
             ].map((it) => (
-              <div
-                key={it.t}
-                className={`flex items-start gap-3 rounded-2xl border p-4 ${it.star ? 'border-brand-green/40 bg-green-50/80 sm:col-span-2' : 'border-green-100 bg-green-50/30'}`}
-              >
-                <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-brand-green flex items-center justify-center">
-                  <Check className="h-4 w-4 text-white stroke-[3px]" />
+              <div key={it.t} className="flex items-start gap-3 py-3 border-b border-green-100/70">
+                <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-brand-green/10 flex items-center justify-center">
+                  <Check className="h-3.5 w-3.5 text-brand-green stroke-[3px]" />
                 </span>
                 <div>
-                  <p className="font-bold text-neutral-dark flex items-center gap-2 flex-wrap">
-                    {it.t}
-                    {it.star && (
-                      <span className="text-[10px] uppercase tracking-wide font-bold text-brand-green bg-white border border-brand-green/30 rounded-full px-2 py-0.5">
-                        Producto principal
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-snug">{it.s}</p>
+                  <p className="font-bold text-neutral-dark text-[15px] leading-tight">{it.t}</p>
+                  <p className="text-sm text-gray-600 leading-snug">{it.s}</p>
                 </div>
               </div>
             ))}
