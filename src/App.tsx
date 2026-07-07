@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   Check,
-  BookOpen,
   Utensils,
-  ShoppingBag,
-  ClipboardList,
   Star,
   Award,
   Activity,
@@ -346,9 +343,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* Lo que viene incluido dentro de la app */}
+          {/* Lo que viene incluido dentro de la app — sección única de entregables */}
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-green/80 mt-8 mb-3 text-center">
-            Y todo esto, incluido dentro
+            Y todo esto, incluido dentro de la app
           </p>
           <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
             {[
@@ -370,6 +367,11 @@ export default function App() {
               </div>
             ))}
           </div>
+
+          <p className="text-center text-xs text-gray-500 mt-5 flex items-center justify-center gap-1.5">
+            <FileText className="h-3.5 w-3.5 text-brand-gold shrink-0" />
+            Las 4 guías también las descargas en PDF, para leer o imprimir cuando quieras.
+          </p>
 
           <div className="mt-8 text-center">
             <a
@@ -644,47 +646,14 @@ export default function App() {
             </div>
           </div>
 
-          {/* Bonos: los 4 PDFs (lo que entregábamos antes) + guía de instalación */}
-          <div className="border-t border-green-100 pt-12">
-            <div className="text-center mb-8">
-              <Eyebrow tone="gold">+ 4 Bonos gratis incluidos</Eyebrow>
-              <h3 className="text-xl md:text-2xl font-bold font-display tracking-tight text-neutral-dark mb-2">
-                Y además, las 4 guías completas de regalo
-              </h3>
-              <p className="text-gray-600 text-sm max-w-xl mx-auto">
-                Las mismas guías en PDF que vendíamos por separado — hoy van <strong>gratis dentro de tu Reto</strong>, para leer, imprimir o consultar cuando quieras.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                [BookOpen, 'Guía Médica de Alimentación', 'La estructura exacta de platos que funciona con la fisiología del GLP-1: qué comer, cuándo y cuánto.'],
-                [Utensils, 'Recetario Anti-Náusea de Alta Proteína', '35 recetas de 15 min con los alimentos que el GLP-1 tolera mejor y que preservan tu músculo.'],
-                [ShoppingBag, 'Lista de Supermercado Inteligente', 'Lo que sí y lo que NO llevar. Los alimentos que agravan los síntomas ya no entran a tu casa.'],
-                [ClipboardList, 'Diario de Síntomas y Progreso', 'Registra y lleva evidencia real a tu próxima consulta para ajustar el tratamiento.'],
-              ].map(([Icon, title, desc]: any) => (
-                <div key={title} className="relative bg-white border border-gray-100 rounded-xl p-5 flex gap-4 hover:border-brand-gold/40 transition-colors">
-                  <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded-full">Bono</span>
-                  <div className="h-10 w-10 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-brand-green" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-neutral-dark text-sm mb-1 flex items-center gap-2">
-                      {title} <FileText className="h-3.5 w-3.5 text-gray-300" />
-                    </h4>
-                    <p className="text-xs text-gray-600 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-xs text-gray-500 mt-6 flex items-center justify-center gap-1.5">
+          <div className="border-t border-green-100 pt-8">
+            <p className="text-center text-sm text-gray-600 flex items-center justify-center gap-2 max-w-xl mx-auto">
               <CheckCircle2 className="h-4 w-4 text-brand-green shrink-0" />
-              Incluye una guía paso a paso para instalar y abrir el app en tu celular en 2 minutos.
+              <span>Adentro también viven las <strong className="text-neutral-dark">4 guías completas</strong>, y una guía paso a paso para instalar el app en tu celular en 2 minutos.</span>
             </p>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-10">
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
