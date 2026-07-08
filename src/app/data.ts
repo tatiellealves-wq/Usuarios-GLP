@@ -5,6 +5,7 @@ export type Receta = {
   nombre: string;
   cat: 'desayuno' | 'principal' | 'snack';
   proteina: number;
+  cal: number; // calorías estimadas por porción
   min: number;
   porciones: number;
   suave: boolean;
@@ -14,52 +15,52 @@ export type Receta = {
 };
 
 export const RECETAS: Receta[] = [
-  { id: 1, nombre: 'Omelette proteico de espinacas y queso', cat: 'desayuno', proteina: 24, min: 8, porciones: 1, suave: true, ing: '3 huevos, espinacas baby, 30 g queso fresco, sal y pimienta.', prep: 'Bate los huevos, vierte en sartén a fuego medio, añade espinacas y queso, dobla y sirve.' },
-  { id: 2, nombre: 'Yogur griego con frutos rojos y chía', cat: 'desayuno', proteina: 20, min: 3, porciones: 1, suave: true, ing: '200 g yogur griego, 1 taza frutos rojos, 1 cda chía, miel opcional.', prep: 'Mezcla todo en un bowl. La chía estabiliza la glucosa de la mañana.' },
-  { id: 3, nombre: 'Avena proteica con canela y almendras', cat: 'desayuno', proteina: 28, min: 10, porciones: 1, suave: false, ing: '½ taza avena, 1 taza leche, 1 scoop proteína, canela, almendras, fruta.', prep: 'Cocina la avena con leche, retira e integra la proteína; termina con canela, almendras y fruta.' },
-  { id: 4, nombre: 'Tostada integral con aguacate y huevo pochado', cat: 'desayuno', proteina: 14, min: 10, porciones: 1, suave: false, ing: '1 pan integral, ¼ aguacate, 1 huevo pochado, pimienta y limón.', prep: 'Tritura el aguacate sobre la tostada, corona con el huevo y termina con pimienta y limón.' },
-  { id: 5, nombre: 'Batido verde de proteína', cat: 'desayuno', proteina: 26, min: 5, porciones: 1, suave: true, ing: 'Espinacas, 1 plátano congelado, 200 ml leche vegetal, 1 scoop proteína, linaza.', prep: 'Licúa todo hasta quedar cremoso. Frío y suave para días sin apetito.' },
-  { id: 6, nombre: 'Panqueques de avena y plátano', cat: 'desayuno', proteina: 18, min: 15, porciones: 2, suave: false, ing: '1 plátano, 2 huevos, ½ taza avena, canela, aceite de coco.', prep: 'Licúa todo y cocina porciones pequeñas 2 min por lado. Sirve con frutos rojos.' },
-  { id: 7, nombre: 'Queso cottage con durazno y nueces', cat: 'desayuno', proteina: 22, min: 3, porciones: 1, suave: true, ing: '¾ taza cottage, 1 durazno o pera, nueces, canela.', prep: 'Sirve el cottage y cubre con fruta, nueces y canela. Sin cocción, sin olores.' },
-  { id: 8, nombre: 'Huevos revueltos cremosos con aguacate', cat: 'desayuno', proteina: 16, min: 8, porciones: 1, suave: true, ing: '2 huevos, 1 cda leche, ¼ aguacate, sal suave.', prep: 'Revuelve a fuego bajo, retira antes de que sequen. Sirve con aguacate en láminas.' },
-  { id: 9, nombre: 'Smoothie bowl de proteína y frutas', cat: 'desayuno', proteina: 28, min: 7, porciones: 1, suave: false, ing: '1 scoop proteína, ½ plátano congelado, frutos rojos, 100 ml leche, granola, coco.', prep: 'Licúa espeso con poca leche; sirve en bowl con granola y coco.' },
-  { id: 10, nombre: 'Chía pudding de vainilla', cat: 'desayuno', proteina: 18, min: 5, porciones: 1, suave: true, ing: '3 cdas chía, 200 ml leche, ½ scoop proteína vainilla, fruta.', prep: 'Mezcla y refrigera toda la noche. Por la mañana agrega fruta.' },
-  { id: 11, nombre: 'Tortilla de claras con champiñones', cat: 'desayuno', proteina: 22, min: 10, porciones: 1, suave: false, ing: '5 claras, champiñones, pimiento, cebollín.', prep: 'Saltea los vegetales, añade las claras y cocina hasta cuajar.' },
-  { id: 12, nombre: 'Arepa integral rellena de huevo y queso', cat: 'desayuno', proteina: 20, min: 15, porciones: 1, suave: false, ing: '1 arepa integral, 1 huevo revuelto, 40 g queso fresco, tomate.', prep: 'Asa la arepa, ábrela y rellena con huevo, queso y tomate.' },
-  { id: 13, nombre: 'Pechuga a la plancha con ensalada y arroz', cat: 'principal', proteina: 38, min: 20, porciones: 1, suave: false, ing: '1 pechuga (150 g), hojas verdes, tomate, pepino, ½ taza arroz integral, aceite de oliva.', prep: 'Cocina la pechuga 5–6 min por lado. Sirve con ensalada aliñada y arroz.' },
-  { id: 14, nombre: 'Salmón al horno con brócoli y batata', cat: 'principal', proteina: 32, min: 25, porciones: 1, suave: false, ing: '1 filete salmón, 1 taza brócoli, 1 batata, aceite de oliva, limón, eneldo.', prep: 'Hornea a 200 °C: batata 25 min; salmón y brócoli los últimos 15.' },
-  { id: 15, nombre: 'Bowl de quinoa con pollo y aguacate', cat: 'principal', proteina: 36, min: 15, porciones: 1, suave: false, ing: '¾ taza quinoa cocida, 100 g pollo desmenuzado, ¼ aguacate, verduras asadas, semillas.', prep: 'Arma el bowl en capas y termina con semillas de calabaza.' },
-  { id: 16, nombre: 'Sopa de lentejas con verduras', cat: 'principal', proteina: 18, min: 25, porciones: 3, suave: true, ing: '1 taza lentejas, zanahoria, apio, cebolla, comino, caldo de verduras.', prep: 'Sofríe, añade lentejas y caldo, cocina 20 min. Congela bien.' },
-  { id: 17, nombre: 'Pescado blanco al limón con puré de coliflor', cat: 'principal', proteina: 28, min: 20, porciones: 1, suave: true, ing: '1 filete merluza/tilapia, ½ coliflor, aceite de oliva, limón, perejil.', prep: 'Pescado al vapor o sartén con limón; coliflor hervida y triturada con aceite.' },
-  { id: 18, nombre: 'Ensalada de atún con garbanzos', cat: 'principal', proteina: 34, min: 10, porciones: 1, suave: false, ing: '1 lata atún en agua, ½ taza garbanzos, tomate, cebolla morada, aceite y limón.', prep: 'Mezcla todo en un bowl. Aguanta perfecto al día siguiente.' },
-  { id: 19, nombre: 'Tacos de res magra en tortilla integral', cat: 'principal', proteina: 32, min: 20, porciones: 2, suave: false, ing: '200 g res magra molida, 4 tortillas integrales, lechuga, pico de gallo.', prep: 'Cocina la carne con especias suaves; sirve en tortillas con lechuga y pico de gallo.' },
-  { id: 20, nombre: 'Pollo en caldo con verduras y arroz', cat: 'principal', proteina: 26, min: 25, porciones: 2, suave: true, ing: '1 pechuga en cubos, zanahoria, calabacín, ½ taza arroz, caldo bajo en sodio.', prep: 'Cocina todo junto hasta que el arroz esté listo. Hidrata y alimenta en días difíciles.' },
-  { id: 21, nombre: 'Tofu salteado con verduras y sésamo', cat: 'principal', proteina: 22, min: 15, porciones: 1, suave: false, ing: '150 g tofu firme, brócoli, pimiento, zanahoria, soya baja en sodio, sésamo.', prep: 'Dora el tofu en cubos, añade verduras y saltea 5 min.' },
-  { id: 22, nombre: 'Crema de calabaza con pollo desmenuzado', cat: 'principal', proteina: 26, min: 25, porciones: 2, suave: true, ing: '½ calabaza, 1 pechuga cocida, cebolla, caldo, un toque de jengibre.', prep: 'Cocina y licúa la calabaza con el caldo; incorpora el pollo al servir.' },
-  { id: 23, nombre: 'Wrap integral de pavo y vegetales', cat: 'principal', proteina: 24, min: 8, porciones: 1, suave: false, ing: '1 tortilla integral, 80 g pavo en fetas, hojas verdes, tomate, ¼ aguacate, yogur.', prep: 'Arma, enrolla y corta a la mitad. El almuerzo portátil.' },
-  { id: 24, nombre: 'Sopa minestrone con legumbres', cat: 'principal', proteina: 14, min: 25, porciones: 3, suave: true, ing: 'Alubias cocidas, zanahoria, apio, calabacín, tomate triturado.', prep: 'Sofríe, añade líquidos y cocina 20 min. Suma queso fresco para más proteína.' },
-  { id: 25, nombre: 'Hummus con bastones de verdura', cat: 'snack', proteina: 7, min: 5, porciones: 1, suave: true, ing: '3 cdas hummus, pepino, zanahoria, apio.', prep: 'Fibra + proteína vegetal sin tocar la cocina.' },
-  { id: 26, nombre: 'Yogur griego con miel y semillas', cat: 'snack', proteina: 18, min: 2, porciones: 1, suave: true, ing: '200 g yogur griego, 1 cdta miel, semillas de girasol o calabaza.', prep: 'El snack proteico más rápido que existe.' },
-  { id: 27, nombre: 'Rollitos de pavo con queso y pepino', cat: 'snack', proteina: 14, min: 5, porciones: 1, suave: false, ing: 'Fetas de pavo, queso fresco, bastones de pepino.', prep: 'Enrolla el pavo con el queso y el pepino dentro.' },
-  { id: 28, nombre: 'Puñado de almendras + 1 manzana', cat: 'snack', proteina: 6, min: 1, porciones: 1, suave: false, ing: '15–20 almendras, 1 manzana.', prep: 'El combo fibra + grasa saludable que corta el antojo.' },
-  { id: 29, nombre: 'Batido de proteína con leche vegetal', cat: 'snack', proteina: 26, min: 3, porciones: 1, suave: true, ing: '1 scoop proteína, 250 ml leche vegetal, hielo.', prep: 'Tu red de seguridad proteica cuando el apetito no aparece.' },
-  { id: 30, nombre: 'Huevos duros', cat: 'snack', proteina: 13, min: 12, porciones: 1, suave: true, ing: '2 huevos (cocina 6–8 en lote el domingo).', prep: '2 huevos = 13 g de proteína al alcance de la mano toda la semana.' },
-  { id: 31, nombre: 'Queso cottage con tomates cherry', cat: 'snack', proteina: 14, min: 3, porciones: 1, suave: true, ing: '½ taza cottage, tomates cherry, pimienta, aceite de oliva.', prep: 'Versión salada del snack proteico.' },
-  { id: 32, nombre: 'Tostadas de arroz con cottage y tomate', cat: 'snack', proteina: 12, min: 4, porciones: 1, suave: false, ing: '2 tostadas de arroz, queso cottage, tomate, orégano.', prep: 'Crocante por fuera, cremoso por dentro.' },
-  { id: 33, nombre: 'Gelatina proteica con frutos rojos', cat: 'snack', proteina: 12, min: 5, porciones: 2, suave: true, ing: 'Gelatina sin azúcar, ½ scoop proteína, frutos rojos.', prep: 'Disuelve la proteína antes de refrigerar. Fría y suave para estómagos sensibles.' },
-  { id: 34, nombre: 'Edamames al vapor con sal marina', cat: 'snack', proteina: 11, min: 6, porciones: 1, suave: false, ing: '1 taza edamames, sal marina.', prep: 'Proteína vegetal completa para picar sin culpa.' },
-  { id: 35, nombre: 'Manzana asada con canela y yogur', cat: 'snack', proteina: 10, min: 8, porciones: 1, suave: true, ing: '1 manzana, canela, 100 g yogur griego.', prep: 'Hornea o microondea la manzana en gajos; sirve tibia con el yogur.' },
+  { id: 1, nombre: 'Omelette proteico de espinacas y queso', cat: 'desayuno', proteina: 24, cal: 320, min: 8, porciones: 1, suave: true, ing: '3 huevos, espinacas baby, 30 g queso fresco, sal y pimienta.', prep: 'Bate los huevos, vierte en sartén a fuego medio, añade espinacas y queso, dobla y sirve.' },
+  { id: 2, nombre: 'Yogur griego con frutos rojos y chía', cat: 'desayuno', proteina: 20, cal: 260, min: 3, porciones: 1, suave: true, ing: '200 g yogur griego, 1 taza frutos rojos, 1 cda chía, miel opcional.', prep: 'Mezcla todo en un bowl. La chía estabiliza la glucosa de la mañana.' },
+  { id: 3, nombre: 'Avena proteica con canela y almendras', cat: 'desayuno', proteina: 28, cal: 420, min: 10, porciones: 1, suave: false, ing: '½ taza avena, 1 taza leche, 1 scoop proteína, canela, almendras, fruta.', prep: 'Cocina la avena con leche, retira e integra la proteína; termina con canela, almendras y fruta.' },
+  { id: 4, nombre: 'Tostada integral con aguacate y huevo pochado', cat: 'desayuno', proteina: 14, cal: 300, min: 10, porciones: 1, suave: false, ing: '1 pan integral, ¼ aguacate, 1 huevo pochado, pimienta y limón.', prep: 'Tritura el aguacate sobre la tostada, corona con el huevo y termina con pimienta y limón.' },
+  { id: 5, nombre: 'Batido verde de proteína', cat: 'desayuno', proteina: 26, cal: 320, min: 5, porciones: 1, suave: true, ing: 'Espinacas, 1 plátano congelado, 200 ml leche vegetal, 1 scoop proteína, linaza.', prep: 'Licúa todo hasta quedar cremoso. Frío y suave para días sin apetito.' },
+  { id: 6, nombre: 'Panqueques de avena y plátano', cat: 'desayuno', proteina: 18, cal: 320, min: 15, porciones: 2, suave: false, ing: '1 plátano, 2 huevos, ½ taza avena, canela, aceite de coco.', prep: 'Licúa todo y cocina porciones pequeñas 2 min por lado. Sirve con frutos rojos.' },
+  { id: 7, nombre: 'Queso cottage con durazno y nueces', cat: 'desayuno', proteina: 22, cal: 290, min: 3, porciones: 1, suave: true, ing: '¾ taza cottage, 1 durazno o pera, nueces, canela.', prep: 'Sirve el cottage y cubre con fruta, nueces y canela. Sin cocción, sin olores.' },
+  { id: 8, nombre: 'Huevos revueltos cremosos con aguacate', cat: 'desayuno', proteina: 16, cal: 280, min: 8, porciones: 1, suave: true, ing: '2 huevos, 1 cda leche, ¼ aguacate, sal suave.', prep: 'Revuelve a fuego bajo, retira antes de que sequen. Sirve con aguacate en láminas.' },
+  { id: 9, nombre: 'Smoothie bowl de proteína y frutas', cat: 'desayuno', proteina: 28, cal: 380, min: 7, porciones: 1, suave: false, ing: '1 scoop proteína, ½ plátano congelado, frutos rojos, 100 ml leche, granola, coco.', prep: 'Licúa espeso con poca leche; sirve en bowl con granola y coco.' },
+  { id: 10, nombre: 'Chía pudding de vainilla', cat: 'desayuno', proteina: 18, cal: 280, min: 5, porciones: 1, suave: true, ing: '3 cdas chía, 200 ml leche, ½ scoop proteína vainilla, fruta.', prep: 'Mezcla y refrigera toda la noche. Por la mañana agrega fruta.' },
+  { id: 11, nombre: 'Tortilla de claras con champiñones', cat: 'desayuno', proteina: 22, cal: 180, min: 10, porciones: 1, suave: false, ing: '5 claras, champiñones, pimiento, cebollín.', prep: 'Saltea los vegetales, añade las claras y cocina hasta cuajar.' },
+  { id: 12, nombre: 'Arepa integral rellena de huevo y queso', cat: 'desayuno', proteina: 20, cal: 340, min: 15, porciones: 1, suave: false, ing: '1 arepa integral, 1 huevo revuelto, 40 g queso fresco, tomate.', prep: 'Asa la arepa, ábrela y rellena con huevo, queso y tomate.' },
+  { id: 13, nombre: 'Pechuga a la plancha con ensalada y arroz', cat: 'principal', proteina: 38, cal: 450, min: 20, porciones: 1, suave: false, ing: '1 pechuga (150 g), hojas verdes, tomate, pepino, ½ taza arroz integral, aceite de oliva.', prep: 'Cocina la pechuga 5–6 min por lado. Sirve con ensalada aliñada y arroz.' },
+  { id: 14, nombre: 'Salmón al horno con brócoli y batata', cat: 'principal', proteina: 32, cal: 470, min: 25, porciones: 1, suave: false, ing: '1 filete salmón, 1 taza brócoli, 1 batata, aceite de oliva, limón, eneldo.', prep: 'Hornea a 200 °C: batata 25 min; salmón y brócoli los últimos 15.' },
+  { id: 15, nombre: 'Bowl de quinoa con pollo y aguacate', cat: 'principal', proteina: 36, cal: 500, min: 15, porciones: 1, suave: false, ing: '¾ taza quinoa cocida, 100 g pollo desmenuzado, ¼ aguacate, verduras asadas, semillas.', prep: 'Arma el bowl en capas y termina con semillas de calabaza.' },
+  { id: 16, nombre: 'Sopa de lentejas con verduras', cat: 'principal', proteina: 18, cal: 280, min: 25, porciones: 3, suave: true, ing: '1 taza lentejas, zanahoria, apio, cebolla, comino, caldo de verduras.', prep: 'Sofríe, añade lentejas y caldo, cocina 20 min. Congela bien.' },
+  { id: 17, nombre: 'Pescado blanco al limón con puré de coliflor', cat: 'principal', proteina: 28, cal: 320, min: 20, porciones: 1, suave: true, ing: '1 filete merluza/tilapia, ½ coliflor, aceite de oliva, limón, perejil.', prep: 'Pescado al vapor o sartén con limón; coliflor hervida y triturada con aceite.' },
+  { id: 18, nombre: 'Ensalada de atún con garbanzos', cat: 'principal', proteina: 34, cal: 380, min: 10, porciones: 1, suave: false, ing: '1 lata atún en agua, ½ taza garbanzos, tomate, cebolla morada, aceite y limón.', prep: 'Mezcla todo en un bowl. Aguanta perfecto al día siguiente.' },
+  { id: 19, nombre: 'Tacos de res magra en tortilla integral', cat: 'principal', proteina: 32, cal: 440, min: 20, porciones: 2, suave: false, ing: '200 g res magra molida, 4 tortillas integrales, lechuga, pico de gallo.', prep: 'Cocina la carne con especias suaves; sirve en tortillas con lechuga y pico de gallo.' },
+  { id: 20, nombre: 'Pollo en caldo con verduras y arroz', cat: 'principal', proteina: 26, cal: 360, min: 25, porciones: 2, suave: true, ing: '1 pechuga en cubos, zanahoria, calabacín, ½ taza arroz, caldo bajo en sodio.', prep: 'Cocina todo junto hasta que el arroz esté listo. Hidrata y alimenta en días difíciles.' },
+  { id: 21, nombre: 'Tofu salteado con verduras y sésamo', cat: 'principal', proteina: 22, cal: 340, min: 15, porciones: 1, suave: false, ing: '150 g tofu firme, brócoli, pimiento, zanahoria, soya baja en sodio, sésamo.', prep: 'Dora el tofu en cubos, añade verduras y saltea 5 min.' },
+  { id: 22, nombre: 'Crema de calabaza con pollo desmenuzado', cat: 'principal', proteina: 26, cal: 300, min: 25, porciones: 2, suave: true, ing: '½ calabaza, 1 pechuga cocida, cebolla, caldo, un toque de jengibre.', prep: 'Cocina y licúa la calabaza con el caldo; incorpora el pollo al servir.' },
+  { id: 23, nombre: 'Wrap integral de pavo y vegetales', cat: 'principal', proteina: 24, cal: 380, min: 8, porciones: 1, suave: false, ing: '1 tortilla integral, 80 g pavo en fetas, hojas verdes, tomate, ¼ aguacate, yogur.', prep: 'Arma, enrolla y corta a la mitad. El almuerzo portátil.' },
+  { id: 24, nombre: 'Sopa minestrone con legumbres', cat: 'principal', proteina: 14, cal: 240, min: 25, porciones: 3, suave: true, ing: 'Alubias cocidas, zanahoria, apio, calabacín, tomate triturado.', prep: 'Sofríe, añade líquidos y cocina 20 min. Suma queso fresco para más proteína.' },
+  { id: 25, nombre: 'Hummus con bastones de verdura', cat: 'snack', proteina: 7, cal: 180, min: 5, porciones: 1, suave: true, ing: '3 cdas hummus, pepino, zanahoria, apio.', prep: 'Fibra + proteína vegetal sin tocar la cocina.' },
+  { id: 26, nombre: 'Yogur griego con miel y semillas', cat: 'snack', proteina: 18, cal: 220, min: 2, porciones: 1, suave: true, ing: '200 g yogur griego, 1 cdta miel, semillas de girasol o calabaza.', prep: 'El snack proteico más rápido que existe.' },
+  { id: 27, nombre: 'Rollitos de pavo con queso y pepino', cat: 'snack', proteina: 14, cal: 160, min: 5, porciones: 1, suave: false, ing: 'Fetas de pavo, queso fresco, bastones de pepino.', prep: 'Enrolla el pavo con el queso y el pepino dentro.' },
+  { id: 28, nombre: 'Puñado de almendras + 1 manzana', cat: 'snack', proteina: 6, cal: 240, min: 1, porciones: 1, suave: false, ing: '15–20 almendras, 1 manzana.', prep: 'El combo fibra + grasa saludable que corta el antojo.' },
+  { id: 29, nombre: 'Batido de proteína con leche vegetal', cat: 'snack', proteina: 26, cal: 210, min: 3, porciones: 1, suave: true, ing: '1 scoop proteína, 250 ml leche vegetal, hielo.', prep: 'Tu red de seguridad proteica cuando el apetito no aparece.' },
+  { id: 30, nombre: 'Huevos duros', cat: 'snack', proteina: 13, cal: 150, min: 12, porciones: 1, suave: true, ing: '2 huevos (cocina 6–8 en lote el domingo).', prep: '2 huevos = 13 g de proteína al alcance de la mano toda la semana.' },
+  { id: 31, nombre: 'Queso cottage con tomates cherry', cat: 'snack', proteina: 14, cal: 150, min: 3, porciones: 1, suave: true, ing: '½ taza cottage, tomates cherry, pimienta, aceite de oliva.', prep: 'Versión salada del snack proteico.' },
+  { id: 32, nombre: 'Tostadas de arroz con cottage y tomate', cat: 'snack', proteina: 12, cal: 160, min: 4, porciones: 1, suave: false, ing: '2 tostadas de arroz, queso cottage, tomate, orégano.', prep: 'Crocante por fuera, cremoso por dentro.' },
+  { id: 33, nombre: 'Gelatina proteica con frutos rojos', cat: 'snack', proteina: 12, cal: 90, min: 5, porciones: 2, suave: true, ing: 'Gelatina sin azúcar, ½ scoop proteína, frutos rojos.', prep: 'Disuelve la proteína antes de refrigerar. Fría y suave para estómagos sensibles.' },
+  { id: 34, nombre: 'Edamames al vapor con sal marina', cat: 'snack', proteina: 11, cal: 180, min: 6, porciones: 1, suave: false, ing: '1 taza edamames, sal marina.', prep: 'Proteína vegetal completa para picar sin culpa.' },
+  { id: 35, nombre: 'Manzana asada con canela y yogur', cat: 'snack', proteina: 10, cal: 190, min: 8, porciones: 1, suave: true, ing: '1 manzana, canela, 100 g yogur griego.', prep: 'Hornea o microondea la manzana en gajos; sirve tibia con el yogur.' },
   // ---- 10 recetas bonus exclusivas del app ----
-  { id: 36, nombre: 'Huevos al horno con espinacas y ricotta', cat: 'desayuno', proteina: 21, min: 14, porciones: 1, suave: true, exclusiva: true, ing: '2 huevos, 1 taza espinacas, 2 cdas ricotta, aceite de oliva.', prep: 'En un molde pequeño: espinacas, ricotta y los huevos encima. Hornea 10–12 min a 180 °C hasta que la clara cuaje.' },
-  { id: 37, nombre: 'Tortitas de cottage y avena', cat: 'desayuno', proteina: 26, min: 12, porciones: 2, suave: false, exclusiva: true, ing: '½ taza cottage, 2 huevos, ½ taza avena, vainilla, canela.', prep: 'Licúa todo y cocina tortitas pequeñas a fuego medio, 2 min por lado. Van bien con frutos rojos.' },
-  { id: 38, nombre: 'Vaso de kéfir con plátano y linaza', cat: 'desayuno', proteina: 14, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '250 ml kéfir natural, ½ plátano, 1 cda linaza molida.', prep: 'Mezcla y listo. Los fermentados del kéfir ayudan a la digestión lenta del GLP-1.' },
-  { id: 39, nombre: 'Albóndigas de pavo con puré de calabaza', cat: 'principal', proteina: 34, min: 30, porciones: 2, suave: true, exclusiva: true, ing: '250 g pavo molido, 1 huevo, 2 cdas avena, ½ calabaza, aceite de oliva.', prep: 'Forma albóndigas y hornéalas 20 min a 200 °C. Sirve sobre el puré de calabaza con un hilo de oliva.' },
-  { id: 40, nombre: 'Estofado suave de res con verduras', cat: 'principal', proteina: 30, min: 35, porciones: 3, suave: true, exclusiva: true, ing: '300 g res magra en cubos, zanahoria, papa, apio, caldo bajo en sodio.', prep: 'Sella la carne, añade verduras y caldo, cocina tapado 30 min a fuego bajo. Congela en porciones.' },
-  { id: 41, nombre: 'Pasta integral con atún y tomate', cat: 'principal', proteina: 28, min: 15, porciones: 1, suave: false, exclusiva: true, ing: '60 g pasta integral, 1 lata atún en agua, tomate triturado, ajo, orégano.', prep: 'Cocina la pasta; saltea el tomate con ajo, integra el atún y mezcla todo.' },
-  { id: 42, nombre: 'Crema de brócoli con cottage', cat: 'principal', proteina: 18, min: 20, porciones: 2, suave: true, exclusiva: true, ing: '1 brócoli, ½ taza cottage, cebolla, caldo de verduras.', prep: 'Cocina el brócoli con la cebolla en el caldo, licúa con el cottage y sirve tibia.' },
-  { id: 43, nombre: 'Rollitos de jamón de pavo con queso', cat: 'snack', proteina: 12, min: 2, porciones: 1, suave: true, exclusiva: true, ing: '3 fetas jamón de pavo, 2 bastones de queso bajo en grasa.', prep: 'Enrolla y listo. Proteína inmediata sin cocinar.' },
-  { id: 44, nombre: 'Batido de cacao y proteína', cat: 'snack', proteina: 25, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '1 scoop proteína chocolate, 250 ml leche, 1 cdta cacao puro, hielo.', prep: 'Licúa todo. Sabe a postre, alimenta como una comida.' },
-  { id: 45, nombre: 'Tostada de ricotta con fresas', cat: 'snack', proteina: 11, min: 4, porciones: 1, suave: true, exclusiva: true, ing: '1 pan integral, 3 cdas ricotta, fresas laminadas, miel opcional.', prep: 'Unta la ricotta, cubre con fresas y un toque de miel si quieres.' },
+  { id: 36, nombre: 'Huevos al horno con espinacas y ricotta', cat: 'desayuno', proteina: 21, cal: 290, min: 14, porciones: 1, suave: true, exclusiva: true, ing: '2 huevos, 1 taza espinacas, 2 cdas ricotta, aceite de oliva.', prep: 'En un molde pequeño: espinacas, ricotta y los huevos encima. Hornea 10–12 min a 180 °C hasta que la clara cuaje.' },
+  { id: 37, nombre: 'Tortitas de cottage y avena', cat: 'desayuno', proteina: 26, cal: 300, min: 12, porciones: 2, suave: false, exclusiva: true, ing: '½ taza cottage, 2 huevos, ½ taza avena, vainilla, canela.', prep: 'Licúa todo y cocina tortitas pequeñas a fuego medio, 2 min por lado. Van bien con frutos rojos.' },
+  { id: 38, nombre: 'Vaso de kéfir con plátano y linaza', cat: 'desayuno', proteina: 14, cal: 220, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '250 ml kéfir natural, ½ plátano, 1 cda linaza molida.', prep: 'Mezcla y listo. Los fermentados del kéfir ayudan a la digestión lenta del GLP-1.' },
+  { id: 39, nombre: 'Albóndigas de pavo con puré de calabaza', cat: 'principal', proteina: 34, cal: 420, min: 30, porciones: 2, suave: true, exclusiva: true, ing: '250 g pavo molido, 1 huevo, 2 cdas avena, ½ calabaza, aceite de oliva.', prep: 'Forma albóndigas y hornéalas 20 min a 200 °C. Sirve sobre el puré de calabaza con un hilo de oliva.' },
+  { id: 40, nombre: 'Estofado suave de res con verduras', cat: 'principal', proteina: 30, cal: 380, min: 35, porciones: 3, suave: true, exclusiva: true, ing: '300 g res magra en cubos, zanahoria, papa, apio, caldo bajo en sodio.', prep: 'Sella la carne, añade verduras y caldo, cocina tapado 30 min a fuego bajo. Congela en porciones.' },
+  { id: 41, nombre: 'Pasta integral con atún y tomate', cat: 'principal', proteina: 28, cal: 450, min: 15, porciones: 1, suave: false, exclusiva: true, ing: '60 g pasta integral, 1 lata atún en agua, tomate triturado, ajo, orégano.', prep: 'Cocina la pasta; saltea el tomate con ajo, integra el atún y mezcla todo.' },
+  { id: 42, nombre: 'Crema de brócoli con cottage', cat: 'principal', proteina: 18, cal: 210, min: 20, porciones: 2, suave: true, exclusiva: true, ing: '1 brócoli, ½ taza cottage, cebolla, caldo de verduras.', prep: 'Cocina el brócoli con la cebolla en el caldo, licúa con el cottage y sirve tibia.' },
+  { id: 43, nombre: 'Rollitos de jamón de pavo con queso', cat: 'snack', proteina: 12, cal: 150, min: 2, porciones: 1, suave: true, exclusiva: true, ing: '3 fetas jamón de pavo, 2 bastones de queso bajo en grasa.', prep: 'Enrolla y listo. Proteína inmediata sin cocinar.' },
+  { id: 44, nombre: 'Batido de cacao y proteína', cat: 'snack', proteina: 25, cal: 240, min: 3, porciones: 1, suave: true, exclusiva: true, ing: '1 scoop proteína chocolate, 250 ml leche, 1 cdta cacao puro, hielo.', prep: 'Licúa todo. Sabe a postre, alimenta como una comida.' },
+  { id: 45, nombre: 'Tostada de ricotta con fresas', cat: 'snack', proteina: 11, cal: 240, min: 4, porciones: 1, suave: true, exclusiva: true, ing: '1 pan integral, 3 cdas ricotta, fresas laminadas, miel opcional.', prep: 'Unta la ricotta, cubre con fresas y un toque de miel si quieres.' },
 ];
 
 // ---- Módulo 3: Lista de Supermercado Inteligente ----
@@ -198,5 +199,118 @@ export const RUTINAS: Rutina[] = [
       { nombre: 'Patada de glúteo de pie', seg: 40, nota: 'Con apoyo en la silla, lleva el talón hacia atrás. Alterna.' },
       { nombre: 'Elevación de talones', seg: 40, nota: 'Termina sintiendo las pantorrillas despiertas.' },
     ],
+  },
+];
+
+// ---- Área de medicamentos (información educativa, no sustituye a tu médico) ----
+export type MedicamentoId = 'mounjaro' | 'zepbound' | 'ozempic' | 'wegovy' | 'rybelsus';
+export type Medicamento = {
+  id: MedicamentoId;
+  nombre: string;
+  principio: string; // principio activo
+  via: 'inyeccion' | 'oral';
+  frecuencia: string; // ej. "1 vez por semana"
+  aprobado: string;
+  aplicar: string[];
+  efectosComunes: string[];
+  efectosAlerta: string[]; // señales para contactar al médico
+  alimentacion: string[];
+  faq: { q: string; a: string }[];
+};
+
+// Alimentación base compartida (misma fisiología en todos): evita repetir y mantiene consistencia.
+const ALIM_BASE = [
+  'Prioriza la proteína en cada comida (huevo, yogur griego, pollo, pescado, legumbres): protege tu músculo.',
+  'Porciones pequeñas y frecuentes; come despacio y detente al primer signo de saciedad.',
+  'Evita frituras, comidas muy grasosas, alcohol y bebidas con gas: son los que más náuseas provocan.',
+  'Hidrátate (unos 8 vasos al día) y suma fibra (verduras, avena, chía) para prevenir el estreñimiento.',
+];
+
+const SEMAGLUTIDA_FAQ = (semanal: boolean): { q: string; a: string }[] => [
+  semanal
+    ? { q: '¿Olvidé mi dosis, qué hago?', a: 'Si faltan 48 horas o más para la siguiente, aplícala en cuanto lo recuerdes. Si falta menos, sáltala y sigue tu día habitual. Nunca apliques dos dosis juntas. Ante la duda, consulta a tu médico o farmacéutico.' }
+    : { q: '¿Olvidé mi pastilla, qué hago?', a: 'Sáltala por completo y toma la siguiente al día siguiente a la hora de siempre. No tomes dos el mismo día. Consulta a tu médico si te pasa seguido.' },
+  { q: '¿Puedo tomar alcohol?', a: 'Con moderación y nunca en ayunas: irrita el estómago, aporta calorías vacías y puede bajar tu glucosa. El día de la dosis, mejor evítalo.' },
+  { q: '¿Es para diabetes o para adelgazar?', a: 'La semaglutida se usa en diabetes tipo 2 y, en otras presentaciones/dosis, en control de peso. Quién la indica y para qué es siempre decisión de tu médico.' },
+  { q: '¿Cuándo empieza a hacer efecto?', a: 'El apetito suele bajar en las primeras semanas, pero el efecto pleno llega con el escalado de dosis a lo largo de las semanas. La constancia importa más que la rapidez.' },
+];
+
+const TIRZEPATIDA_FAQ: { q: string; a: string }[] = [
+  { q: '¿Olvidé mi dosis, qué hago?', a: 'Puedes aplicarla dentro de los 4 días (96 horas) siguientes al día previsto. Si pasó más tiempo, sáltala y continúa con tu día habitual. Nunca apliques dos dosis juntas. Ante la duda, consulta a tu médico.' },
+  { q: '¿En qué se diferencia de la semaglutida?', a: 'La tirzepatida actúa sobre dos hormonas (GIP y GLP-1) en lugar de una. Para tu alimentación, las recomendaciones son prácticamente las mismas.' },
+  { q: '¿Puedo tomar alcohol?', a: 'Con moderación y nunca en ayunas: irrita el estómago y puede alterar la glucosa. El día de la dosis, mejor evítalo.' },
+  { q: '¿Cuándo empieza a hacer efecto?', a: 'El apetito baja en las primeras semanas; el efecto pleno llega con el escalado de dosis. No aumentes por tu cuenta.' },
+];
+
+const APLICAR_INYECCION = [
+  'Una inyección subcutánea 1 vez por semana, el mismo día. Puedes cambiar el día si han pasado al menos 48 h desde la última dosis.',
+  'Zonas: abdomen, muslo o parte superior del brazo. Rota el sitio cada semana para cuidar la piel.',
+  'Puede aplicarse a cualquier hora, con o sin comida.',
+  'Guarda las plumas sin abrir en el refrigerador (2–8 °C), sin congelar. Sigue las indicaciones del prospecto para la pluma en uso.',
+  'La dosis sube de forma gradual (escalado) según tu médico. Nunca aumentes ni ajustes la dosis por tu cuenta.',
+];
+
+const ALERTA_COMUN = [
+  'Dolor abdominal intenso y persistente, que puede irradiarse a la espalda (posible pancreatitis).',
+  'Vómitos o diarrea que no ceden, con signos de deshidratación (mareo, boca seca, orinar poco).',
+  'Reacción alérgica: hinchazón de cara/labios, dificultad para respirar o sarpullido.',
+  'Un bulto o dolor en el cuello, ronquera o dificultad para tragar.',
+  'Cambios bruscos en la visión, o síntomas de azúcar muy baja si usas otros fármacos para la diabetes.',
+];
+
+export const MEDICAMENTOS: Medicamento[] = [
+  {
+    id: 'mounjaro', nombre: 'Mounjaro', principio: 'Tirzepatida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Aprobado para diabetes tipo 2. Doble acción (GIP + GLP-1).',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, especialmente al subir de dosis', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Menos apetito y digestión más lenta', 'Suelen mejorar a medida que tu cuerpo se adapta'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: TIRZEPATIDA_FAQ,
+  },
+  {
+    id: 'zepbound', nombre: 'Zepbound', principio: 'Tirzepatida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Mismo principio activo que Mounjaro (tirzepatida), en la presentación enfocada en el control de peso crónico.',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, sobre todo al inicio y al subir dosis', 'Diarrea o estreñimiento', 'Vómitos, eructos y reflujo', 'Cansancio y menos apetito', 'Suelen disminuir con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: TIRZEPATIDA_FAQ,
+  },
+  {
+    id: 'ozempic', nombre: 'Ozempic', principio: 'Semaglutida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Aprobado para diabetes tipo 2. La pérdida de peso es un efecto asociado.',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas (el más frecuente)', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Eructos y reflujo', 'Menos apetito; mejoran con el tiempo'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: SEMAGLUTIDA_FAQ(true),
+  },
+  {
+    id: 'wegovy', nombre: 'Wegovy', principio: 'Semaglutida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Mismo principio activo que Ozempic (semaglutida), en la presentación enfocada en el control de peso crónico (dosis objetivo más altas).',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, sobre todo al subir de dosis', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Dolor de cabeza y cansancio', 'Menos apetito; suelen mejorar con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: SEMAGLUTIDA_FAQ(true),
+  },
+  {
+    id: 'rybelsus', nombre: 'Rybelsus', principio: 'Semaglutida (oral)', via: 'oral', frecuencia: '1 comprimido al día',
+    aprobado: 'Aprobado para diabetes tipo 2. Es la semaglutida en pastilla — no se inyecta.',
+    aplicar: [
+      'Un comprimido por vía oral todos los días, a la misma hora (idealmente al despertar).',
+      'En ayunas: tómalo con un sorbo de agua (máximo media taza, ~120 ml).',
+      'Espera al menos 30 minutos antes de comer, beber otra cosa o tomar otros medicamentos.',
+      'Tragar el comprimido entero: no lo partas, mastiques ni tritures.',
+      'La dosis sube de forma gradual según tu médico. No la ajustes por tu cuenta.',
+    ],
+    efectosComunes: ['Náuseas, sobre todo al inicio', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Menos apetito y digestión más lenta', 'Suelen disminuir con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: [
+      'Respeta la ventana en ayunas: la absorción de Rybelsus baja mucho si hay comida o demasiada agua.',
+      ...ALIM_BASE,
+    ],
+    faq: SEMAGLUTIDA_FAQ(false),
   },
 ];

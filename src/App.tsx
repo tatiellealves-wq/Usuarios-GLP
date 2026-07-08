@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   Check,
-  BookOpen,
   Utensils,
-  ShoppingBag,
-  ClipboardList,
   Star,
   Award,
   Activity,
@@ -25,7 +22,8 @@ import {
   Thermometer,
   TrendingDown,
   ZapOff,
-  RotateCcw
+  RotateCcw,
+  Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -69,6 +67,26 @@ function Eyebrow({ children, tone = 'green', className = '' }: {
       <span className={`text-[11px] font-bold uppercase tracking-[0.24em] ${text}`}>{children}</span>
       <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
     </span>
+  );
+}
+
+/* Sello insignia "App Completa" — el elemento de firma de la página: certifica que el producto es la app, no solo PDFs */
+function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; rotate?: number; className?: string }) {
+  return (
+    <div
+      className={`relative shrink-0 select-none ${className}`}
+      style={{ width: size, height: size, transform: `rotate(${rotate}deg)` }}
+      aria-hidden="true"
+    >
+      <div className="absolute inset-0 rounded-full border border-brand-gold/50" />
+      <div className="absolute inset-[5px] rounded-full border border-dashed border-brand-gold/35 seal-shine" />
+      <div className="absolute inset-[9px] rounded-full bg-gradient-to-b from-[#1c3d28] to-[#0A2016] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center text-center px-1.5 ring-1 ring-black/20">
+        <Smartphone className="h-4 w-4 text-brand-gold mb-1" strokeWidth={2.25} />
+        <span className="text-[7.5px] font-black uppercase tracking-[0.1em] text-brand-gold leading-[1.15]">
+          App<br />Completa
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -236,8 +254,9 @@ export default function App() {
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan por tus calorías y proteína</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Guía de 5 medicamentos</span>
               </div>
 
               <div className="w-full sm:max-w-md">
@@ -275,9 +294,11 @@ export default function App() {
 
                 <MockupDispositivos />
 
+                <AppSeal size={96} className="absolute -bottom-4 left-[2%] z-40 hidden sm:block drop-shadow-xl" />
+
                 <div className="mt-5 text-center">
                   <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
-                    <Check className="h-3 w-3" /> App + Biblioteca de 4 Guías
+                    <Check className="h-3 w-3" /> App completa + Biblioteca de 4 Guías
                   </span>
                   <p className="text-xs text-green-100/70 font-medium mt-2">Celular, tablet o computadora — tu plan te sigue a todos lados</p>
                 </div>
@@ -300,9 +321,35 @@ export default function App() {
             <p className="text-gray-500">Todo junto, en un solo acceso — sin esperas y sin envíos.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-3">
+          {/* Producto principal: la app, presentada como el héroe del entregable */}
+          <div className="relative overflow-hidden rounded-3xl p-5 md:p-6 bg-gradient-to-br from-[#134029] via-brand-green to-[#0D3320] ring-1 ring-brand-gold/30 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
+            <div className="absolute -top-12 -right-12 h-44 w-44 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
+            <div className="relative flex items-center gap-4 md:gap-6">
+              {/* miniatura real de la app dentro de un marco de teléfono */}
+              <div className="shrink-0 w-[76px] md:w-[96px] rounded-[1.1rem] bg-[#0A2016] p-1.5 ring-1 ring-white/10 shadow-lg">
+                <div className="rounded-[0.8rem] overflow-hidden bg-white">
+                  <img src="/hero/screen-hoy.webp" alt="Pantalla Hoy de la app del Reto GLP-1" className="w-full block" loading="lazy" />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold bg-white/10 border border-brand-gold/30 rounded-full px-2.5 py-1 mb-2">
+                  <Smartphone className="h-3 w-3" /> Producto principal · App
+                </span>
+                <h3 className="text-white font-bold font-display text-xl md:text-2xl leading-tight">App del Reto de 21 días</h3>
+                <p className="text-green-100/90 text-sm md:text-base leading-snug mt-1">
+                  Tu plan día a día con menús inteligentes por calorías y proteína, estadísticas de tu progreso y la guía de tu medicamento — todo en un solo lugar.
+                </p>
+              </div>
+              <AppSeal size={72} rotate={-6} className="hidden md:block -mr-1" />
+            </div>
+          </div>
+
+          {/* Lo que viene incluido dentro de la app — sección única de entregables */}
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-green/80 mt-8 mb-3 text-center">
+            Y todo esto, incluido dentro de la app
+          </p>
+          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
             {[
-              { t: 'App del Reto de 21 días', s: 'Tu plan día a día, guiado paso a paso en el celular', star: true },
               { t: 'Guía nutricional completa', s: 'El método entero, capítulo por capítulo' },
               { t: '35 recetas anti-náusea', s: 'Con la proteína de cada plato ya calculada' },
               { t: 'Lista de compras inteligente', s: 'Qué sí llevar y qué evitar en el súper' },
@@ -310,27 +357,22 @@ export default function App() {
               { t: 'Diario alimentario', s: 'Registra cómo te sientes y descubre tus patrones' },
               { t: 'Actualizaciones futuras', s: 'Nuevas recetas y mejoras, sin costo extra' },
             ].map((it) => (
-              <div
-                key={it.t}
-                className={`flex items-start gap-3 rounded-2xl border p-4 ${it.star ? 'border-brand-green/40 bg-green-50/80 sm:col-span-2' : 'border-green-100 bg-green-50/30'}`}
-              >
-                <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-brand-green flex items-center justify-center">
-                  <Check className="h-4 w-4 text-white stroke-[3px]" />
+              <div key={it.t} className="flex items-start gap-3 py-3 border-b border-green-100/70">
+                <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-brand-green/10 flex items-center justify-center">
+                  <Check className="h-3.5 w-3.5 text-brand-green stroke-[3px]" />
                 </span>
                 <div>
-                  <p className="font-bold text-neutral-dark flex items-center gap-2 flex-wrap">
-                    {it.t}
-                    {it.star && (
-                      <span className="text-[10px] uppercase tracking-wide font-bold text-brand-green bg-white border border-brand-green/30 rounded-full px-2 py-0.5">
-                        Producto principal
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-snug">{it.s}</p>
+                  <p className="font-bold text-neutral-dark text-[15px] leading-tight">{it.t}</p>
+                  <p className="text-sm text-gray-600 leading-snug">{it.s}</p>
                 </div>
               </div>
             ))}
           </div>
+
+          <p className="text-center text-xs text-gray-500 mt-5 flex items-center justify-center gap-1.5">
+            <FileText className="h-3.5 w-3.5 text-brand-gold shrink-0" />
+            Las 4 guías también las descargas en PDF, para leer o imprimir cuando quieras.
+          </p>
 
           <div className="mt-8 text-center">
             <a
@@ -506,7 +548,7 @@ export default function App() {
               Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              Nada de adivinar. Abres la app y ves exactamente qué comer hoy, registras cómo te sientes y avanzas día a día — con toda la biblioteca de guías incluida dentro.
+              Nada de adivinar. La app genera tu menú por tus calorías y proteína, te muestra estadísticas de tu progreso, incluye la guía de tu medicamento y toda la biblioteca de guías — y avanzas día a día.
             </p>
           </div>
 
@@ -578,10 +620,12 @@ export default function App() {
             <div className="lg:col-span-7">
               <ul className="space-y-4">
                 {[
-                  ['El plan de cada día, listo', 'Qué comer, cuánta proteína y cuánta agua — sin improvisar ni una comida.'],
-                  ['35 recetas anti-náusea a un toque', 'Fáciles, rápidas y pensadas para cuando casi no tienes hambre.'],
-                  ['Seguimiento de síntomas, peso y energía', 'Registras en segundos y descubres qué te cae bien y qué no.'],
-                  ['Progreso visual + plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
+                  ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — con las calorías y la proteína ya calculadas. Cambias cualquier plato con un toque.'],
+                  ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista para cuando casi no tienes hambre.'],
+                  ['Guía de tu medicamento', 'Cómo aplicarlo, efectos y alimentación de Ozempic, Wegovy, Mounjaro, Zepbound y Rybelsus — con tu tratamiento destacado.'],
+                  ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, calorías y síntomas — en gráficos claros que puedes llevar a tu médico.'],
+                  ['Registro diario en segundos', 'Síntomas, energía y agua; con el tiempo descubres qué te cae bien y qué no.'],
+                  ['Plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
                   ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
                 ].map(([t, d]) => (
                   <li key={t} className="flex gap-4">
@@ -605,47 +649,14 @@ export default function App() {
             </div>
           </div>
 
-          {/* Bonos: los 4 PDFs (lo que entregábamos antes) + guía de instalación */}
-          <div className="border-t border-green-100 pt-12">
-            <div className="text-center mb-8">
-              <Eyebrow tone="gold">+ 4 Bonos gratis incluidos</Eyebrow>
-              <h3 className="text-xl md:text-2xl font-bold font-display tracking-tight text-neutral-dark mb-2">
-                Y además, las 4 guías completas de regalo
-              </h3>
-              <p className="text-gray-600 text-sm max-w-xl mx-auto">
-                Las mismas guías en PDF que vendíamos por separado — hoy van <strong>gratis dentro de tu Reto</strong>, para leer, imprimir o consultar cuando quieras.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                [BookOpen, 'Guía Médica de Alimentación', 'La estructura exacta de platos que funciona con la fisiología del GLP-1: qué comer, cuándo y cuánto.'],
-                [Utensils, 'Recetario Anti-Náusea de Alta Proteína', '35 recetas de 15 min con los alimentos que el GLP-1 tolera mejor y que preservan tu músculo.'],
-                [ShoppingBag, 'Lista de Supermercado Inteligente', 'Lo que sí y lo que NO llevar. Los alimentos que agravan los síntomas ya no entran a tu casa.'],
-                [ClipboardList, 'Diario de Síntomas y Progreso', 'Registra y lleva evidencia real a tu próxima consulta para ajustar el tratamiento.'],
-              ].map(([Icon, title, desc]: any) => (
-                <div key={title} className="relative bg-white border border-gray-100 rounded-xl p-5 flex gap-4 hover:border-brand-gold/40 transition-colors">
-                  <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 px-2 py-0.5 rounded-full">Bono</span>
-                  <div className="h-10 w-10 bg-green-50 shrink-0 rounded-xl flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-brand-green" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-neutral-dark text-sm mb-1 flex items-center gap-2">
-                      {title} <FileText className="h-3.5 w-3.5 text-gray-300" />
-                    </h4>
-                    <p className="text-xs text-gray-600 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-xs text-gray-500 mt-6 flex items-center justify-center gap-1.5">
+          <div className="border-t border-green-100 pt-8">
+            <p className="text-center text-sm text-gray-600 flex items-center justify-center gap-2 max-w-xl mx-auto">
               <CheckCircle2 className="h-4 w-4 text-brand-green shrink-0" />
-              Incluye una guía paso a paso para instalar y abrir el app en tu celular en 2 minutos.
+              <span>Adentro también viven las <strong className="text-neutral-dark">4 guías completas</strong>, y una guía paso a paso para instalar el app en tu celular en 2 minutos.</span>
             </p>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-10">
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
@@ -894,26 +905,34 @@ export default function App() {
             </p>
           </div>
 
-          <div className="bg-brand-green rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white ring-1 ring-white/10">
-            <div className="bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+          <div className="frame-certificate rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white bg-gradient-to-b from-[#155230] via-brand-green to-[#0E3520]">
+            <div className="absolute -top-10 -right-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
               <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
                 ¡PACK DIGITAL CON ACCESO INMEDIATO!
               <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
             </div>
 
-            <div className="p-8 md:p-10 text-center">
-              <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest mb-2">
-                Guía GLP-1 Inteligente Completo
-              </h3>
-              
+            <div className="relative p-8 md:p-10 text-center">
+              <div className="flex flex-col items-center mb-2">
+                <AppSeal size={64} rotate={0} className="mb-3" />
+                <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest">
+                  Guía GLP-1 Inteligente Completo
+                </h3>
+              </div>
+
               <div className="space-y-3 mt-4 mb-6 text-left border-b border-white/10 pb-6 text-white/90">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu producto</p>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — tu plan día a día + seguimiento <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu app principal</p>
+                <div className="flex items-center gap-3 text-xs bg-white/10 border border-brand-gold/30 rounded-xl px-3 py-3">
+                  <span className="h-8 w-8 shrink-0 rounded-lg bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
+                    <Smartphone className="h-4 w-4 text-brand-gold" />
+                  </span>
+                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — plan inteligente por calorías y proteína, estadísticas y guía de medicamentos <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
                 </div>
 
-                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
                   <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>

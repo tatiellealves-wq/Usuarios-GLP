@@ -1,18 +1,20 @@
 import React, { useMemo, useState } from 'react';
 import {
-  BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
-  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Printer, Ruler, Search, ShieldCheck,
+  AlertTriangle, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Pill, Printer, RefreshCw, Ruler, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
 import {
-  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, PASOS_INYECCION,
-  RECETAS, RUTINAS, type Receta, type Rutina,
+  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, MEDICAMENTOS, PASOS_INYECCION,
+  RECETAS, RUTINAS, type Medicamento, type Receta, type Rutina,
 } from './data';
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
-  borrarFoto, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, importarDatos,
-  lbAKg, listarFotos, metaProteina, racha, semanaSalida, tendenciaSemanal, useEstado,
-  type Comida, type Foto, type Medidas, type Perfil, type PlanSemanal, type RegistroDia,
+  borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, imc,
+  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, racha, semanaSalida, serieDiaria,
+  tendenciaSemanal, useEstado,
+  type Comida, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
+  type PlanSemanal, type RegistroDia, type SexoBio,
 } from './store';
 
 type Tab = 'hoy' | 'recetas' | 'plan' | 'progreso' | 'mas';
@@ -22,6 +24,8 @@ const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', '
 export default function App() {
   const [estado, setEstado] = useEstado();
   const [tab, setTab] = useState<Tab>('hoy');
+  const [planIA, setPlanIA] = useState(false);
+  const [medsOpen, setMedsOpen] = useState(false);
 
   if (!estado.activado) {
     return <Activacion onOk={(codigo) => setEstado((e) => ({ ...e, activado: true, codigoUsado: codigo }))} />;
@@ -43,7 +47,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
       <div key={tab} className="anim-screen">
-      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} />}
+      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
         <PantallaPlan
@@ -62,13 +66,27 @@ export default function App() {
       {tab === 'progreso' && (
         <PantallaProgreso
           estado={estado}
+          setEstado={setEstado}
           onPeso={(kg) => setEstado((e) => ({ ...e, pesos: [...e.pesos.filter((p) => p.fecha !== hoy), { fecha: hoy, kg }] }))}
           onMedidas={(m) => setEstado((e) => ({ ...e, medidas: [...e.medidas.filter((x) => x.fecha !== m.fecha), m] }))}
         />
       )}
-      {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} />}
+      {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} />}
       </div>
       <TabBar tab={tab} setTab={setTab} />
+      {planIA && (
+        <PantallaPlanInteligente
+          estado={estado}
+          setEstado={setEstado}
+          pesoActual={pesoActual}
+          onCerrar={() => setPlanIA(false)}
+        />
+      )}
+      {medsOpen && (
+        <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
+          <PantallaMedicamentos perfil={perfil} onVolver={() => setMedsOpen(false)} />
+        </div>
+      )}
       <CelebracionHost />
     </div>
   );
@@ -272,9 +290,9 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         </div>
 
         <label className="lbl">Tu medicamento</label>
-        <div className="grid grid-cols-2 gap-2">
-          {(['Ozempic', 'Wegovy', 'Mounjaro', 'Otro'] as const).map((m) => (
-            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-sm ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+        <div className="grid grid-cols-3 gap-2">
+          {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
+            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
           ))}
         </div>
 
@@ -311,8 +329,8 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 }
 
 /* ---------- Hoy ---------- */
-function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
-  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal;
+function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA, onMeds }: {
+  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal; onPlanIA: () => void; onMeds: () => void;
 }) {
   const dosisHoy = esDiaDosis(perfil);
   const planHoy = plan[new Date().getDay()] ?? {};
@@ -384,6 +402,26 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
         })}
       </div>
 
+      {/* Acceso al Plan alimentario inteligente */}
+      <button onClick={onPlanIA} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-3 flex items-center gap-3 shadow-lg anim-bounce-in">
+        <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><Sparkles className="h-5 w-5 text-[#D4AF37]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Plan alimentario inteligente</span>
+          <span className="text-xs text-green-100/70">Tu día completo, generado por tus calorías y proteína</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
+
+      {/* Acceso a la Guía de medicamentos */}
+      <button onClick={onMeds} className="card w-full text-left flex items-center gap-3 !mb-4">
+        <span className="h-11 w-11 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Guía de medicamentos</span>
+          <span className="text-xs text-gray-500">{perfil.medicamento && perfil.medicamento !== 'Otro' ? `Cómo usar tu ${perfil.medicamento}, efectos y alimentación` : 'Cómo aplicar, efectos, alimentación y dudas'}</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
+      </button>
+
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
 
       {comidasHoy.length > 0 && (
@@ -452,6 +490,18 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan }: {
           <Check className={`h-4 w-4 ${reg.proteina ? '' : 'opacity-30'}`} />
           {reg.proteina ? `Proteína cumplida (~${meta} g) ✓` : `¿Cumpliste tus ~${meta} g de proteína?`}
         </button>
+
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Proteína hoy (g)</span>
+            <input type="number" inputMode="numeric" value={reg.proteinaG ?? ''} onChange={(e) => setReg({ proteinaG: e.target.value ? Number(e.target.value) : undefined })} placeholder={`${meta}`} className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Calorías hoy</span>
+            <input type="number" inputMode="numeric" value={reg.caloriasKcal ?? ''} onChange={(e) => setReg({ caloriasKcal: e.target.value ? Number(e.target.value) : undefined })} placeholder="kcal" className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
+        </div>
+        <p className="text-[10px] text-gray-400 mt-1.5">Se completan solos al aplicar tu Plan alimentario inteligente — o anótalos aquí. Alimentan tus Estadísticas.</p>
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <p className="text-sm font-bold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
@@ -776,9 +826,239 @@ function SelectorReceta({ cats, onPick, onQuitar, onCerrar }: {
   );
 }
 
+/* ---------- Plan alimentario inteligente ---------- */
+const CAT_DE_COMIDA: Record<Comida, Receta['cat']> = {
+  desayuno: 'desayuno', almuerzo: 'principal', cena: 'principal', snack: 'snack',
+};
+const SHARE_COMIDA: Record<Comida, number> = {
+  desayuno: 0.25, almuerzo: 0.32, cena: 0.28, snack: 0.15,
+};
+const COMIDAS_PLAN: { id: Comida; label: string }[] = [
+  { id: 'desayuno', label: 'Desayuno' },
+  { id: 'almuerzo', label: 'Almuerzo' },
+  { id: 'cena', label: 'Cena' },
+  { id: 'snack', label: 'Merienda' },
+];
+
+// Elige, para cada comida, la receta cuya caloría se acerca a la parte del día que le toca.
+// `variar` reparte entre las 4 más cercanas para que "otra combinación" dé variedad real.
+function generarComidas(calorias: number, suave: boolean, variar: boolean): Partial<Record<Comida, number>> {
+  const usados = new Set<number>();
+  const out: Partial<Record<Comida, number>> = {};
+  for (const { id: slot } of COMIDAS_PLAN) {
+    const objetivo = calorias * SHARE_COMIDA[slot];
+    let elig = RECETAS.filter((r) => r.cat === CAT_DE_COMIDA[slot] && (!suave || r.suave) && !usados.has(r.id));
+    if (!elig.length) elig = RECETAS.filter((r) => r.cat === CAT_DE_COMIDA[slot] && !usados.has(r.id));
+    if (!elig.length) elig = RECETAS.filter((r) => r.cat === CAT_DE_COMIDA[slot]);
+    // Puntúa por cercanía calórica, premiando la proteína (escudo muscular del GLP-1).
+    const puntaje = (r: Receta) => Math.abs(r.cal - objetivo) - r.proteina * 1.5;
+    elig = elig.slice().sort((a, b) => puntaje(a) - puntaje(b));
+    const topN = elig.slice(0, Math.min(4, elig.length));
+    const pick = variar && topN.length > 1 ? topN[Math.floor(Math.random() * topN.length)] : topN[0];
+    out[slot] = pick.id;
+    usados.add(pick.id);
+  }
+  return out;
+}
+
+function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; pesoActual?: number; onCerrar: () => void;
+}) {
+  const guardado = estado.planInteligente;
+  const perfil = estado.perfil!;
+  const [modo, setModo] = useState<'form' | 'plan'>(guardado?.comidas ? 'plan' : 'form');
+  const [cambiando, setCambiando] = useState<Comida | null>(null);
+
+  const [peso, setPeso] = useState(String(guardado?.peso ?? pesoActual ?? perfil.pesoInicial ?? ''));
+  const [altura, setAltura] = useState(String(guardado?.altura ?? perfil.altura ?? ''));
+  const [edad, setEdad] = useState(guardado?.edad ? String(guardado.edad) : '');
+  const [sexo, setSexo] = useState<SexoBio>(guardado?.sexo ?? 'F');
+  const [objetivo, setObjetivo] = useState<ObjetivoPlan>(guardado?.objetivo ?? 'perder');
+  const [suave, setSuave] = useState<boolean>(guardado?.suave ?? false);
+
+  const pesoN = Number(peso), alturaN = Number(altura), edadN = Number(edad);
+  const valido = pesoN >= 30 && pesoN <= 300 && alturaN >= 120 && alturaN <= 220 && edadN >= 14 && edadN <= 100;
+
+  const metas = guardado ? metasPlan(guardado) : null;
+  const comidas = guardado?.comidas ?? {};
+  const totalCal = COMIDAS_PLAN.reduce((s, c) => s + (RECETAS.find((r) => r.id === comidas[c.id])?.cal ?? 0), 0);
+  const totalProt = COMIDAS_PLAN.reduce((s, c) => s + (RECETAS.find((r) => r.id === comidas[c.id])?.proteina ?? 0), 0);
+
+  const generar = (variar: boolean) => {
+    const d: Omit<PlanInteligente, 'comidas'> = { peso: pesoN, altura: alturaN, edad: edadN, sexo, objetivo, suave };
+    const m = metasPlan(d);
+    setEstado((e) => ({
+      ...e,
+      perfil: e.perfil ? { ...e.perfil, altura: alturaN } : e.perfil, // altura compartida con Estadísticas (IMC)
+      planInteligente: { ...d, comidas: generarComidas(m.calorias, suave, variar) },
+    }));
+    setModo('plan');
+  };
+
+  const regenerar = () => {
+    if (!guardado) return;
+    const m = metasPlan(guardado);
+    setEstado((e) => ({ ...e, planInteligente: { ...guardado, comidas: generarComidas(m.calorias, guardado.suave, true) } }));
+  };
+
+  const cambiarComida = (slot: Comida, id: number) => {
+    if (!guardado) return;
+    setEstado((e) => ({ ...e, planInteligente: { ...guardado, comidas: { ...guardado.comidas, [slot]: id } } }));
+    setCambiando(null);
+  };
+
+  const aplicarAHoy = () => {
+    if (!guardado) return;
+    const hoyIdx = new Date().getDay();
+    const hoy = hoyISO();
+    setEstado((e) => {
+      const reg = e.registros[hoy] ?? { fecha: hoy, agua: 0, proteina: false };
+      return {
+        ...e,
+        plan: { ...e.plan, [hoyIdx]: { ...guardado.comidas } },
+        registros: { ...e.registros, [hoy]: { ...reg, proteinaG: totalProt, caloriasKcal: totalCal } },
+      };
+    });
+    celebrar('¡Plan aplicado a hoy! 🍽️', 'Menú, proteína y calorías del día quedaron registrados.');
+    onCerrar();
+  };
+
+  return (
+    <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
+      <div className="max-w-md mx-auto px-5 pt-6">
+        <button onClick={onCerrar} className="text-sm font-bold text-gray-500 mb-4">← Volver</button>
+        <div className="flex items-center gap-2.5 mb-1">
+          <span className="h-10 w-10 rounded-2xl bg-[#0D3320] flex items-center justify-center shrink-0"><Sparkles className="h-5 w-5 text-[#D4AF37]" /></span>
+          <h1 className="text-2xl font-bold">Plan alimentario inteligente</h1>
+        </div>
+        <p className="text-sm text-gray-500 mb-5">Con tus datos calculamos tus calorías y proteína del día, y armamos un menú completo. Puedes cambiar cualquier plato.</p>
+
+        {modo === 'form' ? (
+          <div className="anim-fade-up">
+            <div className="grid grid-cols-3 gap-2">
+              <div><label className="lbl">Peso (kg)</label><input className="inp" type="number" inputMode="decimal" value={peso} onChange={(e) => setPeso(e.target.value)} placeholder="75" /></div>
+              <div><label className="lbl">Altura (cm)</label><input className="inp" type="number" inputMode="numeric" value={altura} onChange={(e) => setAltura(e.target.value)} placeholder="165" /></div>
+              <div><label className="lbl">Edad</label><input className="inp" type="number" inputMode="numeric" value={edad} onChange={(e) => setEdad(e.target.value)} placeholder="40" /></div>
+            </div>
+
+            <label className="lbl">Sexo biológico <span className="text-gray-400 font-normal normal-case">· para el cálculo</span></label>
+            <div className="grid grid-cols-2 gap-2">
+              {([['F', 'Femenino'], ['M', 'Masculino']] as const).map(([v, l]) => (
+                <button key={v} onClick={() => setSexo(v)} className={`seg py-3 text-sm ${sexo === v ? 'seg-on' : ''}`}>{l}</button>
+              ))}
+            </div>
+
+            <label className="lbl">Tu objetivo</label>
+            <div className="grid grid-cols-3 gap-2">
+              {([['perder', 'Perder peso'], ['mantener', 'Mantener'], ['ganar', 'Ganar músculo']] as const).map(([v, l]) => (
+                <button key={v} onClick={() => setObjetivo(v)} className={`seg py-3 text-xs leading-tight ${objetivo === v ? 'seg-on' : ''}`}>{l}</button>
+              ))}
+            </div>
+
+            <button onClick={() => setSuave(!suave)} className="w-full flex items-center gap-3 mt-4 rounded-2xl border-2 border-[#ECE7DD] bg-white px-4 py-3 text-left">
+              <span className={`h-5 w-5 rounded-md border flex items-center justify-center shrink-0 ${suave ? 'bg-[#16A34A] border-[#16A34A]' : 'border-gray-300'}`}>{suave && <Check className="h-3.5 w-3.5 text-white" />}</span>
+              <span className="text-sm"><b>Estómago sensible</b> — prioriza recetas suaves</span>
+            </button>
+
+            <button disabled={!valido} onClick={() => generar(false)} className="btn3d btn3d-gold w-full mt-6 py-4 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-40">
+              <Sparkles className="h-4 w-4" /> Generar mi plan
+            </button>
+            <p className="text-[11px] text-gray-400 mt-3 text-center leading-relaxed">Cálculo educativo (fórmula Mifflin-St Jeor, actividad ligera). No sustituye la indicación de tu médico o nutricionista.</p>
+          </div>
+        ) : metas && (
+          <div className="anim-fade-up">
+            <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-5 mb-3">
+              <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-2">Tus metas diarias</p>
+              <div className="flex gap-3">
+                <div className="flex-1 rounded-xl bg-white/10 p-3 text-center">
+                  <p className="text-2xl font-extrabold tabular-nums">{metas.calorias}</p>
+                  <p className="text-[10px] text-green-100/70 font-semibold">kcal / día</p>
+                </div>
+                <div className="flex-1 rounded-xl bg-white/10 p-3 text-center">
+                  <p className="text-2xl font-extrabold tabular-nums text-[#D4AF37]">{metas.proteina} g</p>
+                  <p className="text-[10px] text-green-100/70 font-semibold">proteína</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-green-100/50 mt-2 text-center">Metabolismo basal ~{metas.bmr} kcal · gasto estimado ~{metas.tdee} kcal</p>
+            </div>
+
+            <div className="card">
+              <div className="flex justify-between text-xs font-bold mb-1"><span>Calorías del plan</span><span className={totalCal <= metas.calorias + 100 ? 'text-[#16A34A]' : 'text-[#8A6D1C]'}>{totalCal} / {metas.calorias} kcal</span></div>
+              <div className="barra h-2.5 bg-[#ECE7DD] mb-3"><div className="barra-fill bg-[#16A34A]" style={{ width: `${Math.min(100, (totalCal / metas.calorias) * 100)}%` }} /></div>
+              <div className="flex justify-between text-xs font-bold mb-1"><span>Proteína del plan</span><span className={totalProt >= metas.proteina ? 'text-[#16A34A]' : 'text-[#8A6D1C]'}>{totalProt} / {metas.proteina} g</span></div>
+              <div className="barra h-2.5 bg-[#ECE7DD]"><div className="barra-fill bg-[#D4AF37]" style={{ width: `${Math.min(100, (totalProt / metas.proteina) * 100)}%` }} /></div>
+            </div>
+
+            {COMIDAS_PLAN.map((c) => {
+              const r = RECETAS.find((x) => x.id === comidas[c.id]);
+              return (
+                <div key={c.id} className="card flex items-center gap-3">
+                  <span className="h-10 w-10 rounded-xl bg-[#EAF4EC] flex items-center justify-center shrink-0"><Utensils className="h-4 w-4 text-[#16A34A]" /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{c.label}</p>
+                    <p className="text-sm font-bold truncate">{r?.nombre ?? '—'}</p>
+                    {r && <p className="text-xs text-gray-400">{r.cal} kcal · {r.proteina} g proteína</p>}
+                  </div>
+                  <button onClick={() => setCambiando(c.id)} className="text-xs font-bold text-[#16A34A] bg-[#EAF4EC] rounded-xl px-3 py-2 shrink-0">Cambiar</button>
+                </div>
+              );
+            })}
+
+            <button onClick={regenerar} className="btn3d btn3d-soft w-full mt-2 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm"><RefreshCw className="h-4 w-4" /> Generar otra combinación</button>
+            <button onClick={aplicarAHoy} className="btn3d w-full mt-2.5 py-4 rounded-2xl flex items-center justify-center gap-2"><Check className="h-4 w-4" /> Aplicar a mi día de hoy</button>
+            <button onClick={() => setModo('form')} className="w-full mt-2 py-3 text-sm font-bold text-gray-500">Editar mis datos</button>
+            <p className="text-[11px] text-gray-400 mt-2 mb-4 text-center leading-relaxed">Plan orientativo generado a partir de tus datos. Ajusta las porciones a tu apetito y consulta a tu médico o nutricionista.</p>
+          </div>
+        )}
+      </div>
+
+      {cambiando && metas && (
+        <SelectorComida
+          slot={cambiando}
+          objetivoCal={metas.calorias * SHARE_COMIDA[cambiando]}
+          suave={guardado?.suave ?? false}
+          onPick={(id) => cambiarComida(cambiando, id)}
+          onCerrar={() => setCambiando(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function SelectorComida({ slot, objetivoCal, suave, onPick, onCerrar }: {
+  slot: Comida; objetivoCal: number; suave: boolean; onPick: (id: number) => void; onCerrar: () => void;
+}) {
+  const [soloSuaves, setSoloSuaves] = useState(suave);
+  const label = COMIDAS_PLAN.find((c) => c.id === slot)!.label;
+  const lista = RECETAS
+    .filter((r) => r.cat === CAT_DE_COMIDA[slot] && (!soloSuaves || r.suave))
+    .sort((a, b) => Math.abs(a.cal - objetivoCal) - Math.abs(b.cal - objetivoCal));
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-end" onClick={onCerrar}>
+      <div className="bg-white w-full max-w-md mx-auto rounded-t-3xl p-5 max-h-[75vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-center mb-1">
+          <h2 className="font-bold">Elegir {label.toLowerCase()}</h2>
+          <button onClick={() => setSoloSuaves(!soloSuaves)} className={`text-xs font-bold px-3 py-1.5 rounded-full border ${soloSuaves ? 'bg-[#28415E] text-white border-[#28415E]' : 'border-gray-200 text-gray-500'}`}>Solo suaves</button>
+        </div>
+        <p className="text-xs text-gray-400 mb-2">Ordenadas por cercanía a ~{Math.round(objetivoCal)} kcal para esta comida.</p>
+        {lista.map((r) => (
+          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-3 border-t border-gray-100 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate">{r.nombre}</p>
+              <p className="text-xs text-gray-400">{r.cal} kcal · {r.proteina} g proteína{r.suave ? ' · suave' : ''}</p>
+            </div>
+            {r.exclusiva && <span className="tag bg-[#C9A035] text-white shrink-0">✦ App</span>}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Progreso ---------- */
-function PantallaProgreso({ estado, onPeso, onMedidas }: {
+function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
   estado: ReturnType<typeof useEstado>[0];
+  setEstado: ReturnType<typeof useEstado>[1];
   onPeso: (kg: number) => void;
   onMedidas: (m: Medidas) => void;
 }) {
@@ -786,6 +1066,7 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
   const [pesoInput, setPesoInput] = useState('');
   const [med, setMed] = useState<Medidas>({ fecha: hoyISO() });
   const [verInforme, setVerInforme] = useState(false);
+  const [verStats, setVerStats] = useState(false);
 
   const tendencia = tendenciaSemanal(estado.pesos);
   const ultimo = estado.pesos.length ? [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha)).at(-1)!.kg : null;
@@ -804,10 +1085,20 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
   }, [estado.registros]);
 
   if (verInforme) return <Informe estado={estado} onCerrar={() => setVerInforme(false)} />;
+  if (verStats) return <PantallaEstadisticas estado={estado} setEstado={setEstado} onCerrar={() => setVerStats(false)} />;
 
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
       <h1 className="text-2xl font-bold mb-4">Mi progreso</h1>
+
+      <button onClick={() => setVerStats(true)} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-4 flex items-center gap-3 shadow-lg">
+        <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><LineChart className="h-5 w-5 text-[#D4AF37]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Estadísticas completas</span>
+          <span className="text-xs text-green-100/70">Peso, IMC, cintura, agua, proteína, calorías y síntomas</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
 
       <div className="card">
         <div className="flex justify-between items-center mb-3">
@@ -1032,9 +1323,191 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
   );
 }
 
+/* ---------- Estadísticas ---------- */
+const etqFecha = (iso: string) => iso.slice(8, 10) + '/' + iso.slice(5, 7);
+
+function MiniLinea({ datos, color, meta, unidad = '', decimales = 0 }: {
+  datos: { etiqueta: string; v: number }[]; color: string; meta?: number; unidad?: string; decimales?: number;
+}) {
+  const W = 320, H = 120, P = 26;
+  const vals = datos.map((d) => d.v);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if (meta !== undefined) { min = Math.min(min, meta); max = Math.max(max, meta); }
+  const pad = (max - min) * 0.15 || 1;
+  min -= pad; max += pad;
+  const x = (i: number) => P + (i * (W - 2 * P)) / Math.max(1, datos.length - 1);
+  const y = (v: number) => H - P - ((v - min) * (H - 2 * P)) / (max - min || 1);
+  const pts = datos.map((d, i) => `${x(i)},${y(d.v)}`).join(' ');
+  const paso = Math.max(1, Math.ceil(datos.length / 6));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+      {meta !== undefined && (
+        <>
+          <line x1={P} y1={y(meta)} x2={W - P} y2={y(meta)} stroke="#C9A035" strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x={W - P} y={y(meta) - 4} textAnchor="end" fontSize="8" fill="#C9A035" fontWeight="700">meta {meta}{unidad}</text>
+        </>
+      )}
+      {datos.length > 1 && <polyline points={pts} fill="none" stroke={color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />}
+      {datos.map((d, i) => (
+        <g key={i}>
+          <circle cx={x(i)} cy={y(d.v)} r="3" fill={color} />
+          {(i === 0 || i === datos.length - 1) && <text x={x(i)} y={y(d.v) - 8} textAnchor="middle" fontSize="9" fill="#1F2430" fontWeight="700">{d.v.toFixed(decimales)}</text>}
+          {i % paso === 0 && <text x={x(i)} y={H - 6} textAnchor="middle" fontSize="7.5" fill="#9CA3AF">{d.etiqueta}</text>}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function MiniBarras({ datos, color, max }: { datos: { etiqueta: string; v?: number }[]; color: string; max: number }) {
+  const W = 320, H = 90, bw = W / datos.length;
+  const y = (v: number) => 70 - (Math.min(v, max) / max) * 55;
+  const paso = Math.max(1, Math.ceil(datos.length / 7));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+      {datos.map((d, i) => (
+        <g key={i}>
+          {d.v !== undefined && d.v > 0 && <rect x={i * bw + 2} y={y(d.v)} width={bw - 4} height={70 - y(d.v) + 2} rx="2" fill={color} opacity=".85" />}
+          {i % paso === 0 && <text x={i * bw + bw / 2} y={84} textAnchor="middle" fontSize="7" fill="#9CA3AF">{d.etiqueta}</text>}
+        </g>
+      ))}
+      <line x1="0" y1="72" x2={W} y2="72" stroke="#E5E7EB" />
+    </svg>
+  );
+}
+
+function TarjetaStat({ titulo, valor, color, hay, vacio, children }: {
+  titulo: string; valor?: string; color?: string; hay: boolean; vacio: string; children: React.ReactNode;
+}) {
+  return (
+    <div className="card">
+      <div className="flex justify-between items-baseline mb-2">
+        <h2 className="font-bold">{titulo}</h2>
+        {valor && <span className="text-sm font-extrabold" style={{ color: color ?? '#1F2430' }}>{valor}</span>}
+      </div>
+      {hay ? children : <p className="text-xs text-gray-400 py-5 text-center">{vacio}</p>}
+    </div>
+  );
+}
+
+function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onCerrar: () => void;
+}) {
+  const perfil = estado.perfil!;
+  const [alturaInput, setAlturaInput] = useState('');
+
+  const pesos = [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const pesoSerie = pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: p.kg }));
+  const pesoAct = pesos.length ? pesos.at(-1)!.kg : null;
+  const pesoDelta = pesoAct !== null ? Math.round((pesoAct - perfil.pesoInicial) * 10) / 10 : null;
+
+  const altura = perfil.altura;
+  const imcSerie = altura ? pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: imc(p.kg, altura) })) : [];
+  const imcAct = altura && pesoAct !== null ? imc(pesoAct, altura) : 0;
+  const claseImc = imcAct ? clasificarIMC(imcAct) : null;
+
+  const cinturaSerie = [...estado.medidas]
+    .filter((m) => m.cintura !== undefined)
+    .sort((a, b) => a.fecha.localeCompare(b.fecha))
+    .map((m) => ({ etiqueta: etqFecha(m.fecha), v: m.cintura! }));
+
+  const agua = serieDiaria(estado.registros, 'agua', 14).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor }));
+  const aguaHay = agua.some((d) => (d.v ?? 0) > 0);
+
+  const protSerie = serieDiaria(estado.registros, 'proteinaG', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const metaProt = metaProteina(perfil, pesoAct ?? undefined);
+  const protProm = protSerie.length ? Math.round(protSerie.reduce((s, d) => s + d.v, 0) / protSerie.length) : 0;
+
+  const calSerie = serieDiaria(estado.registros, 'caloriasKcal', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const metaCal = estado.planInteligente ? metasPlan(estado.planInteligente).calorias : undefined;
+  const calProm = calSerie.length ? Math.round(calSerie.reduce((s, d) => s + d.v, 0) / calSerie.length) : 0;
+
+  const naus = serieDiaria(estado.registros, 'nauseas', 14);
+  const ener = serieDiaria(estado.registros, 'energia', 14);
+  const sintomas = naus.map((d, i) => ({ fecha: d.fecha.slice(8), nauseas: d.valor, energia: ener[i].valor }));
+  const sintomasHay = sintomas.some((d) => d.nauseas !== undefined || d.energia !== undefined);
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-5 pb-4">
+      <button onClick={onCerrar} className="text-sm font-bold text-gray-500 mb-3">← Mi progreso</button>
+      <div className="flex items-center gap-2.5 mb-1">
+        <span className="h-10 w-10 rounded-2xl bg-[#0D3320] flex items-center justify-center shrink-0"><LineChart className="h-5 w-5 text-[#D4AF37]" /></span>
+        <h1 className="text-2xl font-bold">Estadísticas</h1>
+      </div>
+      <p className="text-sm text-gray-500 mb-5">Todo tu progreso en un solo lugar. Los datos salen de lo que registras en Hoy y Progreso.</p>
+
+      {/* Peso */}
+      <TarjetaStat titulo="Peso" hay={pesoSerie.length >= 2}
+        valor={pesoDelta !== null ? `${pesoDelta > 0 ? '+' : ''}${pesoDelta} kg` : undefined}
+        color={pesoDelta !== null && pesoDelta <= 0 ? '#16A34A' : '#8A6D1C'}
+        vacio="Registra tu peso al menos 2 veces en Progreso para ver la curva.">
+        <MiniLinea datos={pesoSerie} color="#166534" decimales={1} unidad=" kg" />
+      </TarjetaStat>
+
+      {/* IMC */}
+      {altura ? (
+        <TarjetaStat titulo="IMC" hay={imcSerie.length >= 2}
+          valor={claseImc ? `${imcAct} · ${claseImc.label}` : undefined} color={claseImc?.color}
+          vacio="Registra tu peso para calcular la curva de IMC.">
+          <MiniLinea datos={imcSerie} color={claseImc?.color ?? '#166534'} decimales={1} />
+        </TarjetaStat>
+      ) : (
+        <div className="card">
+          <h2 className="font-bold mb-1">IMC</h2>
+          <p className="text-xs text-gray-500 mb-3">Ingresa tu altura una vez y calculamos tu índice de masa corporal automáticamente.</p>
+          <div className="flex gap-2">
+            <input value={alturaInput} onChange={(e) => setAlturaInput(e.target.value)} type="number" inputMode="numeric" placeholder="Altura (cm)" className="inp flex-1 !mb-0" />
+            <button onClick={() => { const v = Number(alturaInput); if (v >= 120 && v <= 220) setEstado((e) => ({ ...e, perfil: e.perfil ? { ...e.perfil, altura: v } : e.perfil })); }} className="btn3d px-5 rounded-2xl text-sm">Guardar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Cintura */}
+      <TarjetaStat titulo="Cintura" hay={cinturaSerie.length >= 2}
+        valor={cinturaSerie.length ? `${cinturaSerie.at(-1)!.v} cm` : undefined} color="#C9A035"
+        vacio="Registra tu cintura en Progreso → Medidas del mes (al menos 2 veces).">
+        <MiniLinea datos={cinturaSerie} color="#C9A035" decimales={1} unidad=" cm" />
+      </TarjetaStat>
+
+      {/* Agua */}
+      <TarjetaStat titulo="Agua · últimos 14 días" hay={aguaHay}
+        valor="meta 8 vasos" color="#38BDF8"
+        vacio="Registra tus vasos de agua en la pestaña Hoy.">
+        <MiniBarras datos={agua} color="#38BDF8" max={8} />
+      </TarjetaStat>
+
+      {/* Proteína */}
+      <TarjetaStat titulo="Proteína (g)" hay={protSerie.length >= 1}
+        valor={protSerie.length ? `prom. ${protProm} g` : undefined} color="#16A34A"
+        vacio="Anota tus gramos de proteína en Hoy, o aplica tu Plan alimentario inteligente.">
+        <MiniLinea datos={protSerie} color="#16A34A" meta={metaProt} unidad=" g" />
+      </TarjetaStat>
+
+      {/* Calorías */}
+      <TarjetaStat titulo="Calorías (kcal)" hay={calSerie.length >= 1}
+        valor={calSerie.length ? `prom. ${calProm} kcal` : undefined} color="#166534"
+        vacio="Anota tus calorías en Hoy, o aplica tu Plan alimentario inteligente.">
+        <MiniLinea datos={calSerie} color="#166534" meta={metaCal} unidad="" />
+      </TarjetaStat>
+
+      {/* Síntomas */}
+      <TarjetaStat titulo="Náuseas y energía · 14 días" hay={sintomasHay}
+        vacio="Registra náuseas y energía en la pestaña Hoy.">
+        <GraficoBarras datos={sintomas} />
+        <div className="flex gap-4 mt-2 text-[10px] text-gray-500">
+          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#DC2626]" /> Náuseas</span>
+          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#16A34A]" /> Energía</span>
+        </div>
+      </TarjetaStat>
+
+      <p className="text-[10px] text-gray-400 text-center mt-2">Datos orientativos de tu propio registro. Compártelos con tu médico desde Progreso → Informe.</p>
+    </div>
+  );
+}
+
 /* ---------- Más (menú) ---------- */
-function PantallaMas({ estado, setEstado }: {
-  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onPlanIA: () => void; onMeds: () => void;
 }) {
   const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
 
@@ -1055,6 +1528,22 @@ function PantallaMas({ estado, setEstado }: {
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
       <h1 className="text-2xl font-bold mb-4">Más herramientas</h1>
+      <button onClick={onPlanIA} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-3 flex items-center gap-4 shadow-lg">
+        <span className="h-12 w-12 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><Sparkles className="h-5 w-5 text-[#D4AF37]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Plan alimentario inteligente</span>
+          <span className="text-xs text-green-100/70">{estado.planInteligente ? 'Tu plan está listo — ábrelo o ajústalo' : 'Genera tu día por calorías y proteína'}</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
+      <button onClick={onMeds} className="card w-full text-left flex items-center gap-4">
+        <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Guía de medicamentos</span>
+          <span className="text-xs text-gray-500">Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus{estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
+      </button>
       {items.map((it) => (
         <button key={it.id} onClick={() => setVista(it.id)} className="card w-full text-left flex items-center gap-4">
           <span className="h-12 w-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: it.bg, color: it.fg }}>{it.icon}</span>
@@ -1411,6 +1900,126 @@ function PantallaGuia() {
       <p className="text-[10px] text-gray-400 text-center mt-4 mb-2">
         El Plan de Salida interactivo está en Más herramientas → Plan de Salida.
       </p>
+    </div>
+  );
+}
+
+/* ---------- Guía de medicamentos ---------- */
+function PantallaMedicamentos({ perfil, onVolver }: { perfil: Perfil; onVolver: () => void }) {
+  const miMed = perfil.medicamento;
+  const orden = [...MEDICAMENTOS].sort((a, b) => (b.nombre === miMed ? 1 : 0) - (a.nombre === miMed ? 1 : 0));
+  const [sel, setSel] = useState<Medicamento | null>(null);
+  const [secc, setSecc] = useState<'aplicar' | 'efectos' | 'alimentacion' | 'faq'>('aplicar');
+
+  if (sel) {
+    const Icono = sel.via === 'oral' ? Pill : Syringe;
+    return (
+      <div className="max-w-md mx-auto px-5 pt-4">
+        <button onClick={() => setSel(null)} className="text-sm font-bold text-gray-500 mb-3">← Todos los medicamentos</button>
+
+        <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-5 mb-4">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center shrink-0"><Icono className="h-5 w-5 text-[#D4AF37]" /></span>
+            <div className="min-w-0">
+              <h1 className="text-xl font-extrabold leading-tight">{sel.nombre}</h1>
+              <p className="text-xs text-green-100/70">{sel.principio}</p>
+            </div>
+          </div>
+          <span className="inline-block text-[10px] font-bold bg-white/10 rounded-full px-2.5 py-1">{sel.via === 'oral' ? '💊 Pastilla' : '💉 Inyección'} · {sel.frecuencia}</span>
+          <p className="text-[11px] text-green-100/60 mt-3 leading-relaxed">{sel.aprobado}</p>
+        </div>
+
+        <div className="grid grid-cols-4 gap-1.5 mb-4">
+          {([['aplicar', 'Aplicar'], ['efectos', 'Efectos'], ['alimentacion', 'Comer'], ['faq', 'Dudas']] as const).map(([v, l]) => (
+            <button key={v} onClick={() => setSecc(v)} className={`seg py-2.5 text-xs ${secc === v ? 'seg-on' : ''}`}>{l}</button>
+          ))}
+        </div>
+
+        {secc === 'aplicar' && (
+          <div className="card">
+            <h2 className="font-bold mb-3 flex items-center gap-2"><Icono className="h-4 w-4 text-[#0C87C4]" /> Cómo {sel.via === 'oral' ? 'tomarlo' : 'aplicarlo'}</h2>
+            <ol className="space-y-2.5">
+              {sel.aplicar.map((t, i) => (
+                <li key={i} className="flex gap-3 text-sm text-gray-600">
+                  <span className="h-6 w-6 shrink-0 rounded-full bg-[#EAF4EC] text-[#166534] font-bold text-xs flex items-center justify-center">{i + 1}</span>
+                  <span className="leading-snug">{t}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {secc === 'efectos' && (
+          <>
+            <div className="card">
+              <h2 className="font-bold mb-2">Efectos frecuentes</h2>
+              {sel.efectosComunes.map((t, i) => (
+                <div key={i} className="flex gap-2.5 py-1.5 text-sm text-gray-600"><Check className="h-4 w-4 text-[#16A34A] shrink-0 mt-0.5" /> <span className="leading-snug">{t}</span></div>
+              ))}
+            </div>
+            <div className="card !border-[#F0D9D9] bg-[#FDF8F8]">
+              <h2 className="font-bold text-[#8C2F2F] mb-2 flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> Contacta a tu médico si…</h2>
+              {sel.efectosAlerta.map((t, i) => (
+                <div key={i} className="flex gap-2.5 py-1.5 text-xs text-gray-700"><span className="text-[#8C2F2F] font-bold shrink-0">•</span> <span className="leading-snug">{t}</span></div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {secc === 'alimentacion' && (
+          <div className="card">
+            <h2 className="font-bold mb-2 flex items-center gap-2"><Utensils className="h-4 w-4 text-[#16A34A]" /> Alimentación recomendada</h2>
+            {sel.alimentacion.map((t, i) => (
+              <div key={i} className="flex gap-2.5 py-1.5 text-sm text-gray-600"><span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] shrink-0 mt-2" /> <span className="leading-snug">{t}</span></div>
+            ))}
+            <p className="text-[10px] text-gray-400 mt-2">Genera un menú a tu medida en Hoy → Plan alimentario inteligente.</p>
+          </div>
+        )}
+
+        {secc === 'faq' && (
+          <div className="space-y-2.5">
+            {sel.faq.map((f, i) => <React.Fragment key={i}><FaqMed q={f.q} a={f.a} /></React.Fragment>)}
+          </div>
+        )}
+
+        <p className="text-[10px] text-gray-400 text-center mt-4 mb-4 leading-relaxed">Información educativa general. No sustituye el prospecto ni las indicaciones de tu médico o farmacéutico. Nunca inicies, cambies o suspendas tu tratamiento por tu cuenta.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <button onClick={onVolver} className="text-sm font-bold text-gray-500 mb-3">← Volver</button>
+      <h1 className="text-2xl font-bold mb-1">Guía de medicamentos</h1>
+      <p className="text-sm text-gray-500 mb-4">Cómo se usa cada uno, sus efectos, la alimentación que mejor lo acompaña y las dudas más comunes.</p>
+      {orden.map((m) => {
+        const Icono = m.via === 'oral' ? Pill : Syringe;
+        const mio = m.nombre === miMed;
+        return (
+          <button key={m.id} onClick={() => { setSel(m); setSecc('aplicar'); }} className={`card w-full text-left flex items-center gap-4 ${mio ? 'ring-2 ring-[#16A34A]' : ''}`}>
+            <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Icono className="h-5 w-5" /></span>
+            <span className="min-w-0 flex-1">
+              <span className="font-bold text-sm flex items-center gap-2 flex-wrap">{m.nombre} {mio && <span className="text-[9px] font-bold uppercase tracking-wide text-[#166534] bg-[#EAF4EC] rounded-full px-2 py-0.5">Tu tratamiento</span>}</span>
+              <span className="text-xs text-gray-500">{m.principio} · {m.via === 'oral' ? 'pastilla diaria' : 'inyección semanal'}</span>
+            </span>
+            <ChevronDown className="h-4 w-4 text-gray-300 shrink-0 -rotate-90" />
+          </button>
+        );
+      })}
+      <p className="text-[10px] text-gray-400 text-center mt-4">Información educativa · no sustituye a tu médico ni al prospecto de tu medicamento.</p>
+    </div>
+  );
+}
+
+function FaqMed({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="card !p-0 overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex justify-between items-center text-left p-4 gap-3">
+        <span className="font-bold text-sm">{q}</span>
+        {open ? <ChevronUp className="h-4 w-4 text-gray-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-400 shrink-0" />}
+      </button>
+      {open && <div className="px-4 pb-4 border-t border-gray-100 pt-3"><p className="text-sm text-gray-600 leading-relaxed">{a}</p></div>}
     </div>
   );
 }

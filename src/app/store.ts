@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 export type Perfil = {
   nombre: string;
   pesoInicial: number; // kg
+  altura?: number; // cm — para IMC (opcional; se completa en el plan o en estadísticas)
   unidad: 'kg' | 'lb';
-  medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Otro';
+  medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Zepbound' | 'Rybelsus' | 'Otro';
   diaDosis: number; // 0=domingo … 6=sábado
   objetivo?: number; // kg
   fechaInicio: string;
@@ -17,6 +18,8 @@ export type RegistroDia = {
   energia?: number;
   agua: number;
   proteina: boolean;
+  proteinaG?: number; // gramos de proteína del día (se autocompleta al aplicar el plan)
+  caloriasKcal?: number; // calorías del día (se autocompleta al aplicar el plan)
   pasosInyeccion?: string[];
   nota?: string; // diario: qué comí, cómo me sentí
 };
@@ -28,6 +31,19 @@ export type Comida = 'desayuno' | 'almuerzo' | 'cena' | 'snack';
 export type PlanDia = Partial<Record<Comida, number>>; // id de receta
 export type PlanSemanal = Record<number, PlanDia>; // 0=domingo … 6=sábado
 
+// ---- Plan alimentario inteligente ----
+export type SexoBio = 'F' | 'M';
+export type ObjetivoPlan = 'perder' | 'mantener' | 'ganar';
+export type PlanInteligente = {
+  peso: number; // kg
+  altura: number; // cm
+  edad: number;
+  sexo: SexoBio;
+  objetivo: ObjetivoPlan;
+  suave: boolean; // priorizar recetas suaves (estómago sensible)
+  comidas: Partial<Record<Comida, number>>; // id de receta por comida
+};
+
 export type Estado = {
   activado: boolean;
   codigoUsado?: string; // código de activación introducido (para soporte)
@@ -36,6 +52,7 @@ export type Estado = {
   pesos: Peso[];
   medidas: Medidas[];
   plan: PlanSemanal;
+  planInteligente?: PlanInteligente; // plan alimentario generado por calorías
   comprasHechas: string[]; // ítems marcados de la lista de compras
   despensaHecha: string[]; // ítems marcados de la Lista de Supermercado (Módulo 3)
   salida?: { inicio: string; checks: string[] };
@@ -106,6 +123,59 @@ export function metaProteina(perfil: Perfil, pesoActual?: number): number {
 
 export function esDiaDosis(perfil: Perfil, fecha = new Date()): boolean {
   return fecha.getDay() === perfil.diaDosis;
+}
+
+// Índice de masa corporal y su clasificación (OMS).
+export function imc(kg: number, alturaCm: number): number {
+  if (!alturaCm) return 0;
+  const m = alturaCm / 100;
+  return Math.round((kg / (m * m)) * 10) / 10;
+}
+
+export function clasificarIMC(v: number): { label: string; color: string } {
+  if (v < 18.5) return { label: 'Bajo peso', color: '#E7B93B' };
+  if (v < 25) return { label: 'Peso normal', color: '#16A34A' };
+  if (v < 30) return { label: 'Sobrepeso', color: '#E7B93B' };
+  return { label: 'Obesidad', color: '#DC2626' };
+}
+
+// Serie de los últimos `dias` de un campo numérico del registro diario.
+export function serieDiaria(
+  registros: Record<string, RegistroDia>,
+  campo: 'agua' | 'proteinaG' | 'caloriasKcal' | 'nauseas' | 'energia',
+  dias = 21,
+): { fecha: string; valor?: number }[] {
+  const out: { fecha: string; valor?: number }[] = [];
+  const hoy = new Date();
+  for (let i = dias - 1; i >= 0; i--) {
+    const d = new Date(hoy);
+    d.setDate(hoy.getDate() - i);
+    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const r = registros[iso];
+    out.push({ fecha: iso, valor: r ? (r[campo] as number | undefined) : undefined });
+  }
+  return out;
+}
+
+// Metas del plan alimentario inteligente.
+// BMR con Mifflin-St Jeor · TDEE con actividad ligera · déficit/superávit según objetivo.
+// La proteína sigue la guía (1.7–2.0 g/kg) para proteger el músculo durante el GLP-1.
+export function metasPlan(d: { peso: number; altura: number; edad: number; sexo: SexoBio; objetivo: ObjetivoPlan }): {
+  bmr: number; tdee: number; calorias: number; proteina: number;
+} {
+  const base = 10 * d.peso + 6.25 * d.altura - 5 * d.edad;
+  const bmr = Math.round(base + (d.sexo === 'M' ? 5 : -161));
+  const tdee = bmr * 1.375; // actividad ligera (caminatas + tareas del día)
+  let cal = d.objetivo === 'perder' ? tdee - 500 : d.objetivo === 'ganar' ? tdee + 250 : tdee;
+  const piso = d.sexo === 'F' ? 1200 : 1500; // mínimo seguro
+  cal = Math.max(piso, cal);
+  const factor = d.objetivo === 'perder' ? 1.8 : d.objetivo === 'ganar' ? 2.0 : 1.7;
+  return {
+    bmr,
+    tdee: Math.round(tdee),
+    calorias: Math.round(cal / 10) * 10,
+    proteina: Math.round(d.peso * factor),
+  };
 }
 
 export function racha(registros: Record<string, RegistroDia>): number {
