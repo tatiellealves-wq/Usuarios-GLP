@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Lora", Georgia, "Times New Roman", serif;
+  --font-display: "Bodoni Moda", "Times New Roman", Georgia, serif;
   --color-brand-green: #166534;
   --color-brand-green-hover: #14532D;
   --color-brand-green-vibrant: #16A34A;
@@ -38,40 +38,50 @@
 
 .font-display {
   font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Bodoni es una didona de alto contraste: a escala display no debe apretarse.
+   Neutralizamos el tracking-tight heredado para que las astas finas respiren. */
+h1.font-display,
+h2.font-display,
+h3.font-display {
+  letter-spacing: -0.005em;
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-@keyframes pulse-gold {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.35);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
-  }
-}
-
-@keyframes pulse-vibrant-green {
-  0%, 100% {
-    box-shadow: 0 4px 18px rgba(22, 163, 74, 0.30), 0 0 0 0 rgba(22, 163, 74, 0.35);
-  }
-  50% {
-    box-shadow: 0 4px 26px rgba(22, 163, 74, 0.40), 0 0 0 9px rgba(22, 163, 74, 0);
-  }
-}
-
+/* Botón principal: presencia por elevación y sombra refinada, no por parpadeo.
+   La marca pide "confianza calmada" — nada de pulsos de urgencia. */
 .animate-pulse-green {
-  animation: pulse-vibrant-green 2.5s infinite;
+  box-shadow:
+    0 1px 2px rgba(13, 51, 32, 0.10),
+    0 10px 24px -10px rgba(21, 128, 61, 0.55);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.animate-pulse-green:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(13, 51, 32, 0.12),
+    0 20px 38px -12px rgba(21, 128, 61, 0.6);
 }
 
+/* Sello de garantía: quieto y sólido, como un timbre grabado. */
 .animate-pulse-gold {
-  animation: pulse-gold 2s infinite;
+  box-shadow: 0 10px 30px -12px rgba(168, 134, 13, 0.5);
 }
 
 .glow-gold {
   text-shadow: 0 0 10px rgba(217, 119, 6, 0.25);
+}
+
+/* Sombra premium reutilizable: doble capa, corta y difusa, para tarjetas héroe. */
+.shadow-luxe {
+  box-shadow:
+    0 1px 2px rgba(13, 51, 32, 0.06),
+    0 24px 56px -28px rgba(13, 51, 32, 0.5);
 }
 
 /* Doble marco tipo certificado, usado en tarjetas insignia (sello, oferta) */
@@ -96,18 +106,10 @@
 }
 
 .bg-premium-wellness {
-  background-color: #FAF8F2;
+  background-color: #FBFAF6;
   background-image:
-    radial-gradient(circle at 8% 15%, rgba(22, 101, 52, 0.04) 0%, transparent 45%),
-    radial-gradient(circle at 92% 8%, rgba(22, 163, 74, 0.025) 0%, transparent 40%),
-    radial-gradient(circle at 50% 90%, rgba(22, 163, 74, 0.02) 0%, transparent 50%);
-}
-
-.bg-smart-grid {
-  background-size: 48px 48px;
-  background-image:
-    linear-gradient(to right, rgba(22, 101, 52, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22, 101, 52, 0.03) 1px, transparent 1px);
+    radial-gradient(circle at 12% 12%, rgba(22, 101, 52, 0.035) 0%, transparent 42%),
+    radial-gradient(circle at 88% 6%, rgba(212, 175, 55, 0.03) 0%, transparent 38%);
 }
 
 @media (prefers-reduced-motion: reduce) {

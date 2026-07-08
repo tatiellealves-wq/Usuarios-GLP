@@ -191,7 +191,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-premium-wellness bg-smart-grid text-neutral-dark font-sans selection:bg-brand-green/10 selection:text-brand-green overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-premium-wellness text-neutral-dark font-sans selection:bg-brand-green/10 selection:text-brand-green overflow-x-hidden antialiased">
       
       <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
@@ -226,15 +226,16 @@ export default function App() {
 
       <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-[#0D3320]">
         
-        <div className="bg-white/10 border-b border-white/10 py-3 px-4 mb-8 -mx-6 text-center">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-brand-gold text-xs md:text-sm font-semibold tracking-wide">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-gold animate-pulse shrink-0" />
-            <span className="font-poppins-bold uppercase select-none flex items-center gap-2 flex-wrap justify-center">
-              PRECIO DE LANZAMIENTO:
-              <span className="bg-white/15 border border-brand-gold/40 rounded-md px-2.5 py-0.5 text-brand-gold tabular-nums normal-case text-sm">
-                US$ 19.90 <span className="text-white/50 line-through ml-1">US$ 49.90</span>
+        <div className="bg-black/15 border-b border-brand-gold/20 py-3 px-4 mb-8 -mx-6 text-center">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs md:text-sm">
+            <span className="h-px w-6 bg-brand-gold/50 hidden sm:block" aria-hidden="true" />
+            <span className="select-none flex items-center gap-2.5 flex-wrap justify-center text-green-100/85 font-medium tracking-wide">
+              <span className="uppercase text-[10px] md:text-xs tracking-[0.22em] text-brand-gold/90 font-semibold">Precio de lanzamiento</span>
+              <span className="text-brand-gold tabular-nums text-sm md:text-base font-semibold">
+                US$&nbsp;19.90 <span className="text-white/45 line-through ml-1 font-normal">US$&nbsp;49.90</span>
               </span>
             </span>
+            <span className="h-px w-6 bg-brand-gold/50 hidden sm:block" aria-hidden="true" />
           </div>
         </div>
 
@@ -272,7 +273,6 @@ export default function App() {
                     Empezar mi Reto de 21 días — US$ 19.90
                     <ArrowRight className="h-5 w-5" />
                   </span>
-                  <div className="absolute top-0 -inset-full h-full w-1/2 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-40 z-0 group-hover:animate-shine" />
                 </a>
 
                 <div className="flex items-center justify-center gap-6 mt-3 text-xs text-green-200 font-medium">
@@ -970,10 +970,12 @@ export default function App() {
             <div className="absolute -top-10 -right-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-10 -left-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative bg-white/10 border-b border-white/5 text-white text-center py-3.5 px-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
-                ¡PACK DIGITAL CON ACCESO INMEDIATO!
-              <Sparkles className="h-4 w-4 text-brand-gold animate-pulse" />
+            <div className="relative bg-black/15 border-b border-brand-gold/20 text-center py-3.5 px-4 flex items-center justify-center gap-3">
+              <span className="h-px w-6 bg-brand-gold/50" aria-hidden="true" />
+              <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-brand-gold/90 flex items-center gap-2">
+                <Smartphone className="h-3.5 w-3.5" /> Pack digital · Acceso inmediato
+              </span>
+              <span className="h-px w-6 bg-brand-gold/50" aria-hidden="true" />
             </div>
 
             <div className="relative p-8 md:p-10 text-center">
@@ -1042,9 +1044,9 @@ export default function App() {
                 <span>Quiero el protocolo completo — US$ 19.90</span>
               </a>
 
-              <p className="text-xs text-brand-gold leading-relaxed font-semibold mb-6 flex items-center justify-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                Cada semana sin el protocolo es una semana de náuseas innecesarias, músculo perdido y confusión. El momento de actuar es ahora.
+              <p className="text-xs text-green-100/80 leading-relaxed font-medium mb-6 flex items-center justify-center gap-1.5 max-w-sm mx-auto">
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-brand-gold" />
+                Empieza hoy y llega a tu próxima inyección con el plan correcto desde el primer día.
               </p>
 
               <div className="border-t border-white/10 pt-6">
