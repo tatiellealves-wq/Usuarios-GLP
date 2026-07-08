@@ -23,7 +23,9 @@ import {
   TrendingDown,
   ZapOff,
   RotateCcw,
-  Smartphone
+  Smartphone,
+  LineChart,
+  Syringe
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -668,6 +670,65 @@ export default function App() {
             </a>
           </div>
 
+        </div>
+      </section>
+      </FadeIn>
+
+      {/* Posicionamiento: la app como nutricionista digital especializado */}
+      <FadeIn>
+      <section className="py-20 px-6 bg-[#FAF8F2]">
+        <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden relative bg-gradient-to-br from-[#0D3320] via-brand-green to-[#0B2417] ring-1 ring-brand-gold/25 shadow-[0_30px_80px_-40px_rgba(13,51,32,0.85)]">
+          <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
+          <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-brand-green-vibrant/10 blur-3xl pointer-events-none" aria-hidden="true" />
+
+          <div className="relative p-8 md:p-14">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <Eyebrow tone="dark">Tu app, tu especialista</Eyebrow>
+              <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.12] mb-4" style={{ textWrap: 'balance' } as React.CSSProperties}>
+                Tu nutricionista digital,<br className="hidden md:block" /> especializado en GLP‑1
+              </h2>
+              <p className="text-green-100/80 text-base md:text-lg leading-relaxed">
+                Un nutricionista que de verdad entiende el GLP‑1 cobra <strong className="text-white">US$ 40–80 por sesión</strong> — y lo ves una vez al mes. Este te acompaña <strong className="text-brand-gold">cada día, dentro de la app</strong>, por un pago único.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-x-8 max-w-3xl mx-auto">
+              {[
+                [Activity, 'Calcula tus números', 'Con tu peso, altura y objetivo define tus calorías y proteína del día — como en una primera consulta.'],
+                [Utensils, 'Arma tu menú del día', 'Desayuno, almuerzo, cena y merienda que cumplen tus metas. ¿No te gusta un plato? Lo cambias con un toque.'],
+                [LineChart, 'Vigila tu progreso', 'Peso, IMC, cintura, agua, proteína, calorías y síntomas en gráficos claros — para ver qué funciona.'],
+                [Syringe, 'Conoce tu medicamento', 'Cómo aplicarlo, qué comer y qué esperar de Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus.'],
+                [ShieldCheck, 'Te cuida el día de la dosis', 'Te guía paso a paso antes y después de la inyección para evitar las náuseas.'],
+                [RotateCcw, 'Te prepara para el después', 'El plan de salida de 12 semanas para que el resultado se quede cuando termines el tratamiento.'],
+              ].map(([Icon, t, d]: any) => (
+                <div key={t} className="flex items-start gap-4 py-4 border-b border-white/10">
+                  <span className="h-10 w-10 shrink-0 rounded-xl bg-brand-gold/15 border border-brand-gold/25 flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-brand-gold" />
+                  </span>
+                  <div>
+                    <h3 className="font-bold text-white text-[15px] mb-0.5">{t}</h3>
+                    <p className="text-sm text-green-100/70 leading-relaxed">{d}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 text-center">
+              <div className="inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs font-semibold text-green-100/70 mb-6">
+                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> Un pago único, sin mensualidad</span>
+                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> 100% offline, en tu bolsillo</span>
+                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> Acceso inmediato</span>
+              </div>
+              <a
+                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+                onClick={triggerCheckout}
+                className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/30 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D3320] focus-visible:ring-brand-gold"
+              >
+                <span>Tener mi nutricionista digital — US$ 19.90</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
         </div>
       </section>
       </FadeIn>
