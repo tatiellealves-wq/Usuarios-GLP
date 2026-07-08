@@ -10,8 +10,9 @@ import {
 } from './data';
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
-  borrarFoto, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, importarDatos,
-  lbAKg, listarFotos, metaProteina, metasPlan, racha, semanaSalida, tendenciaSemanal, useEstado,
+  borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, imc,
+  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, racha, semanaSalida, serieDiaria,
+  tendenciaSemanal, useEstado,
   type Comida, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
   type PlanSemanal, type RegistroDia, type SexoBio,
 } from './store';
@@ -64,6 +65,7 @@ export default function App() {
       {tab === 'progreso' && (
         <PantallaProgreso
           estado={estado}
+          setEstado={setEstado}
           onPeso={(kg) => setEstado((e) => ({ ...e, pesos: [...e.pesos.filter((p) => p.fecha !== hoy), { fecha: hoy, kg }] }))}
           onMedidas={(m) => setEstado((e) => ({ ...e, medidas: [...e.medidas.filter((x) => x.fecha !== m.fecha), m] }))}
         />
@@ -473,6 +475,18 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA }: {
           {reg.proteina ? `Proteína cumplida (~${meta} g) ✓` : `¿Cumpliste tus ~${meta} g de proteína?`}
         </button>
 
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Proteína hoy (g)</span>
+            <input type="number" inputMode="numeric" value={reg.proteinaG ?? ''} onChange={(e) => setReg({ proteinaG: e.target.value ? Number(e.target.value) : undefined })} placeholder={`${meta}`} className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Calorías hoy</span>
+            <input type="number" inputMode="numeric" value={reg.caloriasKcal ?? ''} onChange={(e) => setReg({ caloriasKcal: e.target.value ? Number(e.target.value) : undefined })} placeholder="kcal" className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
+        </div>
+        <p className="text-[10px] text-gray-400 mt-1.5">Se completan solos al aplicar tu Plan alimentario inteligente — o anótalos aquí. Alimentan tus Estadísticas.</p>
+
         <div className="mt-4 pt-4 border-t border-gray-100">
           <p className="text-sm font-bold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
           <textarea
@@ -840,7 +854,7 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
   const [cambiando, setCambiando] = useState<Comida | null>(null);
 
   const [peso, setPeso] = useState(String(guardado?.peso ?? pesoActual ?? perfil.pesoInicial ?? ''));
-  const [altura, setAltura] = useState(guardado?.altura ? String(guardado.altura) : '');
+  const [altura, setAltura] = useState(String(guardado?.altura ?? perfil.altura ?? ''));
   const [edad, setEdad] = useState(guardado?.edad ? String(guardado.edad) : '');
   const [sexo, setSexo] = useState<SexoBio>(guardado?.sexo ?? 'F');
   const [objetivo, setObjetivo] = useState<ObjetivoPlan>(guardado?.objetivo ?? 'perder');
@@ -857,7 +871,11 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
   const generar = (variar: boolean) => {
     const d: Omit<PlanInteligente, 'comidas'> = { peso: pesoN, altura: alturaN, edad: edadN, sexo, objetivo, suave };
     const m = metasPlan(d);
-    setEstado((e) => ({ ...e, planInteligente: { ...d, comidas: generarComidas(m.calorias, suave, variar) } }));
+    setEstado((e) => ({
+      ...e,
+      perfil: e.perfil ? { ...e.perfil, altura: alturaN } : e.perfil, // altura compartida con Estadísticas (IMC)
+      planInteligente: { ...d, comidas: generarComidas(m.calorias, suave, variar) },
+    }));
     setModo('plan');
   };
 
@@ -876,8 +894,16 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
   const aplicarAHoy = () => {
     if (!guardado) return;
     const hoyIdx = new Date().getDay();
-    setEstado((e) => ({ ...e, plan: { ...e.plan, [hoyIdx]: { ...guardado.comidas } } }));
-    celebrar('¡Plan aplicado a hoy! 🍽️', 'Tu menú del día ya está en la pestaña Hoy.');
+    const hoy = hoyISO();
+    setEstado((e) => {
+      const reg = e.registros[hoy] ?? { fecha: hoy, agua: 0, proteina: false };
+      return {
+        ...e,
+        plan: { ...e.plan, [hoyIdx]: { ...guardado.comidas } },
+        registros: { ...e.registros, [hoy]: { ...reg, proteinaG: totalProt, caloriasKcal: totalCal } },
+      };
+    });
+    celebrar('¡Plan aplicado a hoy! 🍽️', 'Menú, proteína y calorías del día quedaron registrados.');
     onCerrar();
   };
 
@@ -1014,8 +1040,9 @@ function SelectorComida({ slot, objetivoCal, suave, onPick, onCerrar }: {
 }
 
 /* ---------- Progreso ---------- */
-function PantallaProgreso({ estado, onPeso, onMedidas }: {
+function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
   estado: ReturnType<typeof useEstado>[0];
+  setEstado: ReturnType<typeof useEstado>[1];
   onPeso: (kg: number) => void;
   onMedidas: (m: Medidas) => void;
 }) {
@@ -1023,6 +1050,7 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
   const [pesoInput, setPesoInput] = useState('');
   const [med, setMed] = useState<Medidas>({ fecha: hoyISO() });
   const [verInforme, setVerInforme] = useState(false);
+  const [verStats, setVerStats] = useState(false);
 
   const tendencia = tendenciaSemanal(estado.pesos);
   const ultimo = estado.pesos.length ? [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha)).at(-1)!.kg : null;
@@ -1041,10 +1069,20 @@ function PantallaProgreso({ estado, onPeso, onMedidas }: {
   }, [estado.registros]);
 
   if (verInforme) return <Informe estado={estado} onCerrar={() => setVerInforme(false)} />;
+  if (verStats) return <PantallaEstadisticas estado={estado} setEstado={setEstado} onCerrar={() => setVerStats(false)} />;
 
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
       <h1 className="text-2xl font-bold mb-4">Mi progreso</h1>
+
+      <button onClick={() => setVerStats(true)} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-4 flex items-center gap-3 shadow-lg">
+        <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><LineChart className="h-5 w-5 text-[#D4AF37]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Estadísticas completas</span>
+          <span className="text-xs text-green-100/70">Peso, IMC, cintura, agua, proteína, calorías y síntomas</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
 
       <div className="card">
         <div className="flex justify-between items-center mb-3">
@@ -1265,6 +1303,188 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
         </>)}
         <p className="text-[10px] text-gray-400">Registro personal del o de la paciente vía app Guía GLP-1 Inteligente. No constituye historial clínico.</p>
       </div>
+    </div>
+  );
+}
+
+/* ---------- Estadísticas ---------- */
+const etqFecha = (iso: string) => iso.slice(8, 10) + '/' + iso.slice(5, 7);
+
+function MiniLinea({ datos, color, meta, unidad = '', decimales = 0 }: {
+  datos: { etiqueta: string; v: number }[]; color: string; meta?: number; unidad?: string; decimales?: number;
+}) {
+  const W = 320, H = 120, P = 26;
+  const vals = datos.map((d) => d.v);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if (meta !== undefined) { min = Math.min(min, meta); max = Math.max(max, meta); }
+  const pad = (max - min) * 0.15 || 1;
+  min -= pad; max += pad;
+  const x = (i: number) => P + (i * (W - 2 * P)) / Math.max(1, datos.length - 1);
+  const y = (v: number) => H - P - ((v - min) * (H - 2 * P)) / (max - min || 1);
+  const pts = datos.map((d, i) => `${x(i)},${y(d.v)}`).join(' ');
+  const paso = Math.max(1, Math.ceil(datos.length / 6));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+      {meta !== undefined && (
+        <>
+          <line x1={P} y1={y(meta)} x2={W - P} y2={y(meta)} stroke="#C9A035" strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x={W - P} y={y(meta) - 4} textAnchor="end" fontSize="8" fill="#C9A035" fontWeight="700">meta {meta}{unidad}</text>
+        </>
+      )}
+      {datos.length > 1 && <polyline points={pts} fill="none" stroke={color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />}
+      {datos.map((d, i) => (
+        <g key={i}>
+          <circle cx={x(i)} cy={y(d.v)} r="3" fill={color} />
+          {(i === 0 || i === datos.length - 1) && <text x={x(i)} y={y(d.v) - 8} textAnchor="middle" fontSize="9" fill="#1F2430" fontWeight="700">{d.v.toFixed(decimales)}</text>}
+          {i % paso === 0 && <text x={x(i)} y={H - 6} textAnchor="middle" fontSize="7.5" fill="#9CA3AF">{d.etiqueta}</text>}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function MiniBarras({ datos, color, max }: { datos: { etiqueta: string; v?: number }[]; color: string; max: number }) {
+  const W = 320, H = 90, bw = W / datos.length;
+  const y = (v: number) => 70 - (Math.min(v, max) / max) * 55;
+  const paso = Math.max(1, Math.ceil(datos.length / 7));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+      {datos.map((d, i) => (
+        <g key={i}>
+          {d.v !== undefined && d.v > 0 && <rect x={i * bw + 2} y={y(d.v)} width={bw - 4} height={70 - y(d.v) + 2} rx="2" fill={color} opacity=".85" />}
+          {i % paso === 0 && <text x={i * bw + bw / 2} y={84} textAnchor="middle" fontSize="7" fill="#9CA3AF">{d.etiqueta}</text>}
+        </g>
+      ))}
+      <line x1="0" y1="72" x2={W} y2="72" stroke="#E5E7EB" />
+    </svg>
+  );
+}
+
+function TarjetaStat({ titulo, valor, color, hay, vacio, children }: {
+  titulo: string; valor?: string; color?: string; hay: boolean; vacio: string; children: React.ReactNode;
+}) {
+  return (
+    <div className="card">
+      <div className="flex justify-between items-baseline mb-2">
+        <h2 className="font-bold">{titulo}</h2>
+        {valor && <span className="text-sm font-extrabold" style={{ color: color ?? '#1F2430' }}>{valor}</span>}
+      </div>
+      {hay ? children : <p className="text-xs text-gray-400 py-5 text-center">{vacio}</p>}
+    </div>
+  );
+}
+
+function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onCerrar: () => void;
+}) {
+  const perfil = estado.perfil!;
+  const [alturaInput, setAlturaInput] = useState('');
+
+  const pesos = [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const pesoSerie = pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: p.kg }));
+  const pesoAct = pesos.length ? pesos.at(-1)!.kg : null;
+  const pesoDelta = pesoAct !== null ? Math.round((pesoAct - perfil.pesoInicial) * 10) / 10 : null;
+
+  const altura = perfil.altura;
+  const imcSerie = altura ? pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: imc(p.kg, altura) })) : [];
+  const imcAct = altura && pesoAct !== null ? imc(pesoAct, altura) : 0;
+  const claseImc = imcAct ? clasificarIMC(imcAct) : null;
+
+  const cinturaSerie = [...estado.medidas]
+    .filter((m) => m.cintura !== undefined)
+    .sort((a, b) => a.fecha.localeCompare(b.fecha))
+    .map((m) => ({ etiqueta: etqFecha(m.fecha), v: m.cintura! }));
+
+  const agua = serieDiaria(estado.registros, 'agua', 14).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor }));
+  const aguaHay = agua.some((d) => (d.v ?? 0) > 0);
+
+  const protSerie = serieDiaria(estado.registros, 'proteinaG', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const metaProt = metaProteina(perfil, pesoAct ?? undefined);
+  const protProm = protSerie.length ? Math.round(protSerie.reduce((s, d) => s + d.v, 0) / protSerie.length) : 0;
+
+  const calSerie = serieDiaria(estado.registros, 'caloriasKcal', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const metaCal = estado.planInteligente ? metasPlan(estado.planInteligente).calorias : undefined;
+  const calProm = calSerie.length ? Math.round(calSerie.reduce((s, d) => s + d.v, 0) / calSerie.length) : 0;
+
+  const naus = serieDiaria(estado.registros, 'nauseas', 14);
+  const ener = serieDiaria(estado.registros, 'energia', 14);
+  const sintomas = naus.map((d, i) => ({ fecha: d.fecha.slice(8), nauseas: d.valor, energia: ener[i].valor }));
+  const sintomasHay = sintomas.some((d) => d.nauseas !== undefined || d.energia !== undefined);
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-5 pb-4">
+      <button onClick={onCerrar} className="text-sm font-bold text-gray-500 mb-3">← Mi progreso</button>
+      <div className="flex items-center gap-2.5 mb-1">
+        <span className="h-10 w-10 rounded-2xl bg-[#0D3320] flex items-center justify-center shrink-0"><LineChart className="h-5 w-5 text-[#D4AF37]" /></span>
+        <h1 className="text-2xl font-bold">Estadísticas</h1>
+      </div>
+      <p className="text-sm text-gray-500 mb-5">Todo tu progreso en un solo lugar. Los datos salen de lo que registras en Hoy y Progreso.</p>
+
+      {/* Peso */}
+      <TarjetaStat titulo="Peso" hay={pesoSerie.length >= 2}
+        valor={pesoDelta !== null ? `${pesoDelta > 0 ? '+' : ''}${pesoDelta} kg` : undefined}
+        color={pesoDelta !== null && pesoDelta <= 0 ? '#16A34A' : '#8A6D1C'}
+        vacio="Registra tu peso al menos 2 veces en Progreso para ver la curva.">
+        <MiniLinea datos={pesoSerie} color="#166534" decimales={1} unidad=" kg" />
+      </TarjetaStat>
+
+      {/* IMC */}
+      {altura ? (
+        <TarjetaStat titulo="IMC" hay={imcSerie.length >= 2}
+          valor={claseImc ? `${imcAct} · ${claseImc.label}` : undefined} color={claseImc?.color}
+          vacio="Registra tu peso para calcular la curva de IMC.">
+          <MiniLinea datos={imcSerie} color={claseImc?.color ?? '#166534'} decimales={1} />
+        </TarjetaStat>
+      ) : (
+        <div className="card">
+          <h2 className="font-bold mb-1">IMC</h2>
+          <p className="text-xs text-gray-500 mb-3">Ingresa tu altura una vez y calculamos tu índice de masa corporal automáticamente.</p>
+          <div className="flex gap-2">
+            <input value={alturaInput} onChange={(e) => setAlturaInput(e.target.value)} type="number" inputMode="numeric" placeholder="Altura (cm)" className="inp flex-1 !mb-0" />
+            <button onClick={() => { const v = Number(alturaInput); if (v >= 120 && v <= 220) setEstado((e) => ({ ...e, perfil: e.perfil ? { ...e.perfil, altura: v } : e.perfil })); }} className="btn3d px-5 rounded-2xl text-sm">Guardar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Cintura */}
+      <TarjetaStat titulo="Cintura" hay={cinturaSerie.length >= 2}
+        valor={cinturaSerie.length ? `${cinturaSerie.at(-1)!.v} cm` : undefined} color="#C9A035"
+        vacio="Registra tu cintura en Progreso → Medidas del mes (al menos 2 veces).">
+        <MiniLinea datos={cinturaSerie} color="#C9A035" decimales={1} unidad=" cm" />
+      </TarjetaStat>
+
+      {/* Agua */}
+      <TarjetaStat titulo="Agua · últimos 14 días" hay={aguaHay}
+        valor="meta 8 vasos" color="#38BDF8"
+        vacio="Registra tus vasos de agua en la pestaña Hoy.">
+        <MiniBarras datos={agua} color="#38BDF8" max={8} />
+      </TarjetaStat>
+
+      {/* Proteína */}
+      <TarjetaStat titulo="Proteína (g)" hay={protSerie.length >= 1}
+        valor={protSerie.length ? `prom. ${protProm} g` : undefined} color="#16A34A"
+        vacio="Anota tus gramos de proteína en Hoy, o aplica tu Plan alimentario inteligente.">
+        <MiniLinea datos={protSerie} color="#16A34A" meta={metaProt} unidad=" g" />
+      </TarjetaStat>
+
+      {/* Calorías */}
+      <TarjetaStat titulo="Calorías (kcal)" hay={calSerie.length >= 1}
+        valor={calSerie.length ? `prom. ${calProm} kcal` : undefined} color="#166534"
+        vacio="Anota tus calorías en Hoy, o aplica tu Plan alimentario inteligente.">
+        <MiniLinea datos={calSerie} color="#166534" meta={metaCal} unidad="" />
+      </TarjetaStat>
+
+      {/* Síntomas */}
+      <TarjetaStat titulo="Náuseas y energía · 14 días" hay={sintomasHay}
+        vacio="Registra náuseas y energía en la pestaña Hoy.">
+        <GraficoBarras datos={sintomas} />
+        <div className="flex gap-4 mt-2 text-[10px] text-gray-500">
+          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#DC2626]" /> Náuseas</span>
+          <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#16A34A]" /> Energía</span>
+        </div>
+      </TarjetaStat>
+
+      <p className="text-[10px] text-gray-400 text-center mt-2">Datos orientativos de tu propio registro. Compártelos con tu médico desde Progreso → Informe.</p>
     </div>
   );
 }
