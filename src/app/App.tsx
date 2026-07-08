@@ -25,6 +25,7 @@ export default function App() {
   const [estado, setEstado] = useEstado();
   const [tab, setTab] = useState<Tab>('hoy');
   const [planIA, setPlanIA] = useState(false);
+  const [medsOpen, setMedsOpen] = useState(false);
 
   if (!estado.activado) {
     return <Activacion onOk={(codigo) => setEstado((e) => ({ ...e, activado: true, codigoUsado: codigo }))} />;
@@ -46,7 +47,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
       <div key={tab} className="anim-screen">
-      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} onPlanIA={() => setPlanIA(true)} />}
+      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
         <PantallaPlan
@@ -70,7 +71,7 @@ export default function App() {
           onMedidas={(m) => setEstado((e) => ({ ...e, medidas: [...e.medidas.filter((x) => x.fecha !== m.fecha), m] }))}
         />
       )}
-      {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} onPlanIA={() => setPlanIA(true)} />}
+      {tab === 'mas' && <PantallaMas estado={estado} setEstado={setEstado} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} />}
       </div>
       <TabBar tab={tab} setTab={setTab} />
       {planIA && (
@@ -80,6 +81,11 @@ export default function App() {
           pesoActual={pesoActual}
           onCerrar={() => setPlanIA(false)}
         />
+      )}
+      {medsOpen && (
+        <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
+          <PantallaMedicamentos perfil={perfil} onVolver={() => setMedsOpen(false)} />
+        </div>
       )}
       <CelebracionHost />
     </div>
@@ -323,8 +329,8 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 }
 
 /* ---------- Hoy ---------- */
-function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA }: {
-  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal; onPlanIA: () => void;
+function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA, onMeds }: {
+  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal; onPlanIA: () => void; onMeds: () => void;
 }) {
   const dosisHoy = esDiaDosis(perfil);
   const planHoy = plan[new Date().getDay()] ?? {};
@@ -397,13 +403,23 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA }: {
       </div>
 
       {/* Acceso al Plan alimentario inteligente */}
-      <button onClick={onPlanIA} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-4 flex items-center gap-3 shadow-lg anim-bounce-in">
+      <button onClick={onPlanIA} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-3 flex items-center gap-3 shadow-lg anim-bounce-in">
         <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><Sparkles className="h-5 w-5 text-[#D4AF37]" /></span>
         <span className="min-w-0 flex-1">
           <span className="font-bold text-sm block">Plan alimentario inteligente</span>
           <span className="text-xs text-green-100/70">Tu día completo, generado por tus calorías y proteína</span>
         </span>
         <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
+
+      {/* Acceso a la Guía de medicamentos */}
+      <button onClick={onMeds} className="card w-full text-left flex items-center gap-3 !mb-4">
+        <span className="h-11 w-11 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Guía de medicamentos</span>
+          <span className="text-xs text-gray-500">{perfil.medicamento && perfil.medicamento !== 'Otro' ? `Cómo usar tu ${perfil.medicamento}, efectos y alimentación` : 'Cómo aplicar, efectos, alimentación y dudas'}</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
       </button>
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
@@ -1490,20 +1506,18 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
 }
 
 /* ---------- Más (menú) ---------- */
-function PantallaMas({ estado, setEstado, onPlanIA }: {
-  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onPlanIA: () => void;
+function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onPlanIA: () => void; onMeds: () => void;
 }) {
-  const [vista, setVista] = useState<'menu' | 'guia' | 'medicamentos' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
+  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
 
   if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
-  if (vista === 'medicamentos') return <PantallaMedicamentos perfil={estado.perfil!} onVolver={() => setVista('menu')} />;
   if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'super') return <ConVolver onVolver={() => setVista('menu')}><PantallaSuper estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
-    { id: 'medicamentos' as const, icon: <Syringe className="h-5 w-5" />, bg: '#E7F1FC', fg: '#0C87C4', titulo: 'Guía de medicamentos', sub: `Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus${estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}` },
     { id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
     { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5" />, bg: '#FDF3D8', fg: '#B08621', titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5" />, bg: '#FCE7E4', fg: '#EF4444', titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
@@ -1521,6 +1535,14 @@ function PantallaMas({ estado, setEstado, onPlanIA }: {
           <span className="text-xs text-green-100/70">{estado.planInteligente ? 'Tu plan está listo — ábrelo o ajústalo' : 'Genera tu día por calorías y proteína'}</span>
         </span>
         <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
+      </button>
+      <button onClick={onMeds} className="card w-full text-left flex items-center gap-4">
+        <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Guía de medicamentos</span>
+          <span className="text-xs text-gray-500">Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus{estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}</span>
+        </span>
+        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
       </button>
       {items.map((it) => (
         <button key={it.id} onClick={() => setVista(it.id)} className="card w-full text-left flex items-center gap-4">
@@ -1967,7 +1989,7 @@ function PantallaMedicamentos({ perfil, onVolver }: { perfil: Perfil; onVolver: 
 
   return (
     <div className="max-w-md mx-auto px-5 pt-4">
-      <button onClick={onVolver} className="text-sm font-bold text-gray-500 mb-3">← Más herramientas</button>
+      <button onClick={onVolver} className="text-sm font-bold text-gray-500 mb-3">← Volver</button>
       <h1 className="text-2xl font-bold mb-1">Guía de medicamentos</h1>
       <p className="text-sm text-gray-500 mb-4">Cómo se usa cada uno, sus efectos, la alimentación que mejor lo acompaña y las dudas más comunes.</p>
       {orden.map((m) => {
