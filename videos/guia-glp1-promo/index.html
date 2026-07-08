@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: 'Poppins'; font-weight: 700; font-style: normal; src: url('assets/Poppins-700.ttf') format('truetype'); font-display: block; }
+      @font-face { font-family: 'Poppins'; font-weight: 600; font-style: normal; src: url('assets/Poppins-600.ttf') format('truetype'); font-display: block; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05130C; }
+      body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; }
+
+      :root {
+        --vibrant: #16A34A;
+        --gold: #D4AF37;
+        --cream: #FBF9F5;
+      }
+
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .bg-green { background: radial-gradient(120% 80% at 50% 0%, #15462B 0%, #0D3320 45%, #071A10 100%); }
+      .bg-deep { background: radial-gradient(120% 90% at 50% 40%, #124029 0%, #0A2417 55%, #05130C 100%); }
+      .glow-gold { position: absolute; border-radius: 50%; background: rgba(212,175,55,0.16); filter: blur(90px); }
+      .glow-green { position: absolute; border-radius: 50%; background: rgba(22,163,74,0.18); filter: blur(90px); }
+
+      .pad { position: absolute; left: 96px; right: 96px; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 18px; color: var(--gold); font-weight: 700;
+        font-size: 30px; letter-spacing: 6px; text-transform: uppercase; }
+      .eyebrow .rule { width: 46px; height: 2px; background: rgba(212,175,55,0.6); }
+
+      .h1 { color: var(--cream); font-weight: 700; font-size: 92px; line-height: 1.05; letter-spacing: -2px; }
+      .h1 .gold { color: var(--gold); }
+      .cap { color: var(--cream); font-weight: 700; font-size: 76px; line-height: 1.08; letter-spacing: -1.5px; }
+      .cap .gold { color: var(--gold); }
+      .sub { color: rgba(255,255,255,0.72); font-weight: 600; font-size: 40px; line-height: 1.3; }
+
+      .phone { position: absolute; left: 50%; transform: translateX(-50%); width: 560px;
+        background: #0A0F0C; border-radius: 60px; padding: 16px; box-shadow: 0 50px 120px -30px rgba(0,0,0,0.75);
+        outline: 1px solid rgba(255,255,255,0.08); }
+      .phone .screen { border-radius: 46px; overflow: hidden; background: #FBF9F5; display: block; }
+      .phone img { width: 100%; display: block; }
+      .phone .notch { position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+        width: 150px; height: 30px; background: #0A0F0C; border-radius: 0 0 22px 22px; z-index: 3; }
+
+      .badge { display: inline-flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(212,175,55,0.32); border-radius: 999px; padding: 16px 30px;
+        color: var(--cream); font-weight: 600; font-size: 34px; }
+      .badge b { color: var(--gold); }
+
+      .chip { display: inline-block; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 999px; padding: 18px 34px; color: var(--cream); font-weight: 600; font-size: 38px; margin: 0 10px 18px 0; }
+
+      .cta { display: inline-flex; align-items: center; justify-content: center; gap: 18px;
+        background: var(--vibrant); color: #fff; font-weight: 700; font-size: 52px;
+        padding: 40px 70px; border-radius: 34px; box-shadow: 0 30px 70px -20px rgba(22,163,74,0.7); }
+      .price { color: #fff; font-weight: 700; font-size: 128px; letter-spacing: -3px; }
+      .price .cur { color: var(--gold); font-size: 60px; vertical-align: super; font-weight: 700; }
+      .strike { color: rgba(255,255,255,0.45); font-weight: 600; font-size: 46px; text-decoration: line-through; }
+      .domain { color: rgba(255,255,255,0.55); font-weight: 600; font-size: 34px; letter-spacing: 2px; }
+
+      .logo-row { display: inline-flex; align-items: center; gap: 22px; }
+      .logo-row img { width: 92px; height: 92px; border-radius: 22px; }
+      .logo-row .name { color: var(--cream); font-weight: 700; font-size: 46px; line-height: 1; text-align: left; }
+      .logo-row .name span { display: block; color: var(--gold); font-size: 28px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="1920">
+
+      <!-- S1 · HOOK (0–4.5) -->
+      <div id="scene-hook" class="scene bg-deep clip" data-start="0" data-duration="4.5" data-track-index="0">
+        <div class="glow-gold" style="width:640px;height:640px;top:-160px;right:-160px;"></div>
+        <div class="glow-green" style="width:620px;height:620px;bottom:-200px;left:-180px;"></div>
+        <div id="s1eye" class="pad" style="top:360px;"><span class="eyebrow"><span class="rule"></span>Ozempic · Wegovy · Mounjaro<span class="rule"></span></span></div>
+        <div id="s1l1" class="pad h1" style="top:470px;">Tu médico te dio el <span class="gold">medicamento</span>.</div>
+        <div id="s1l2" class="pad h1" style="top:820px;">Pero no te dijo <span class="gold">qué comer</span>.</div>
+        <div id="s1sub" class="pad sub" style="top:1240px;">Y ahí empiezan las náuseas, la pérdida de músculo y el efecto rebote.</div>
+      </div>
+
+      <!-- S2 · SOLUCIÓN (4.5–8.5) -->
+      <div id="scene-solucion" class="scene bg-green clip" data-start="4.5" data-duration="4" data-track-index="0">
+        <div class="glow-gold" style="width:680px;height:680px;top:120px;left:50%;transform:translateX(-50%);"></div>
+        <div id="s2icon" class="logo-row" style="position:absolute;top:560px;left:50%;transform:translateX(-50%);">
+          <img src="assets/icon.png" alt="" />
+          <div class="name">Guía GLP‑1<span>Inteligente</span></div>
+        </div>
+        <div id="s2l1" class="pad cap" style="top:760px;text-align:center;">Ahora tienes un <span class="gold">nutricionista</span> en tu bolsillo.</div>
+        <div id="s2sub" class="pad sub" style="top:1200px;text-align:center;">Especializado en tu tratamiento GLP‑1. Cada día.</div>
+      </div>
+
+      <!-- S3 · PLAN INTELIGENTE (8.5–13.5) -->
+      <div id="scene-plan" class="scene bg-green clip" data-start="8.5" data-duration="5" data-track-index="0">
+        <div class="glow-green" style="width:560px;height:560px;top:900px;right:-160px;"></div>
+        <div id="s3eye" class="pad" style="top:150px;text-align:center;"><span class="eyebrow" style="justify-content:center;"><span class="rule"></span>Plan inteligente<span class="rule"></span></span></div>
+        <div id="s3cap" class="pad cap" style="top:230px;text-align:center;">Tu <span class="gold">menú del día</span>, por tus calorías y proteína.</div>
+        <div id="s3phone" class="phone" style="top:640px;"><div class="notch"></div><div class="screen"><img src="assets/screen-hoy.webp" alt="Pantalla Hoy" /></div></div>
+      </div>
+
+      <!-- S4 · RECETAS (13.5–17.5) -->
+      <div id="scene-recetas" class="scene bg-green clip" data-start="13.5" data-duration="4" data-track-index="0">
+        <div class="glow-gold" style="width:520px;height:520px;top:820px;left:-140px;"></div>
+        <div id="s4cap" class="pad cap" style="top:230px;text-align:center;"><span class="gold">45 recetas</span> anti‑náusea, listas en minutos.</div>
+        <div id="s4phone" class="phone" style="top:640px;"><div class="notch"></div><div class="screen"><img src="assets/screen-recetas.webp" alt="Pantalla Recetas" /></div></div>
+      </div>
+
+      <!-- S5 · PROGRESO (17.5–22) -->
+      <div id="scene-progreso" class="scene bg-green clip" data-start="17.5" data-duration="4.5" data-track-index="0">
+        <div class="glow-green" style="width:560px;height:560px;top:760px;right:-170px;"></div>
+        <div id="s5cap" class="pad cap" style="top:230px;text-align:center;">Mira tu <span class="gold">progreso</span> real.</div>
+        <div id="s5sub" class="pad sub" style="top:470px;text-align:center;">Peso, IMC, cintura, proteína y síntomas.</div>
+        <div id="s5phone" class="phone" style="top:700px;"><div class="notch"></div><div class="screen"><img src="assets/screen-progreso.webp" alt="Pantalla Progreso" /></div></div>
+      </div>
+
+      <!-- S6 · MEDICAMENTOS (22–26) -->
+      <div id="scene-medicamentos" class="scene bg-deep clip" data-start="22" data-duration="4" data-track-index="0">
+        <div class="glow-gold" style="width:640px;height:640px;top:-140px;left:50%;transform:translateX(-50%);"></div>
+        <div id="s6eye" class="pad" style="top:560px;text-align:center;"><span class="eyebrow" style="justify-content:center;"><span class="rule"></span>Guía de medicamentos<span class="rule"></span></span></div>
+        <div id="s6cap" class="pad cap" style="top:650px;text-align:center;">Cómo aplicarlo y qué comer, <span class="gold">paso a paso</span>.</div>
+        <div id="s6chips" class="pad" style="top:1080px;text-align:center;">
+          <span class="chip">Ozempic</span><span class="chip">Wegovy</span><span class="chip">Mounjaro</span><span class="chip">Zepbound</span><span class="chip">Rybelsus</span>
+        </div>
+      </div>
+
+      <!-- S7 · CTA (26–32) -->
+      <div id="scene-cta" class="scene bg-green clip" data-start="26" data-duration="6" data-track-index="0">
+        <div class="glow-gold" style="width:720px;height:720px;top:-180px;right:-180px;"></div>
+        <div class="glow-green" style="width:640px;height:640px;bottom:-220px;left:-180px;"></div>
+        <div id="s7logo" class="logo-row" style="position:absolute;top:300px;left:50%;transform:translateX(-50%);">
+          <img src="assets/icon.png" alt="" />
+          <div class="name">Guía GLP‑1<span>Inteligente</span></div>
+        </div>
+        <div id="s7l1" class="pad cap" style="top:470px;text-align:center;">Reto de <span class="gold">21 días</span>. Acceso inmediato.</div>
+        <div id="s7price" style="position:absolute;top:800px;left:0;right:0;text-align:center;">
+          <div class="strike">Valor US$ 89.90</div>
+          <div class="price"><span class="cur">US$</span> 19.90</div>
+          <div style="margin-top:14px;"><span class="badge"><b>Un solo pago</b> · sin mensualidad</span></div>
+        </div>
+        <div id="s7cta" style="position:absolute;top:1360px;left:0;right:0;text-align:center;">
+          <span class="cta">Empieza hoy →</span>
+        </div>
+        <div id="s7dom" class="domain pad" style="top:1560px;text-align:center;">guiaglp1.com</div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const E = 'power3.out';
+
+      // S1
+      tl.from('#s1eye', { opacity: 0, y: -24, duration: 0.6, ease: E }, 0.15)
+        .from('#s1l1', { opacity: 0, y: 44, duration: 0.7, ease: E }, 0.5)
+        .from('#s1l2', { opacity: 0, y: 44, duration: 0.7, ease: E }, 1.25)
+        .from('#s1sub', { opacity: 0, y: 30, duration: 0.7, ease: E }, 2.1);
+
+      // S2
+      tl.from('#s2icon', { opacity: 0, scale: 0.7, duration: 0.7, ease: 'back.out(1.6)', transformOrigin: '50% 50%' }, 4.65)
+        .from('#s2l1', { opacity: 0, y: 40, duration: 0.7, ease: E }, 5.0)
+        .from('#s2sub', { opacity: 0, y: 26, duration: 0.6, ease: E }, 5.6);
+
+      // S3
+      tl.from('#s3eye', { opacity: 0, y: -20, duration: 0.5, ease: E }, 8.6)
+        .from('#s3cap', { opacity: 0, y: 34, duration: 0.7, ease: E }, 8.75)
+        .from('#s3phone', { opacity: 0, y: 140, duration: 0.9, ease: E }, 8.95)
+        .fromTo('#s3phone img', { scale: 1.0 }, { scale: 1.07, duration: 5, ease: 'none', transformOrigin: '50% 15%' }, 8.6);
+
+      // S4
+      tl.from('#s4cap', { opacity: 0, y: 34, duration: 0.7, ease: E }, 13.6)
+        .from('#s4phone', { opacity: 0, y: 140, duration: 0.9, ease: E }, 13.75)
+        .fromTo('#s4phone img', { scale: 1.0 }, { scale: 1.07, duration: 4, ease: 'none', transformOrigin: '50% 20%' }, 13.6);
+
+      // S5
+      tl.from('#s5cap', { opacity: 0, y: 34, duration: 0.6, ease: E }, 17.6)
+        .from('#s5sub', { opacity: 0, y: 26, duration: 0.6, ease: E }, 17.9)
+        .from('#s5phone', { opacity: 0, y: 140, duration: 0.9, ease: E }, 18.1)
+        .fromTo('#s5phone img', { scale: 1.0 }, { scale: 1.07, duration: 4.5, ease: 'none', transformOrigin: '50% 18%' }, 17.6);
+
+      // S6
+      tl.from('#s6eye', { opacity: 0, y: -20, duration: 0.5, ease: E }, 22.1)
+        .from('#s6cap', { opacity: 0, y: 36, duration: 0.7, ease: E }, 22.3)
+        .from('#s6chips span', { opacity: 0, y: 30, duration: 0.5, stagger: 0.09, ease: E }, 22.9);
+
+      // S7
+      tl.from('#s7logo', { opacity: 0, y: -24, duration: 0.6, ease: E }, 26.15)
+        .from('#s7l1', { opacity: 0, y: 34, duration: 0.7, ease: E }, 26.5)
+        .from('#s7price .strike', { opacity: 0, y: 20, duration: 0.5, ease: E }, 27.0)
+        .from('#s7price .price', { opacity: 0, scale: 0.8, duration: 0.7, ease: 'back.out(1.7)', transformOrigin: '50% 50%' }, 27.25)
+        .from('#s7price .badge', { opacity: 0, y: 20, duration: 0.5, ease: E }, 27.7)
+        .from('#s7cta .cta', { opacity: 0, y: 34, duration: 0.6, ease: 'back.out(1.5)' }, 28.1)
+        .from('#s7dom', { opacity: 0, duration: 0.6, ease: E }, 28.6)
+        .to('#s7cta .cta', { scale: 1.05, duration: 0.6, yoyo: true, repeat: 3, ease: 'sine.inOut', transformOrigin: '50% 50%' }, 29.0);
+
+      window.__timelines['main'] = tl;
+    </script>
+  </body>
+</html>
