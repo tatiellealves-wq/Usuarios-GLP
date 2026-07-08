@@ -28,6 +28,19 @@ export type Comida = 'desayuno' | 'almuerzo' | 'cena' | 'snack';
 export type PlanDia = Partial<Record<Comida, number>>; // id de receta
 export type PlanSemanal = Record<number, PlanDia>; // 0=domingo … 6=sábado
 
+// ---- Plan alimentario inteligente ----
+export type SexoBio = 'F' | 'M';
+export type ObjetivoPlan = 'perder' | 'mantener' | 'ganar';
+export type PlanInteligente = {
+  peso: number; // kg
+  altura: number; // cm
+  edad: number;
+  sexo: SexoBio;
+  objetivo: ObjetivoPlan;
+  suave: boolean; // priorizar recetas suaves (estómago sensible)
+  comidas: Partial<Record<Comida, number>>; // id de receta por comida
+};
+
 export type Estado = {
   activado: boolean;
   codigoUsado?: string; // código de activación introducido (para soporte)
@@ -36,6 +49,7 @@ export type Estado = {
   pesos: Peso[];
   medidas: Medidas[];
   plan: PlanSemanal;
+  planInteligente?: PlanInteligente; // plan alimentario generado por calorías
   comprasHechas: string[]; // ítems marcados de la lista de compras
   despensaHecha: string[]; // ítems marcados de la Lista de Supermercado (Módulo 3)
   salida?: { inicio: string; checks: string[] };
@@ -106,6 +120,27 @@ export function metaProteina(perfil: Perfil, pesoActual?: number): number {
 
 export function esDiaDosis(perfil: Perfil, fecha = new Date()): boolean {
   return fecha.getDay() === perfil.diaDosis;
+}
+
+// Metas del plan alimentario inteligente.
+// BMR con Mifflin-St Jeor · TDEE con actividad ligera · déficit/superávit según objetivo.
+// La proteína sigue la guía (1.7–2.0 g/kg) para proteger el músculo durante el GLP-1.
+export function metasPlan(d: { peso: number; altura: number; edad: number; sexo: SexoBio; objetivo: ObjetivoPlan }): {
+  bmr: number; tdee: number; calorias: number; proteina: number;
+} {
+  const base = 10 * d.peso + 6.25 * d.altura - 5 * d.edad;
+  const bmr = Math.round(base + (d.sexo === 'M' ? 5 : -161));
+  const tdee = bmr * 1.375; // actividad ligera (caminatas + tareas del día)
+  let cal = d.objetivo === 'perder' ? tdee - 500 : d.objetivo === 'ganar' ? tdee + 250 : tdee;
+  const piso = d.sexo === 'F' ? 1200 : 1500; // mínimo seguro
+  cal = Math.max(piso, cal);
+  const factor = d.objetivo === 'perder' ? 1.8 : d.objetivo === 'ganar' ? 2.0 : 1.7;
+  return {
+    bmr,
+    tdee: Math.round(tdee),
+    calorias: Math.round(cal / 10) * 10,
+    proteina: Math.round(d.peso * factor),
+  };
 }
 
 export function racha(registros: Record<string, RegistroDia>): number {
