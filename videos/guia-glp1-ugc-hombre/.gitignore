@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 snapshots/
 renders/work-*/
 renders/ugc-silent.mp4
