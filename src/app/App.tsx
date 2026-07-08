@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import {
-  BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
-  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Printer, RefreshCw, Ruler, Search, ShieldCheck,
+  AlertTriangle, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Pill, Printer, RefreshCw, Ruler, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
 import {
-  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, PASOS_INYECCION,
-  RECETAS, RUTINAS, type Receta, type Rutina,
+  ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, MEDICAMENTOS, PASOS_INYECCION,
+  RECETAS, RUTINAS, type Medicamento, type Receta, type Rutina,
 } from './data';
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
@@ -284,9 +284,9 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         </div>
 
         <label className="lbl">Tu medicamento</label>
-        <div className="grid grid-cols-2 gap-2">
-          {(['Ozempic', 'Wegovy', 'Mounjaro', 'Otro'] as const).map((m) => (
-            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-sm ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+        <div className="grid grid-cols-3 gap-2">
+          {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
+            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
           ))}
         </div>
 
@@ -1493,15 +1493,17 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
 function PantallaMas({ estado, setEstado, onPlanIA }: {
   estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onPlanIA: () => void;
 }) {
-  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
+  const [vista, setVista] = useState<'menu' | 'guia' | 'medicamentos' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
 
   if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
+  if (vista === 'medicamentos') return <PantallaMedicamentos perfil={estado.perfil!} onVolver={() => setVista('menu')} />;
   if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'super') return <ConVolver onVolver={() => setVista('menu')}><PantallaSuper estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
+    { id: 'medicamentos' as const, icon: <Syringe className="h-5 w-5" />, bg: '#E7F1FC', fg: '#0C87C4', titulo: 'Guía de medicamentos', sub: `Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus${estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}` },
     { id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
     { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5" />, bg: '#FDF3D8', fg: '#B08621', titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5" />, bg: '#FCE7E4', fg: '#EF4444', titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
@@ -1876,6 +1878,126 @@ function PantallaGuia() {
       <p className="text-[10px] text-gray-400 text-center mt-4 mb-2">
         El Plan de Salida interactivo está en Más herramientas → Plan de Salida.
       </p>
+    </div>
+  );
+}
+
+/* ---------- Guía de medicamentos ---------- */
+function PantallaMedicamentos({ perfil, onVolver }: { perfil: Perfil; onVolver: () => void }) {
+  const miMed = perfil.medicamento;
+  const orden = [...MEDICAMENTOS].sort((a, b) => (b.nombre === miMed ? 1 : 0) - (a.nombre === miMed ? 1 : 0));
+  const [sel, setSel] = useState<Medicamento | null>(null);
+  const [secc, setSecc] = useState<'aplicar' | 'efectos' | 'alimentacion' | 'faq'>('aplicar');
+
+  if (sel) {
+    const Icono = sel.via === 'oral' ? Pill : Syringe;
+    return (
+      <div className="max-w-md mx-auto px-5 pt-4">
+        <button onClick={() => setSel(null)} className="text-sm font-bold text-gray-500 mb-3">← Todos los medicamentos</button>
+
+        <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-5 mb-4">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center shrink-0"><Icono className="h-5 w-5 text-[#D4AF37]" /></span>
+            <div className="min-w-0">
+              <h1 className="text-xl font-extrabold leading-tight">{sel.nombre}</h1>
+              <p className="text-xs text-green-100/70">{sel.principio}</p>
+            </div>
+          </div>
+          <span className="inline-block text-[10px] font-bold bg-white/10 rounded-full px-2.5 py-1">{sel.via === 'oral' ? '💊 Pastilla' : '💉 Inyección'} · {sel.frecuencia}</span>
+          <p className="text-[11px] text-green-100/60 mt-3 leading-relaxed">{sel.aprobado}</p>
+        </div>
+
+        <div className="grid grid-cols-4 gap-1.5 mb-4">
+          {([['aplicar', 'Aplicar'], ['efectos', 'Efectos'], ['alimentacion', 'Comer'], ['faq', 'Dudas']] as const).map(([v, l]) => (
+            <button key={v} onClick={() => setSecc(v)} className={`seg py-2.5 text-xs ${secc === v ? 'seg-on' : ''}`}>{l}</button>
+          ))}
+        </div>
+
+        {secc === 'aplicar' && (
+          <div className="card">
+            <h2 className="font-bold mb-3 flex items-center gap-2"><Icono className="h-4 w-4 text-[#0C87C4]" /> Cómo {sel.via === 'oral' ? 'tomarlo' : 'aplicarlo'}</h2>
+            <ol className="space-y-2.5">
+              {sel.aplicar.map((t, i) => (
+                <li key={i} className="flex gap-3 text-sm text-gray-600">
+                  <span className="h-6 w-6 shrink-0 rounded-full bg-[#EAF4EC] text-[#166534] font-bold text-xs flex items-center justify-center">{i + 1}</span>
+                  <span className="leading-snug">{t}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {secc === 'efectos' && (
+          <>
+            <div className="card">
+              <h2 className="font-bold mb-2">Efectos frecuentes</h2>
+              {sel.efectosComunes.map((t, i) => (
+                <div key={i} className="flex gap-2.5 py-1.5 text-sm text-gray-600"><Check className="h-4 w-4 text-[#16A34A] shrink-0 mt-0.5" /> <span className="leading-snug">{t}</span></div>
+              ))}
+            </div>
+            <div className="card !border-[#F0D9D9] bg-[#FDF8F8]">
+              <h2 className="font-bold text-[#8C2F2F] mb-2 flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> Contacta a tu médico si…</h2>
+              {sel.efectosAlerta.map((t, i) => (
+                <div key={i} className="flex gap-2.5 py-1.5 text-xs text-gray-700"><span className="text-[#8C2F2F] font-bold shrink-0">•</span> <span className="leading-snug">{t}</span></div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {secc === 'alimentacion' && (
+          <div className="card">
+            <h2 className="font-bold mb-2 flex items-center gap-2"><Utensils className="h-4 w-4 text-[#16A34A]" /> Alimentación recomendada</h2>
+            {sel.alimentacion.map((t, i) => (
+              <div key={i} className="flex gap-2.5 py-1.5 text-sm text-gray-600"><span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] shrink-0 mt-2" /> <span className="leading-snug">{t}</span></div>
+            ))}
+            <p className="text-[10px] text-gray-400 mt-2">Genera un menú a tu medida en Hoy → Plan alimentario inteligente.</p>
+          </div>
+        )}
+
+        {secc === 'faq' && (
+          <div className="space-y-2.5">
+            {sel.faq.map((f, i) => <React.Fragment key={i}><FaqMed q={f.q} a={f.a} /></React.Fragment>)}
+          </div>
+        )}
+
+        <p className="text-[10px] text-gray-400 text-center mt-4 mb-4 leading-relaxed">Información educativa general. No sustituye el prospecto ni las indicaciones de tu médico o farmacéutico. Nunca inicies, cambies o suspendas tu tratamiento por tu cuenta.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <button onClick={onVolver} className="text-sm font-bold text-gray-500 mb-3">← Más herramientas</button>
+      <h1 className="text-2xl font-bold mb-1">Guía de medicamentos</h1>
+      <p className="text-sm text-gray-500 mb-4">Cómo se usa cada uno, sus efectos, la alimentación que mejor lo acompaña y las dudas más comunes.</p>
+      {orden.map((m) => {
+        const Icono = m.via === 'oral' ? Pill : Syringe;
+        const mio = m.nombre === miMed;
+        return (
+          <button key={m.id} onClick={() => { setSel(m); setSecc('aplicar'); }} className={`card w-full text-left flex items-center gap-4 ${mio ? 'ring-2 ring-[#16A34A]' : ''}`}>
+            <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Icono className="h-5 w-5" /></span>
+            <span className="min-w-0 flex-1">
+              <span className="font-bold text-sm flex items-center gap-2 flex-wrap">{m.nombre} {mio && <span className="text-[9px] font-bold uppercase tracking-wide text-[#166534] bg-[#EAF4EC] rounded-full px-2 py-0.5">Tu tratamiento</span>}</span>
+              <span className="text-xs text-gray-500">{m.principio} · {m.via === 'oral' ? 'pastilla diaria' : 'inyección semanal'}</span>
+            </span>
+            <ChevronDown className="h-4 w-4 text-gray-300 shrink-0 -rotate-90" />
+          </button>
+        );
+      })}
+      <p className="text-[10px] text-gray-400 text-center mt-4">Información educativa · no sustituye a tu médico ni al prospecto de tu medicamento.</p>
+    </div>
+  );
+}
+
+function FaqMed({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="card !p-0 overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex justify-between items-center text-left p-4 gap-3">
+        <span className="font-bold text-sm">{q}</span>
+        {open ? <ChevronUp className="h-4 w-4 text-gray-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-400 shrink-0" />}
+      </button>
+      {open && <div className="px-4 pb-4 border-t border-gray-100 pt-3"><p className="text-sm text-gray-600 leading-relaxed">{a}</p></div>}
     </div>
   );
 }

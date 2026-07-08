@@ -6,7 +6,7 @@ export type Perfil = {
   pesoInicial: number; // kg
   altura?: number; // cm — para IMC (opcional; se completa en el plan o en estadísticas)
   unidad: 'kg' | 'lb';
-  medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Otro';
+  medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Zepbound' | 'Rybelsus' | 'Otro';
   diaDosis: number; // 0=domingo … 6=sábado
   objetivo?: number; // kg
   fechaInicio: string;

@@ -201,3 +201,116 @@ export const RUTINAS: Rutina[] = [
     ],
   },
 ];
+
+// ---- Área de medicamentos (información educativa, no sustituye a tu médico) ----
+export type MedicamentoId = 'mounjaro' | 'zepbound' | 'ozempic' | 'wegovy' | 'rybelsus';
+export type Medicamento = {
+  id: MedicamentoId;
+  nombre: string;
+  principio: string; // principio activo
+  via: 'inyeccion' | 'oral';
+  frecuencia: string; // ej. "1 vez por semana"
+  aprobado: string;
+  aplicar: string[];
+  efectosComunes: string[];
+  efectosAlerta: string[]; // señales para contactar al médico
+  alimentacion: string[];
+  faq: { q: string; a: string }[];
+};
+
+// Alimentación base compartida (misma fisiología en todos): evita repetir y mantiene consistencia.
+const ALIM_BASE = [
+  'Prioriza la proteína en cada comida (huevo, yogur griego, pollo, pescado, legumbres): protege tu músculo.',
+  'Porciones pequeñas y frecuentes; come despacio y detente al primer signo de saciedad.',
+  'Evita frituras, comidas muy grasosas, alcohol y bebidas con gas: son los que más náuseas provocan.',
+  'Hidrátate (unos 8 vasos al día) y suma fibra (verduras, avena, chía) para prevenir el estreñimiento.',
+];
+
+const SEMAGLUTIDA_FAQ = (semanal: boolean): { q: string; a: string }[] => [
+  semanal
+    ? { q: '¿Olvidé mi dosis, qué hago?', a: 'Si faltan 48 horas o más para la siguiente, aplícala en cuanto lo recuerdes. Si falta menos, sáltala y sigue tu día habitual. Nunca apliques dos dosis juntas. Ante la duda, consulta a tu médico o farmacéutico.' }
+    : { q: '¿Olvidé mi pastilla, qué hago?', a: 'Sáltala por completo y toma la siguiente al día siguiente a la hora de siempre. No tomes dos el mismo día. Consulta a tu médico si te pasa seguido.' },
+  { q: '¿Puedo tomar alcohol?', a: 'Con moderación y nunca en ayunas: irrita el estómago, aporta calorías vacías y puede bajar tu glucosa. El día de la dosis, mejor evítalo.' },
+  { q: '¿Es para diabetes o para adelgazar?', a: 'La semaglutida se usa en diabetes tipo 2 y, en otras presentaciones/dosis, en control de peso. Quién la indica y para qué es siempre decisión de tu médico.' },
+  { q: '¿Cuándo empieza a hacer efecto?', a: 'El apetito suele bajar en las primeras semanas, pero el efecto pleno llega con el escalado de dosis a lo largo de las semanas. La constancia importa más que la rapidez.' },
+];
+
+const TIRZEPATIDA_FAQ: { q: string; a: string }[] = [
+  { q: '¿Olvidé mi dosis, qué hago?', a: 'Puedes aplicarla dentro de los 4 días (96 horas) siguientes al día previsto. Si pasó más tiempo, sáltala y continúa con tu día habitual. Nunca apliques dos dosis juntas. Ante la duda, consulta a tu médico.' },
+  { q: '¿En qué se diferencia de la semaglutida?', a: 'La tirzepatida actúa sobre dos hormonas (GIP y GLP-1) en lugar de una. Para tu alimentación, las recomendaciones son prácticamente las mismas.' },
+  { q: '¿Puedo tomar alcohol?', a: 'Con moderación y nunca en ayunas: irrita el estómago y puede alterar la glucosa. El día de la dosis, mejor evítalo.' },
+  { q: '¿Cuándo empieza a hacer efecto?', a: 'El apetito baja en las primeras semanas; el efecto pleno llega con el escalado de dosis. No aumentes por tu cuenta.' },
+];
+
+const APLICAR_INYECCION = [
+  'Una inyección subcutánea 1 vez por semana, el mismo día. Puedes cambiar el día si han pasado al menos 48 h desde la última dosis.',
+  'Zonas: abdomen, muslo o parte superior del brazo. Rota el sitio cada semana para cuidar la piel.',
+  'Puede aplicarse a cualquier hora, con o sin comida.',
+  'Guarda las plumas sin abrir en el refrigerador (2–8 °C), sin congelar. Sigue las indicaciones del prospecto para la pluma en uso.',
+  'La dosis sube de forma gradual (escalado) según tu médico. Nunca aumentes ni ajustes la dosis por tu cuenta.',
+];
+
+const ALERTA_COMUN = [
+  'Dolor abdominal intenso y persistente, que puede irradiarse a la espalda (posible pancreatitis).',
+  'Vómitos o diarrea que no ceden, con signos de deshidratación (mareo, boca seca, orinar poco).',
+  'Reacción alérgica: hinchazón de cara/labios, dificultad para respirar o sarpullido.',
+  'Un bulto o dolor en el cuello, ronquera o dificultad para tragar.',
+  'Cambios bruscos en la visión, o síntomas de azúcar muy baja si usas otros fármacos para la diabetes.',
+];
+
+export const MEDICAMENTOS: Medicamento[] = [
+  {
+    id: 'mounjaro', nombre: 'Mounjaro', principio: 'Tirzepatida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Aprobado para diabetes tipo 2. Doble acción (GIP + GLP-1).',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, especialmente al subir de dosis', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Menos apetito y digestión más lenta', 'Suelen mejorar a medida que tu cuerpo se adapta'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: TIRZEPATIDA_FAQ,
+  },
+  {
+    id: 'zepbound', nombre: 'Zepbound', principio: 'Tirzepatida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Mismo principio activo que Mounjaro (tirzepatida), en la presentación enfocada en el control de peso crónico.',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, sobre todo al inicio y al subir dosis', 'Diarrea o estreñimiento', 'Vómitos, eructos y reflujo', 'Cansancio y menos apetito', 'Suelen disminuir con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: TIRZEPATIDA_FAQ,
+  },
+  {
+    id: 'ozempic', nombre: 'Ozempic', principio: 'Semaglutida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Aprobado para diabetes tipo 2. La pérdida de peso es un efecto asociado.',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas (el más frecuente)', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Eructos y reflujo', 'Menos apetito; mejoran con el tiempo'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: SEMAGLUTIDA_FAQ(true),
+  },
+  {
+    id: 'wegovy', nombre: 'Wegovy', principio: 'Semaglutida', via: 'inyeccion', frecuencia: '1 vez por semana',
+    aprobado: 'Mismo principio activo que Ozempic (semaglutida), en la presentación enfocada en el control de peso crónico (dosis objetivo más altas).',
+    aplicar: APLICAR_INYECCION,
+    efectosComunes: ['Náuseas, sobre todo al subir de dosis', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Dolor de cabeza y cansancio', 'Menos apetito; suelen mejorar con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: ALIM_BASE,
+    faq: SEMAGLUTIDA_FAQ(true),
+  },
+  {
+    id: 'rybelsus', nombre: 'Rybelsus', principio: 'Semaglutida (oral)', via: 'oral', frecuencia: '1 comprimido al día',
+    aprobado: 'Aprobado para diabetes tipo 2. Es la semaglutida en pastilla — no se inyecta.',
+    aplicar: [
+      'Un comprimido por vía oral todos los días, a la misma hora (idealmente al despertar).',
+      'En ayunas: tómalo con un sorbo de agua (máximo media taza, ~120 ml).',
+      'Espera al menos 30 minutos antes de comer, beber otra cosa o tomar otros medicamentos.',
+      'Tragar el comprimido entero: no lo partas, mastiques ni tritures.',
+      'La dosis sube de forma gradual según tu médico. No la ajustes por tu cuenta.',
+    ],
+    efectosComunes: ['Náuseas, sobre todo al inicio', 'Diarrea o estreñimiento', 'Vómitos y dolor abdominal', 'Menos apetito y digestión más lenta', 'Suelen disminuir con las semanas'],
+    efectosAlerta: ALERTA_COMUN,
+    alimentacion: [
+      'Respeta la ventana en ayunas: la absorción de Rybelsus baja mucho si hay comida o demasiada agua.',
+      ...ALIM_BASE,
+    ],
+    faq: SEMAGLUTIDA_FAQ(false),
+  },
+];
