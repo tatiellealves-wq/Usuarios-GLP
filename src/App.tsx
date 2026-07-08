@@ -254,8 +254,9 @@ export default function App() {
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan por tus calorías y proteína</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan de salida de 12 semanas</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Guía de 5 medicamentos</span>
               </div>
 
               <div className="w-full sm:max-w-md">
@@ -336,7 +337,7 @@ export default function App() {
                 </span>
                 <h3 className="text-white font-bold font-display text-xl md:text-2xl leading-tight">App del Reto de 21 días</h3>
                 <p className="text-green-100/90 text-sm md:text-base leading-snug mt-1">
-                  Tu plan día a día, guiado paso a paso — abres la app y sabes exactamente qué comer hoy.
+                  Tu plan día a día con menús inteligentes por calorías y proteína, estadísticas de tu progreso y la guía de tu medicamento — todo en un solo lugar.
                 </p>
               </div>
               <AppSeal size={72} rotate={-6} className="hidden md:block -mr-1" />
@@ -547,7 +548,7 @@ export default function App() {
               Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              Nada de adivinar. Abres la app y ves exactamente qué comer hoy, registras cómo te sientes y avanzas día a día — con toda la biblioteca de guías incluida dentro.
+              Nada de adivinar. La app genera tu menú por tus calorías y proteína, te muestra estadísticas de tu progreso, incluye la guía de tu medicamento y toda la biblioteca de guías — y avanzas día a día.
             </p>
           </div>
 
@@ -619,10 +620,12 @@ export default function App() {
             <div className="lg:col-span-7">
               <ul className="space-y-4">
                 {[
-                  ['El plan de cada día, listo', 'Qué comer, cuánta proteína y cuánta agua — sin improvisar ni una comida.'],
-                  ['35 recetas anti-náusea a un toque', 'Fáciles, rápidas y pensadas para cuando casi no tienes hambre.'],
-                  ['Seguimiento de síntomas, peso y energía', 'Registras en segundos y descubres qué te cae bien y qué no.'],
-                  ['Progreso visual + plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
+                  ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — con las calorías y la proteína ya calculadas. Cambias cualquier plato con un toque.'],
+                  ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista para cuando casi no tienes hambre.'],
+                  ['Guía de tu medicamento', 'Cómo aplicarlo, efectos y alimentación de Ozempic, Wegovy, Mounjaro, Zepbound y Rybelsus — con tu tratamiento destacado.'],
+                  ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, calorías y síntomas — en gráficos claros que puedes llevar a tu médico.'],
+                  ['Registro diario en segundos', 'Síntomas, energía y agua; con el tiempo descubres qué te cae bien y qué no.'],
+                  ['Plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
                   ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
                 ].map(([t, d]) => (
                   <li key={t} className="flex gap-4">
@@ -926,7 +929,7 @@ export default function App() {
                   <span className="h-8 w-8 shrink-0 rounded-lg bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
                     <Smartphone className="h-4 w-4 text-brand-gold" />
                   </span>
-                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — tu plan día a día + seguimiento <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
+                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — plan inteligente por calorías y proteína, estadísticas y guía de medicamentos <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
                 </div>
 
                 <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
