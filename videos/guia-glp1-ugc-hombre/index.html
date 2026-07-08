@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/Poppins-700.ttf') format('truetype'); font-display: block; }
+      @font-face { font-family: 'Poppins'; font-weight: 600; src: url('assets/Poppins-600.ttf') format('truetype'); font-display: block; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05130C; }
+      body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; }
+      :root { --vibrant: #16A34A; --gold: #D4AF37; --cream: #FBF9F5; }
+
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .bg-green { background: radial-gradient(120% 80% at 50% 0%, #15462B 0%, #0D3320 45%, #071A10 100%); }
+      .bg-deep { background: radial-gradient(120% 90% at 50% 35%, #123C25 0%, #0A2417 55%, #05130C 100%); }
+      .bgimg { position: absolute; inset: 0; overflow: hidden; }
+      .bgimg img { width: 100%; height: 100%; object-fit: cover; }
+      .scrim-b { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,14,9,0.94) 4%, rgba(4,14,9,0.62) 26%, rgba(4,14,9,0.05) 52%, rgba(4,14,9,0.28) 100%); }
+      .scrim-full { position: absolute; inset: 0; background: rgba(6,18,11,0.62); }
+      .glow-gold { position: absolute; border-radius: 50%; background: rgba(212,175,55,0.16); filter: blur(90px); }
+
+      .kicker { position: absolute; top: 120px; left: 0; right: 0; text-align: center; }
+      .kicker span { display: inline-flex; align-items: center; gap: 12px; background: rgba(6,18,11,0.5);
+        border: 1px solid rgba(212,175,55,0.45); color: var(--gold); font-weight: 700; font-size: 30px;
+        letter-spacing: 3px; text-transform: uppercase; padding: 14px 30px; border-radius: 999px; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
+
+      .capb { position: absolute; left: 80px; right: 80px; bottom: 200px; text-align: center;
+        color: var(--cream); font-weight: 700; font-size: 74px; line-height: 1.1; letter-spacing: -1.5px;
+        text-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+      .capb b { color: var(--gold); font-weight: 700; }
+      .subb { position: absolute; left: 90px; right: 90px; bottom: 130px; text-align: center;
+        color: rgba(255,255,255,0.82); font-weight: 600; font-size: 36px; line-height: 1.3; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+
+      .pain { position: absolute; left: 90px; right: 90px; text-align: center; color: var(--cream);
+        font-weight: 700; font-size: 82px; letter-spacing: -1.5px; }
+      .pain .x { color: #F4A9A0; }
+
+      .center-cap { position: absolute; left: 80px; right: 80px; top: 200px; text-align: center;
+        color: var(--cream); font-weight: 700; font-size: 66px; line-height: 1.12; letter-spacing: -1.2px; }
+      .center-cap b { color: var(--gold); }
+
+      .phone { position: absolute; background: #0A0F0C; border-radius: 52px; padding: 14px;
+        box-shadow: 0 50px 120px -30px rgba(0,0,0,0.8); outline: 1px solid rgba(255,255,255,0.08); }
+      .phone .screen { border-radius: 40px; overflow: hidden; background: #FBF9F5; display: block; }
+      .phone img { width: 100%; display: block; }
+
+      .chips { position: absolute; left: 70px; right: 70px; text-align: center; }
+      .chip { display: inline-block; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3);
+        border-radius: 999px; padding: 16px 30px; color: var(--cream); font-weight: 600; font-size: 36px; margin: 0 8px 16px; }
+      .chip b { color: var(--gold); }
+
+      .logo-row { display: inline-flex; align-items: center; gap: 20px; }
+      .logo-row img { width: 86px; height: 86px; border-radius: 20px; }
+      .logo-row .name { color: var(--cream); font-weight: 700; font-size: 44px; line-height: 1; text-align: left; }
+      .logo-row .name span { display: block; color: var(--gold); font-size: 27px; font-weight: 600; }
+
+      .stars { color: var(--gold); font-size: 40px; letter-spacing: 4px; }
+      .proof { color: rgba(255,255,255,0.85); font-weight: 600; font-size: 34px; }
+      .price { color: #fff; font-weight: 700; font-size: 120px; letter-spacing: -3px; line-height: 1; }
+      .price .cur { color: var(--gold); font-size: 56px; vertical-align: super; }
+      .paycap { color: var(--gold); font-weight: 700; font-size: 34px; letter-spacing: 1px; }
+      .cta { display: inline-flex; align-items: center; gap: 16px; background: var(--vibrant); color: #fff;
+        font-weight: 700; font-size: 50px; padding: 36px 66px; border-radius: 30px; box-shadow: 0 30px 70px -20px rgba(22,163,74,0.75); }
+      .domain { color: rgba(255,255,255,0.6); font-weight: 600; font-size: 32px; letter-spacing: 2px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26.54" data-width="1080" data-height="1920">
+
+      <!-- S1 · HOOK (0–4.98) -->
+      <div id="scene-hook" class="scene clip" data-start="0" data-duration="5.04" data-track-index="0">
+        <div class="bgimg"><img id="s1img" src="assets/person-phone.png" alt="" /></div>
+        <div class="scrim-b"></div>
+        <div id="s1kick" class="kicker"><span><span class="dot"></span>App de alimentación · GLP‑1</span></div>
+        <div id="s1cap" class="capb">¿Usas <b>Ozempic, Mounjaro,<br />Wegovy</b> o <b>Rybelsus</b>?</div>
+      </div>
+
+      <!-- S2 · PROBLEMA (4.98–10.18) -->
+      <div id="scene-problema" class="scene clip" data-start="5.04" data-duration="5.38" data-track-index="0">
+        <div class="bgimg"><img id="s2img" src="assets/person-phone.png" alt="" /></div>
+        <div class="scrim-b"></div>
+        <div id="s2cap" class="capb" style="bottom:230px;">El medicamento hace su parte…</div>
+        <div id="s2sub" class="subb" style="bottom:150px;font-size:46px;color:#fff;">pero <b style="color:var(--gold);font-weight:700;">nadie te dijo qué comer.</b></div>
+      </div>
+
+      <!-- S3 · DOLOR (10.18–14.97) -->
+      <div id="scene-dolor" class="scene bg-deep clip" data-start="10.42" data-duration="5.88" data-track-index="0">
+        <div class="glow-gold" style="width:640px;height:640px;top:-160px;right:-140px;"></div>
+        <div id="s3p1" class="pain" style="top:560px;">Náuseas.</div>
+        <div id="s3p2" class="pain" style="top:720px;">Pérdida de <span class="x">músculo</span>.</div>
+        <div id="s3p3" class="pain" style="top:900px;">Miedo al <span class="x">rebote</span>.</div>
+        <div id="s3sub" class="subb" style="bottom:360px;font-size:38px;">El problema no es el medicamento — es no saber qué comer.</div>
+      </div>
+
+      <!-- S4 · SOLUCIÓN / APP (14.97–19.40) -->
+      <div id="scene-solucion" class="scene clip" data-start="16.30" data-duration="3.00" data-track-index="0">
+        <div class="bgimg"><img id="s4img" src="assets/person-cooking.png" alt="" style="filter:blur(6px) brightness(0.5);transform:scale(1.1);" /></div>
+        <div class="scrim-full"></div>
+        <div id="s4cap" class="center-cap" style="top:150px;">La app que te dice, cada día,<br /><b>qué comer</b>.</div>
+        <div id="s4phone" class="phone" style="width:520px;left:50%;top:520px;transform:translateX(-50%);"><div class="screen"><img src="assets/screen-hoy.webp" alt="" /></div></div>
+      </div>
+
+      <!-- S5 · FEATURES (19.40–23.60) -->
+      <div id="scene-features" class="scene bg-green clip" data-start="19.30" data-duration="3.60" data-track-index="0">
+        <div id="s5cap" class="center-cap" style="top:150px;">Menú, recetas y progreso<br />— <b>a un toque</b>.</div>
+        <div id="s5p1" class="phone" style="width:300px;left:60px;top:520px;transform:rotate(-4deg);"><div class="screen"><img src="assets/screen-hoy.webp" alt="" /></div></div>
+        <div id="s5p2" class="phone" style="width:320px;left:50%;top:470px;margin-left:-160px;z-index:2;"><div class="screen"><img src="assets/screen-recetas.webp" alt="" /></div></div>
+        <div id="s5p3" class="phone" style="width:300px;right:60px;top:520px;transform:rotate(4deg);"><div class="screen"><img src="assets/screen-progreso.webp" alt="" /></div></div>
+        <div id="s5chips" class="chips" style="bottom:230px;">
+          <span class="chip"><b>Calorías</b> y proteína</span><span class="chip"><b>45</b> recetas</span><span class="chip">Tu <b>progreso</b></span>
+        </div>
+      </div>
+
+      <!-- S6 · CTA (23.60–27.30) -->
+      <div id="scene-cta" class="scene clip" data-start="22.90" data-duration="3.64" data-track-index="0">
+        <div class="bgimg"><img id="s6img" src="assets/person-confident.png" alt="" style="filter:brightness(0.42);" /></div>
+        <div class="scrim-full" style="background:linear-gradient(to bottom, rgba(6,18,11,0.55), rgba(6,18,11,0.8));"></div>
+        <div id="s6logo" class="logo-row" style="position:absolute;top:250px;left:50%;transform:translateX(-50%);">
+          <img src="assets/icon.png" alt="" /><div class="name">Guía GLP‑1<span>Inteligente</span></div>
+        </div>
+        <div id="s6proof" style="position:absolute;top:430px;left:0;right:0;text-align:center;">
+          <div class="stars">★★★★★</div><div class="proof">Miles ya comen mejor con su tratamiento</div>
+        </div>
+        <div id="s6price" style="position:absolute;top:640px;left:0;right:0;text-align:center;">
+          <div class="price"><span class="cur">US$</span> 19.90</div>
+          <div class="paycap">Un solo pago · acceso inmediato</div>
+        </div>
+        <div id="s6cta" style="position:absolute;top:1120px;left:0;right:0;text-align:center;"><span class="cta">Empieza hoy →</span></div>
+        <div id="s6dom" class="domain" style="position:absolute;top:1320px;left:0;right:0;text-align:center;">guiaglp1.com</div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const E = 'power3.out';
+      const kb = (sel, from, to, at, dur) => tl.fromTo(sel, { scale: from }, { scale: to, duration: dur, ease: 'none', transformOrigin: '50% 40%' }, at);
+
+      kb('#s1img', 1.06, 1.14, 0, 5.1);
+      tl.from('#s1kick', { opacity: 0, y: -20, duration: 0.6, ease: E }, 0.2)
+        .from('#s1cap', { opacity: 0, y: 40, duration: 0.7, ease: E }, 0.55);
+
+      kb('#s2img', 1.14, 1.2, 5.04, 5.5);
+      tl.from('#s2cap', { opacity: 0, y: 34, duration: 0.6, ease: E }, 5.21)
+        .from('#s2sub', { opacity: 0, y: 24, duration: 0.6, ease: E }, 7.5);
+
+      tl.from('#s3p1', { opacity: 0, x: -40, duration: 0.5, ease: E }, 10.6)
+        .from('#s3p2', { opacity: 0, x: -40, duration: 0.5, ease: E }, 11.6)
+        .from('#s3p3', { opacity: 0, x: -40, duration: 0.5, ease: E }, 12.7)
+        .from('#s3sub', { opacity: 0, y: 20, duration: 0.6, ease: E }, 14.4);
+
+      kb('#s4img', 1.1, 1.16, 16.30, 3.1);
+      tl.from('#s4cap', { opacity: 0, y: 30, duration: 0.6, ease: E }, 16.5)
+        .from('#s4phone', { opacity: 0, y: 120, duration: 0.9, ease: E }, 16.9);
+
+      tl.from('#s5cap', { opacity: 0, y: 30, duration: 0.55, ease: E }, 19.45)
+        .from('#s5p2', { opacity: 0, y: 90, duration: 0.6, ease: E }, 19.65)
+        .from('#s5p1', { opacity: 0, y: 70, duration: 0.6, ease: E }, 19.85)
+        .from('#s5p3', { opacity: 0, y: 70, duration: 0.6, ease: E }, 20.0)
+        .from('#s5chips span', { opacity: 0, y: 24, duration: 0.45, stagger: 0.1, ease: E }, 20.4);
+
+      kb('#s6img', 1.05, 1.12, 22.90, 3.64);
+      tl.from('#s6logo', { opacity: 0, y: -20, duration: 0.6, ease: E }, 23.1)
+        .from('#s6proof', { opacity: 0, y: 20, duration: 0.5, ease: E }, 23.4)
+        .from('#s6price', { opacity: 0, scale: 0.85, duration: 0.6, ease: 'back.out(1.6)', transformOrigin: '50% 50%' }, 23.8)
+        .from('#s6cta', { opacity: 0, y: 30, duration: 0.6, ease: 'back.out(1.5)' }, 24.3)
+        .from('#s6dom', { opacity: 0, duration: 0.5, ease: E }, 24.7)
+        .to('#s6cta .cta', { scale: 1.05, duration: 0.5, yoyo: true, repeat: 2, ease: 'sine.inOut', transformOrigin: '50% 50%' }, 25.1);
+
+      window.__timelines['main'] = tl;
+    </script>
+  </body>
+</html>
