@@ -93,26 +93,30 @@ function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; ro
 }
 
 /* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
-function MockupDispositivos() {
-  // Teléfono fotorrealista con la pantalla real de la app compuesta sobre el área de la pantalla.
+// Teléfono fotorrealista con la pantalla real del app compuesta sobre la pantalla. Reutilizable.
+function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 'La app Guía GLP-1 en el teléfono', shadow = 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }: {
+  className?: string; screen?: string; alt?: string; shadow?: string;
+}) {
   return (
-    <div className="relative mx-auto w-full max-w-[290px]" style={{ aspectRatio: '1536 / 2048' }}>
-      {/* Marco fotorrealista del teléfono */}
+    <div className={`relative ${className}`} style={{ aspectRatio: '1536 / 2048' }}>
       <img
         src="/hero/phone-real.png"
-        alt="La app Guía GLP-1 abierta en el teléfono"
+        alt={alt}
         className="relative z-0 w-full block select-none pointer-events-none"
-        style={{ filter: 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }}
+        style={{ filter: shadow }}
       />
-      {/* Pantalla real compuesta sobre el área de la pantalla */}
       <div
         className="absolute z-10 overflow-hidden"
         style={{ left: '26.82%', top: '11.04%', width: '46.35%', height: '73.93%', borderRadius: '9% / 6%' }}
       >
-        <img src="/hero/screen-hoy.webp" alt="Pantalla de la app: tu plan del día" className="w-full h-full object-cover object-top" loading="lazy" />
+        <img src={screen} alt="" className="w-full h-full object-cover object-top" loading="lazy" />
       </div>
     </div>
   );
+}
+
+function MockupDispositivos() {
+  return <TelefonoReal className="mx-auto w-full max-w-[290px]" alt="La app Guía GLP-1 abierta en el teléfono" />;
 }
 
 /* Navegación de pasos numéricos del quiz */
@@ -520,12 +524,8 @@ export default function App() {
           <div className="relative overflow-hidden rounded-3xl p-5 md:p-6 bg-gradient-to-br from-[#134029] via-brand-green to-[#0D3320] ring-1 ring-brand-gold/30 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
             <div className="absolute -top-12 -right-12 h-44 w-44 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
             <div className="relative flex items-center gap-4 md:gap-6">
-              {/* miniatura real de la app dentro de un marco de teléfono */}
-              <div className="shrink-0 w-[76px] md:w-[96px] rounded-[1.1rem] bg-[#0A2016] p-1.5 ring-1 ring-white/10 shadow-lg">
-                <div className="rounded-[0.8rem] overflow-hidden bg-white">
-                  <img src="/hero/screen-hoy.webp" alt="Pantalla Hoy de la app del Reto GLP-1" className="w-full block" loading="lazy" />
-                </div>
-              </div>
+              {/* teléfono fotorrealista con la pantalla real */}
+              <TelefonoReal className="shrink-0 w-[88px] md:w-[112px]" shadow="drop-shadow(0 12px 18px rgba(0,0,0,0.45))" alt="Pantalla Hoy de la app del Reto GLP-1" />
               <div className="min-w-0 flex-1">
                 <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold bg-white/10 border border-brand-gold/30 rounded-full px-2.5 py-1 mb-2">
                   <Smartphone className="h-3 w-3" /> Producto principal · App
@@ -1269,20 +1269,17 @@ export default function App() {
               </p>
 
               <div className="border-t border-white/10 pt-6">
-                <div className="flex items-center justify-center gap-2 mb-5 bg-white/5 border border-brand-gold/30 rounded-xl px-4 py-3 max-w-md mx-auto">
+                <div className="flex items-center justify-center gap-2 mb-4 bg-white/5 border border-brand-gold/30 rounded-xl px-4 py-3 max-w-md mx-auto">
                   <Globe className="h-4 w-4 text-brand-gold shrink-0" />
                   <span className="text-[11px] md:text-xs font-semibold text-white/90 leading-snug text-left">
-                    Paga en <strong className="text-brand-gold">tu moneda local</strong> — la conversión se hace automáticamente en el checkout, sin complicaciones.
+                    Paga en <strong className="text-brand-gold">tu moneda local</strong> — la conversión es automática en el checkout.
                   </span>
                 </div>
-                <div className="flex justify-center items-center gap-3 opacity-80 mb-2">
-                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">PAGO ENCRIPTADO SSL DE ALTA SEGURIDAD</span>
-                </div>
-                <div className="flex justify-center items-center gap-2.5">
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">VISA</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">MASTERCARD</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">AMEX</span>
-                  <span className="bg-white/5 border border-white/5 px-2.5 py-1 rounded text-[10px] font-bold text-white/80">PAYPAL</span>
+                <div className="flex flex-wrap justify-center items-center gap-2">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-white/40 mr-1"><Lock className="h-3 w-3" /> Pago seguro</span>
+                  {['VISA', 'MASTERCARD', 'AMEX', 'PAYPAL'].map((bandeira) => (
+                    <span key={bandeira} className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-[10px] font-bold text-white/75">{bandeira}</span>
+                  ))}
                 </div>
               </div>
 
