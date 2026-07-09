@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  AlertTriangle, BookOpen, Calendar, Camera, Check, ChevronDown, ChevronUp, Download, Droplets,
+  AlertTriangle, Bell, BookOpen, Calendar, CalendarClock, Camera, Check, ChevronDown, ChevronUp, Clock, Download, Droplets,
   Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Pill, Printer, RefreshCw, Ruler, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
 } from 'lucide-react';
@@ -11,9 +11,9 @@ import {
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
   borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, imc,
-  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, racha, semanaSalida, serieDiaria,
+  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, proximaDosis, racha, semanaSalida, serieDiaria,
   tendenciaSemanal, useEstado,
-  type Comida, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
+  type Comida, type DosisRegistro, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
   type PlanSemanal, type RegistroDia, type SexoBio,
 } from './store';
 
@@ -26,6 +26,19 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('hoy');
   const [planIA, setPlanIA] = useState(false);
   const [medsOpen, setMedsOpen] = useState(false);
+  const [dosisOpen, setDosisOpen] = useState(false);
+
+  // Recordatorio best-effort: al abrir el app el día de dosis (sin registrar aún)
+  // y con permiso concedido, avisamos una vez.
+  useEffect(() => {
+    const p = estado.perfil;
+    if (!p || typeof window === 'undefined' || !('Notification' in window) || Notification.permission !== 'granted') return;
+    if (!esDiaDosis(p) || estado.dosis.some((d) => d.fecha === hoyISO())) return;
+    const clave = 'glp1-noti-' + hoyISO();
+    if (localStorage.getItem(clave)) return;
+    localStorage.setItem(clave, '1');
+    new Notification('💉 Hoy es tu día de dosis', { body: `Aplica tu ${p.medicamento} y regístralo en la app.` });
+  }, [estado.perfil, estado.dosis]);
 
   if (!estado.activado) {
     return <Activacion onOk={(codigo) => setEstado((e) => ({ ...e, activado: true, codigoUsado: codigo }))} />;
@@ -47,7 +60,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#1F2430] font-sans pb-24">
       <div key={tab} className="anim-screen">
-      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} plan={estado.plan} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} />}
+      {tab === 'hoy' && <PantallaHoy perfil={perfil} meta={meta} reg={reg} setReg={setReg} registros={estado.registros} dosis={estado.dosis} plan={estado.plan} onPlanIA={() => setPlanIA(true)} onMeds={() => setMedsOpen(true)} onDosis={() => setDosisOpen(true)} />}
       {tab === 'recetas' && <PantallaRecetas />}
       {tab === 'plan' && (
         <PantallaPlan
@@ -85,6 +98,11 @@ export default function App() {
       {medsOpen && (
         <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
           <PantallaMedicamentos perfil={perfil} onVolver={() => setMedsOpen(false)} />
+        </div>
+      )}
+      {dosisOpen && (
+        <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
+          <PantallaAgendaDosis perfil={perfil} dosis={estado.dosis} setEstado={setEstado} onVolver={() => setDosisOpen(false)} />
         </div>
       )}
       <CelebracionHost />
@@ -329,10 +347,11 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 }
 
 /* ---------- Hoy ---------- */
-function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA, onMeds }: {
-  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; plan: PlanSemanal; onPlanIA: () => void; onMeds: () => void;
+function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlanIA, onMeds, onDosis }: {
+  perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; dosis: DosisRegistro[]; plan: PlanSemanal; onPlanIA: () => void; onMeds: () => void; onDosis: () => void;
 }) {
   const dosisHoy = esDiaDosis(perfil);
+  const prox = proximaDosis(perfil, dosis);
   const planHoy = plan[new Date().getDay()] ?? {};
   const comidasHoy = (Object.entries(planHoy) as [Comida, number][])
     .map(([c, id]) => ({ c, r: RECETAS.find((x) => x.id === id)! }))
@@ -413,13 +432,33 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, plan, onPlanIA, onM
       </button>
 
       {/* Acceso a la Guía de medicamentos */}
-      <button onClick={onMeds} className="card w-full text-left flex items-center gap-3 !mb-4">
+      <button onClick={onMeds} className="card w-full text-left flex items-center gap-3 !mb-3">
         <span className="h-11 w-11 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
         <span className="min-w-0 flex-1">
           <span className="font-bold text-sm block">Guía de medicamentos</span>
           <span className="text-xs text-gray-500">{perfil.medicamento && perfil.medicamento !== 'Otro' ? `Cómo usar tu ${perfil.medicamento}, efectos y alimentación` : 'Cómo aplicar, efectos, alimentación y dudas'}</span>
         </span>
         <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
+      </button>
+
+      {/* Acceso a la Agenda de dosis (recordatorio + historial para el médico) */}
+      <button onClick={onDosis} className="card w-full text-left flex items-center gap-3 !mb-4">
+        <span className="h-11 w-11 rounded-2xl bg-[#FFF0DA] text-[#C9891A] flex items-center justify-center shrink-0"><CalendarClock className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="font-bold text-sm block">Agenda de dosis</span>
+          <span className="text-xs text-gray-500">
+            {prox.esHoy && !prox.aplicadaHoy
+              ? <b className="text-[#C9891A]">Hoy es tu día de dosis</b>
+              : prox.aplicadaHoy && prox.esHoy
+                ? 'Dosis de hoy registrada ✓'
+                : prox.dias === 1 ? 'Tu próxima dosis es mañana'
+                  : `Tu próxima dosis en ${prox.dias} días`}
+          </span>
+        </span>
+        <span className="text-right shrink-0">
+          <span className="block text-lg font-extrabold text-[#C9891A] tabular-nums leading-none">{prox.esHoy && !prox.aplicadaHoy ? '¡Hoy!' : prox.dias}</span>
+          {!(prox.esHoy && !prox.aplicadaHoy) && <span className="block text-[9px] font-bold text-[#C9891A]/60 uppercase">{prox.dias === 1 ? 'día' : 'días'}</span>}
+        </span>
       </button>
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
@@ -589,6 +628,154 @@ function ModoInyeccion({ reg, setReg }: { reg: RegistroDia; setReg: (r: Partial<
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ---------- Agenda de dosis (recordatorio + historial para el médico) ---------- */
+function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
+  perfil: Perfil; dosis: DosisRegistro[]; setEstado: ReturnType<typeof useEstado>[1]; onVolver: () => void;
+}) {
+  const prox = proximaDosis(perfil, dosis);
+  const notiSoportada = typeof window !== 'undefined' && 'Notification' in window;
+
+  const guardarConfig = (patch: Partial<Perfil>) =>
+    setEstado((e) => (e.perfil ? { ...e, perfil: { ...e.perfil, ...patch } } : e));
+
+  const registrar = () => {
+    const iso = hoyISO();
+    const nueva: DosisRegistro = {
+      fecha: iso,
+      med: perfil.medicamento,
+      mg: perfil.dosisMg,
+      hora: new Date().toLocaleTimeString('es-419', { hour: '2-digit', minute: '2-digit' }),
+    };
+    setEstado((e) => ({ ...e, dosis: [nueva, ...e.dosis.filter((d) => d.fecha !== iso)] }));
+    celebrar('¡Dosis registrada! 💉', 'Guardamos tu aplicación en el historial — listo para mostrar a tu médico.');
+  };
+
+  const deshacerHoy = () => setEstado((e) => ({ ...e, dosis: e.dosis.filter((d) => d.fecha !== hoyISO()) }));
+
+  const pedirRecordatorio = async () => {
+    if (!notiSoportada) return;
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      new Notification('Recordatorio activado ✓', { body: `Te avisaremos el día de tu dosis (${DIAS[perfil.diaDosis]}) al abrir el app.` });
+    }
+  };
+
+  const fmtFecha = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('es-419', { weekday: 'short', day: 'numeric', month: 'short' });
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-6">
+      <div className="flex items-center gap-3 mb-5">
+        <button onClick={onVolver} aria-label="Volver" className="h-9 w-9 rounded-full bg-white border-2 border-[#ECE7DD] flex items-center justify-center shrink-0">
+          <ChevronDown className="h-5 w-5 text-gray-500 rotate-90" />
+        </button>
+        <div>
+          <h1 className="text-2xl font-extrabold flex items-center gap-2"><CalendarClock className="h-6 w-6 text-[#C9891A]" /> Agenda de dosis</h1>
+          <p className="text-xs text-gray-500">Tu recordatorio e historial de aplicaciones</p>
+        </div>
+      </div>
+
+      {/* Próxima dosis */}
+      <div className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-5 mb-3 shadow-lg">
+        <p className="text-[10px] uppercase tracking-widest text-green-300/70 font-bold mb-1">Próxima dosis</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-2xl font-extrabold leading-tight">
+              {prox.esHoy && !prox.aplicadaHoy ? '¡Es hoy!' : prox.esHoy && prox.aplicadaHoy ? 'Registrada ✓' : DIAS[perfil.diaDosis]}
+            </p>
+            <p className="text-sm text-green-100/80">
+              {perfil.medicamento}{perfil.dosisMg ? ` · ${perfil.dosisMg}` : ''}{perfil.horaDosis ? ` · ${perfil.horaDosis}` : ''}
+            </p>
+          </div>
+          {!(prox.esHoy && prox.aplicadaHoy) && (
+            <div className="text-right">
+              <p className="text-3xl font-extrabold text-[#D4AF37] tabular-nums leading-none">{prox.esHoy ? '0' : prox.dias}</p>
+              <p className="text-[10px] font-bold text-[#D4AF37]/70 uppercase">{prox.dias === 1 ? 'día' : 'días'}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Registrar */}
+      {prox.aplicadaHoy ? (
+        <div className="card flex items-center gap-3 !mb-3 border-[#BFE6CB]">
+          <span className="h-10 w-10 rounded-full bg-[#EAF4EC] text-[#16A34A] flex items-center justify-center shrink-0"><Check className="h-5 w-5 stroke-[3px]" /></span>
+          <div className="flex-1">
+            <p className="font-bold text-sm">Dosis de hoy registrada</p>
+            <p className="text-xs text-gray-500">¡Bien hecho! Ya quedó en tu historial.</p>
+          </div>
+          <button onClick={deshacerHoy} className="text-xs font-bold text-gray-400 underline">Deshacer</button>
+        </div>
+      ) : (
+        <button onClick={registrar} className="w-full rounded-2xl bg-[#16A34A] text-white font-bold py-4 mb-3 flex items-center justify-center gap-2 shadow-lg active:scale-[0.99] transition-transform" style={{ boxShadow: '0 4px 0 #107636' }}>
+          <Syringe className="h-5 w-5" /> Registrar dosis aplicada
+        </button>
+      )}
+
+      {/* Recordatorio */}
+      {notiSoportada && (
+        <button onClick={pedirRecordatorio} className="card w-full text-left flex items-center gap-3 !mb-4">
+          <span className="h-10 w-10 rounded-2xl bg-[#FFF0DA] text-[#C9891A] flex items-center justify-center shrink-0"><Bell className="h-5 w-5" /></span>
+          <span className="flex-1">
+            <span className="font-bold text-sm block">Activar recordatorio</span>
+            <span className="text-xs text-gray-500">Aviso del navegador el día de tu dosis</span>
+          </span>
+          <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
+        </button>
+      )}
+
+      {/* Configuración */}
+      <div className="card !mb-4">
+        <p className="font-bold text-sm mb-3 flex items-center gap-2"><Clock className="h-4 w-4 text-[#C9891A]" /> Tu esquema</p>
+        <label className="text-xs font-semibold text-gray-500 block mb-1">Día de aplicación</label>
+        <select value={perfil.diaDosis} onChange={(e) => guardarConfig({ diaDosis: Number(e.target.value) })}
+          className="w-full rounded-xl border-2 border-[#ECE7DD] bg-white px-3 py-2.5 text-sm font-semibold mb-3 outline-none focus:border-[#C9891A]">
+          {DIAS.map((d, i) => <option key={i} value={i}>{d}</option>)}
+        </select>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-semibold text-gray-500 block mb-1">Hora</label>
+            <input type="time" value={perfil.horaDosis ?? ''} onChange={(e) => guardarConfig({ horaDosis: e.target.value })}
+              className="w-full rounded-xl border-2 border-[#ECE7DD] bg-white px-3 py-2.5 text-sm font-semibold outline-none focus:border-[#C9891A]" />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-gray-500 block mb-1">Dosis actual</label>
+            <input type="text" inputMode="decimal" placeholder="Ej. 0.5 mg" value={perfil.dosisMg ?? ''} onChange={(e) => guardarConfig({ dosisMg: e.target.value })}
+              className="w-full rounded-xl border-2 border-[#ECE7DD] bg-white px-3 py-2.5 text-sm font-semibold outline-none focus:border-[#C9891A]" />
+          </div>
+        </div>
+      </div>
+
+      {/* Historial */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="font-extrabold flex items-center gap-2"><Calendar className="h-4 w-4 text-[#16A34A]" /> Historial</h2>
+        <span className="tag bg-[#EAF4EC] text-[#166534]">{dosis.length} {dosis.length === 1 ? 'dosis' : 'dosis'}</span>
+      </div>
+      {dosis.length === 0 ? (
+        <p className="text-sm text-gray-400 text-center py-6 card">Aún no registras aplicaciones. Toca «Registrar dosis aplicada» el día de tu inyección.</p>
+      ) : (
+        <>
+          <div className="space-y-2 mb-3">
+            {dosis.slice(0, 30).map((d) => (
+              <div key={d.fecha} className="flex items-center gap-3 rounded-2xl bg-white border-2 border-[#ECE7DD] px-3 py-2.5">
+                <span className="h-9 w-9 rounded-xl bg-[#FFF0DA] text-[#C9891A] flex items-center justify-center shrink-0"><Syringe className="h-4 w-4" /></span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold capitalize">{fmtFecha(d.fecha)}</p>
+                  <p className="text-xs text-gray-500">{d.med}{d.mg ? ` · ${d.mg}` : ''}{d.hora ? ` · ${d.hora}` : ''}</p>
+                </div>
+                <Check className="h-4 w-4 text-[#16A34A] stroke-[3px] shrink-0" />
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 bg-[#EAF1FB] rounded-xl px-3 py-2.5 flex items-start gap-2">
+            <ShieldCheck className="h-4 w-4 text-[#0C87C4] shrink-0 mt-0.5" />
+            Muestra este historial a tu médico en la consulta. Puedes respaldar todos tus datos desde <b>Más → Copia de seguridad</b>.
+          </p>
+        </>
+      )}
     </div>
   );
 }

@@ -8,8 +8,18 @@ export type Perfil = {
   unidad: 'kg' | 'lb';
   medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Zepbound' | 'Rybelsus' | 'Otro';
   diaDosis: number; // 0=domingo … 6=sábado
+  horaDosis?: string; // HH:MM — para el recordatorio
+  dosisMg?: string; // dosis actual, ej. "0.5 mg" (titulación)
   objetivo?: number; // kg
   fechaInicio: string;
+};
+
+// Registro histórico de una aplicación (para mostrar al médico)
+export type DosisRegistro = {
+  fecha: string; // YYYY-MM-DD
+  med: string;
+  mg?: string;
+  hora?: string;
 };
 
 export type RegistroDia = {
@@ -57,11 +67,12 @@ export type Estado = {
   despensaHecha: string[]; // ítems marcados de la Lista de Supermercado (Módulo 3)
   salida?: { inicio: string; checks: string[] };
   rutinasHechas: string[]; // 'YYYY-MM-DD:rutinaId'
+  dosis: DosisRegistro[]; // historial de aplicaciones (más reciente primero)
 };
 
 const KEY = 'glp1app-v1';
 
-const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [], despensaHecha: [], rutinasHechas: [] };
+const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: [], plan: {}, comprasHechas: [], despensaHecha: [], rutinasHechas: [], dosis: [] };
 
 function cargar(): Estado {
   try {
@@ -123,6 +134,21 @@ export function metaProteina(perfil: Perfil, pesoActual?: number): number {
 
 export function esDiaDosis(perfil: Perfil, fecha = new Date()): boolean {
   return fecha.getDay() === perfil.diaDosis;
+}
+
+// Próxima aplicación: día de la semana del perfil; si hoy es día de dosis y ya se
+// registró, pasa a la semana siguiente. Devuelve los días que faltan.
+export function proximaDosis(perfil: Perfil, dosis: DosisRegistro[]): {
+  fecha: Date; iso: string; dias: number; esHoy: boolean; aplicadaHoy: boolean;
+} {
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  const isoHoy = hoyISO();
+  const aplicadaHoy = dosis.some((d) => d.fecha === isoHoy);
+  let diff = (perfil.diaDosis - hoy.getDay() + 7) % 7;
+  if (diff === 0 && aplicadaHoy) diff = 7;
+  const fecha = new Date(hoy); fecha.setDate(hoy.getDate() + diff);
+  const iso = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+  return { fecha, iso, dias: diff, esHoy: diff === 0, aplicadaHoy };
 }
 
 // Índice de masa corporal y su clasificación (OMS).
