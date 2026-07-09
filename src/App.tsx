@@ -1268,13 +1268,13 @@ export default function App() {
                 <span className="text-xs text-white/50 line-through tracking-wide">
                   Valor Total: US$ 89.90
                 </span>
-                <div className="flex items-baseline justify-center gap-1 mt-1">
+                <div className="flex items-baseline justify-center gap-1.5 mt-1">
                   <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
                   <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold tabular-nums">
                     9.90
                   </span>
-                  <span className="text-sm font-semibold text-white/70 ml-1">Un pago único</span>
                 </div>
+                <span className="text-sm font-semibold text-white/70 mt-1">Un pago único</span>
                 <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mt-2 bg-white/5 border border-brand-gold/20 px-3 py-1 rounded-full">
                   Sin mensualidades ni cobros ocultos
                 </span>
@@ -1286,8 +1286,8 @@ export default function App() {
                 onClick={triggerCheckout}
                 className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
               >
-                <ShoppingCart className="h-5 w-5 text-white" />
-                <span>Quiero el protocolo completo — US$ 9.90</span>
+                <ShoppingCart className="h-5 w-5 text-white shrink-0" />
+                <span>Quiero el protocolo completo</span>
               </a>
 
               <p className="text-xs text-green-100/80 leading-relaxed font-medium mb-6 flex items-center justify-center gap-1.5 max-w-sm mx-auto">
