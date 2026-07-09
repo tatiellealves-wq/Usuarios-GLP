@@ -140,9 +140,214 @@ function MockupDispositivos() {
   );
 }
 
+/* Navegación de pasos numéricos del quiz */
+function QuizNav({ onBack, onNext, nextDisabled }: { onBack: () => void; onNext: () => void; nextDisabled?: boolean }) {
+  return (
+    <div className="flex items-center gap-3 pt-1">
+      <button type="button" onClick={onBack} className="text-sm font-semibold text-gray-500 hover:text-gray-800 px-3 py-2">Atrás</button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={nextDisabled}
+        className="flex-1 bg-brand-green hover:bg-brand-green-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+      >
+        Continuar <ArrowRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
+/* Quiz de plan personalizado — el funnel del competidor, pero termina en la oferta.
+   Calcula calorías y proteína (Mifflin-St Jeor) con los datos del visitante y lo lleva al checkout. */
+function PlanQuiz({ open, onClose, onCheckout }: {
+  open: boolean;
+  onClose: () => void;
+  onCheckout: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}) {
+  const reduce = useReducedMotion();
+  const [step, setStep] = useState(0);
+  const [d, setD] = useState<Partial<{
+    sexo: 'mujer' | 'hombre'; edad: number; peso: number; altura: number;
+    med: string; objetivo: 'perder' | 'muscular' | 'mantener'; problema: string;
+  }>>({});
+
+  useEffect(() => { if (open) { setStep(0); setD({}); } }, [open]);
+
+  useEffect(() => {
+    if (open && step === 6 && typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Lead', { content_name: 'Quiz Plan GLP-1' });
+    }
+  }, [open, step]);
+
+  if (!open) return null;
+
+  const TOTAL = 6;
+  const set = (patch: Partial<typeof d>) => setD((p) => ({ ...p, ...patch }));
+  const pick = (patch: Partial<typeof d>) => { set(patch); window.setTimeout(() => setStep((s) => s + 1), reduce ? 0 : 160); };
+  const next = () => setStep((s) => s + 1);
+  const back = () => setStep((s) => Math.max(0, s - 1));
+
+  const peso = d.peso || 0, altura = d.altura || 0, edad = d.edad || 0;
+  const bmr = d.sexo === 'hombre'
+    ? 10 * peso + 6.25 * altura - 5 * edad + 5
+    : 10 * peso + 6.25 * altura - 5 * edad - 161;
+  const tdee = bmr * 1.375;
+  const kcalRaw = d.objetivo === 'perder' ? tdee - 500 : d.objetivo === 'muscular' ? tdee - 250 : tdee;
+  const kcal = Math.max(1200, Math.round(kcalRaw / 10) * 10);
+  const prot = Math.round((peso * 1.85) / 5) * 5;
+
+  const numOk = (v: number | undefined, min: number, max: number) => typeof v === 'number' && v >= min && v <= max;
+
+  const problemaLinea: Record<string, string> = {
+    nauseas: 'Priorizamos recetas suaves y anti-náusea para tus días más sensibles.',
+    comer: 'Cada día te decimos exactamente qué comer, sin que tengas que pensarlo.',
+    musculo: 'Ajustamos tu proteína para que pierdas grasa, no músculo.',
+    rebote: 'Incluye el plan de salida de 12 semanas para que no recuperes el peso.',
+  };
+
+  const Opt = ({ label, sub, onClick, active }: { label: string; sub?: string; onClick: () => void; active?: boolean }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full text-left rounded-xl border px-4 py-3.5 transition-colors ${active ? 'border-brand-green bg-brand-green/5 ring-1 ring-brand-green' : 'border-gray-200 hover:border-brand-green/60 hover:bg-brand-green/[0.03]'}`}
+    >
+      <span className="font-semibold text-neutral-dark text-[15px]">{label}</span>
+      {sub && <span className="block text-xs text-gray-500 mt-0.5">{sub}</span>}
+    </button>
+  );
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
+      <div className="absolute inset-0 bg-neutral-dark/70 backdrop-blur-sm" onClick={onClose} />
+      <motion.div
+        className="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        initial={reduce ? false : { y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-100 shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="bg-brand-green text-white p-1 rounded-md"><Activity className="h-4 w-4 text-brand-gold" /></div>
+            <span className="font-bold text-sm text-neutral-dark">Tu plan personalizado</span>
+          </div>
+          <button onClick={onClose} aria-label="Cerrar" className="text-gray-400 hover:text-gray-700 p-1"><X className="h-5 w-5" /></button>
+        </div>
+
+        {step < TOTAL && (
+          <div className="h-1 bg-gray-100 shrink-0">
+            <div className="h-full bg-brand-green transition-all duration-300" style={{ width: `${((step + 1) / TOTAL) * 100}%` }} />
+          </div>
+        )}
+
+        <div className="p-5 overflow-y-auto">
+          {step === 0 && (
+            <div className="space-y-3">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">Empecemos. ¿Cuál es tu sexo biológico?</h3>
+              <p className="text-sm text-gray-500 !mt-1 mb-1">Lo usamos para calcular tus calorías y proteína con precisión.</p>
+              <Opt label="Mujer" active={d.sexo === 'mujer'} onClick={() => pick({ sexo: 'mujer' })} />
+              <Opt label="Hombre" active={d.sexo === 'hombre'} onClick={() => pick({ sexo: 'hombre' })} />
+            </div>
+          )}
+          {step === 1 && (
+            <div className="space-y-4">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">¿Qué edad tienes?</h3>
+              <input
+                type="number" inputMode="numeric" placeholder="Ej. 42" value={d.edad ?? ''}
+                onChange={(e) => set({ edad: e.target.value === '' ? undefined : Number(e.target.value) })}
+                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+              />
+              <QuizNav onBack={back} onNext={next} nextDisabled={!numOk(d.edad, 16, 90)} />
+            </div>
+          )}
+          {step === 2 && (
+            <div className="space-y-4">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">Tu peso y estatura actuales</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="text-sm font-medium text-gray-600 block">Peso (kg)
+                  <input
+                    type="number" inputMode="numeric" placeholder="80" value={d.peso ?? ''}
+                    onChange={(e) => set({ peso: e.target.value === '' ? undefined : Number(e.target.value) })}
+                    className="mt-1 w-full rounded-xl border border-gray-200 px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+                  />
+                </label>
+                <label className="text-sm font-medium text-gray-600 block">Estatura (cm)
+                  <input
+                    type="number" inputMode="numeric" placeholder="165" value={d.altura ?? ''}
+                    onChange={(e) => set({ altura: e.target.value === '' ? undefined : Number(e.target.value) })}
+                    className="mt-1 w-full rounded-xl border border-gray-200 px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+                  />
+                </label>
+              </div>
+              <QuizNav onBack={back} onNext={next} nextDisabled={!numOk(d.peso, 40, 250) || !numOk(d.altura, 120, 220)} />
+            </div>
+          )}
+          {step === 3 && (
+            <div className="space-y-3">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">¿Qué medicamento usas?</h3>
+              <div className="grid grid-cols-2 gap-2.5">
+                {['Ozempic', 'Mounjaro', 'Wegovy', 'Rybelsus', 'Zepbound', 'Aún no empiezo'].map((m) => (
+                  <Opt key={m} label={m} active={d.med === m} onClick={() => pick({ med: m })} />
+                ))}
+              </div>
+            </div>
+          )}
+          {step === 4 && (
+            <div className="space-y-3">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">¿Cuál es tu objetivo principal?</h3>
+              <Opt label="Perder grasa" sub="Bajar de peso de forma sostenida" active={d.objetivo === 'perder'} onClick={() => pick({ objetivo: 'perder' })} />
+              <Opt label="Cuidar mi músculo" sub="No perder tono mientras adelgazo" active={d.objetivo === 'muscular'} onClick={() => pick({ objetivo: 'muscular' })} />
+              <Opt label="Mantener mi peso" sub="Estabilizar y comer mejor" active={d.objetivo === 'mantener'} onClick={() => pick({ objetivo: 'mantener' })} />
+            </div>
+          )}
+          {step === 5 && (
+            <div className="space-y-3">
+              <h3 className="font-display text-2xl font-bold text-neutral-dark">¿Qué es lo que más te cuesta hoy?</h3>
+              <Opt label="Las náuseas" active={d.problema === 'nauseas'} onClick={() => pick({ problema: 'nauseas' })} />
+              <Opt label="No sé qué comer" active={d.problema === 'comer'} onClick={() => pick({ problema: 'comer' })} />
+              <Opt label="Miedo a perder músculo" active={d.problema === 'musculo'} onClick={() => pick({ problema: 'musculo' })} />
+              <Opt label="Miedo al efecto rebote" active={d.problema === 'rebote'} onClick={() => pick({ problema: 'rebote' })} />
+            </div>
+          )}
+          {step === 6 && (
+            <div className="text-center">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-green bg-brand-green/10 rounded-full px-3 py-1 mb-3"><CheckCircle2 className="h-3.5 w-3.5" /> Plan listo</span>
+              <h3 className="font-display text-2xl font-bold text-neutral-dark mb-1">Tu plan personalizado está listo</h3>
+              <p className="text-sm text-gray-500 mb-4">Calculado con tus datos{d.med && d.med !== 'Aún no empiezo' ? ` y tu tratamiento con ${d.med}` : ''}.</p>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
+                  <div className="text-3xl font-black text-brand-green tabular-nums">{kcal}</div>
+                  <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">kcal / día</div>
+                </div>
+                <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
+                  <div className="text-3xl font-black text-brand-green tabular-nums">{prot} g</div>
+                  <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">proteína / día</div>
+                </div>
+              </div>
+              {d.problema && <p className="text-sm text-gray-600 leading-relaxed mb-1">{problemaLinea[d.problema]}</p>}
+              <p className="text-sm text-gray-600 leading-relaxed mb-5">Dentro de la app tienes tu menú día a día con estos números, <strong className="text-neutral-dark">35 recetas anti-náusea</strong> y la guía de tu medicamento.</p>
+              <a
+                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+                onClick={onCheckout}
+                className="animate-pulse-green w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-base py-4 px-6 rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
+              >
+                Desbloquear mi plan completo — US$ 19.90 <ArrowRight className="h-5 w-5" />
+              </a>
+              <p className="text-[11px] text-gray-400 mt-2.5 flex items-center justify-center gap-3 flex-wrap">
+                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3 text-brand-gold" /> Pago único, sin suscripción</span>
+                <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3 text-brand-gold" /> 7 días de garantía</span>
+              </p>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function App() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
+  const [quizOpen, setQuizOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -192,7 +397,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-premium-wellness text-neutral-dark font-sans selection:bg-brand-green/10 selection:text-brand-green overflow-x-hidden antialiased">
-      
+
+      <PlanQuiz open={quizOpen} onClose={() => setQuizOpen(false)} onCheckout={triggerCheckout} />
+
       <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
@@ -248,18 +455,18 @@ export default function App() {
               </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
-                Aprende <span className="text-brand-gold">exactamente qué comer cada día</span> para aprovechar tu tratamiento GLP-1.
+                Aprovecha al máximo tu tratamiento con <span className="text-brand-gold">Ozempic, Wegovy y Mounjaro</span>.
               </h1>
 
               <p className="text-lg md:text-xl text-green-50 font-normal leading-relaxed mb-6 max-w-2xl">
-                Sin perder músculo, sin náuseas innecesarias y sin efecto rebote. <strong className="text-brand-gold">Solo abres la app y sigues el plan del día</strong> — un reto guiado de 21 días para usuarios de Ozempic, Wegovy y Mounjaro.
+                Aprende <strong className="text-brand-gold">exactamente qué comer cada día</strong> — sin náuseas, sin perder músculo y sin efecto rebote. Solo abres la app y sigues el plan del día: un reto guiado de 21 días.
               </p>
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-green-100 font-semibold">
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan por tus calorías y proteína</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">35 recetas anti-náusea</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Guía de 5 medicamentos</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Calorías y proteína a tu medida</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Compatible con todos los GLP-1</span>
+                <span className="bg-brand-gold/15 border border-brand-gold/40 text-brand-gold rounded-full px-3 py-1.5">Un solo pago · sin suscripción</span>
               </div>
 
               <div className="w-full sm:max-w-md">
@@ -285,6 +492,19 @@ export default function App() {
                   <span className="flex items-center gap-1">
                     <ShieldCheck className="h-4 w-4 text-brand-gold" /> 7 Días de Garantía
                   </span>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setQuizOpen(true)}
+                    className="group w-full flex items-center justify-center gap-2 text-white/90 hover:text-white font-semibold text-sm py-2.5 transition-colors"
+                  >
+                    <Sparkles className="h-4 w-4 text-brand-gold" />
+                    ¿No sabes por dónde empezar? Arma tu plan personalizado
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+                  <p className="text-center text-[11px] text-green-200/70">Test de 1 minuto · gratis · sin tarjeta</p>
                 </div>
               </div>
 
