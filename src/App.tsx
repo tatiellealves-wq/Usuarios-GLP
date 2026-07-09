@@ -498,13 +498,13 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setQuizOpen(true)}
-                    className="group w-full flex items-center justify-center gap-2 text-white/90 hover:text-white font-semibold text-sm py-2.5 transition-colors"
+                    className="group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors"
                   >
-                    <Sparkles className="h-4 w-4 text-brand-gold" />
-                    ¿No sabes por dónde empezar? Arma tu plan personalizado
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                    <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
+                    Arma tu plan personalizado — gratis
+                    <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
                   </button>
-                  <p className="text-center text-[11px] text-green-200/70">Test de 1 minuto · gratis · sin tarjeta</p>
+                  <p className="text-center text-[11px] text-green-200/70 mt-2">Test de 1 minuto · sin tarjeta · resultado al instante</p>
                 </div>
               </div>
 
