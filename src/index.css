@@ -4,15 +4,16 @@
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Spectral", Georgia, "Times New Roman", serif;
-  --color-brand-green: #166534;
-  --color-brand-green-hover: #14532D;
-  --color-brand-green-vibrant: #16A34A;
-  --color-brand-green-vibrant-hover: #15803D;
+  /* Tema dark luxury: carbón + oro champagne */
+  --color-brand-green: #1A1A1C;          /* superficie oscura (antes verde sólido) */
+  --color-brand-green-hover: #26262A;
+  --color-brand-green-vibrant: #D4AF37;  /* CTA dorado */
+  --color-brand-green-vibrant-hover: #C9A233;
   --color-brand-gold: #D4AF37;
   --color-brand-gold-dark: #A8860D;
-  --color-neutral-dark: #0F172A;
-  --color-gray-soft: #F8FAFC;
-  --color-gray-mint: #F0FDF4;
+  --color-neutral-dark: #0C0C0D;         /* fondo/base más oscuro */
+  --color-gray-soft: #16151A;
+  --color-gray-mint: #141416;
 }
 
 @layer base {
@@ -21,8 +22,8 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
-    color: var(--color-neutral-dark);
-    background-color: #FFFFFF;
+    color: #F3EFE7;
+    background-color: #0C0C0D;
   }
 }
 
@@ -56,15 +57,15 @@ h3.font-display {
    La marca pide "confianza calmada" — nada de pulsos de urgencia. */
 .animate-pulse-green {
   box-shadow:
-    0 1px 2px rgba(13, 51, 32, 0.10),
-    0 10px 24px -10px rgba(21, 128, 61, 0.55);
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 28px -10px rgba(212, 175, 55, 0.4);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .animate-pulse-green:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 2px 4px rgba(13, 51, 32, 0.12),
-    0 20px 38px -12px rgba(21, 128, 61, 0.6);
+    0 2px 4px rgba(0, 0, 0, 0.35),
+    0 22px 42px -12px rgba(212, 175, 55, 0.5);
 }
 
 /* Sello de garantía: quieto y sólido, como un timbre grabado. */
@@ -105,10 +106,10 @@ h3.font-display {
 }
 
 .bg-premium-wellness {
-  background-color: #FBFAF6;
+  background-color: #0C0C0D;
   background-image:
-    radial-gradient(circle at 12% 12%, rgba(22, 101, 52, 0.035) 0%, transparent 42%),
-    radial-gradient(circle at 88% 6%, rgba(212, 175, 55, 0.03) 0%, transparent 38%);
+    radial-gradient(circle at 12% 10%, rgba(212, 175, 55, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 4%, rgba(212, 175, 55, 0.04) 0%, transparent 36%);
 }
 
 @media (prefers-reduced-motion: reduce) {
