@@ -1172,10 +1172,36 @@ export default function App() {
       </section>
       </FadeIn>
 
+      {/* Segundo acceso al quiz — atrapa a quien bajó hasta aquí sin decidir */}
+      <FadeIn>
+      <section className="px-6 pt-4 pb-2">
+        <div className="max-w-2xl mx-auto rounded-3xl bg-gradient-to-br from-[#0D3320] to-[#17452A] p-7 md:p-9 text-center ring-1 ring-brand-gold/25 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-gold mb-3">
+            <Sparkles className="h-3.5 w-3.5" /> Gratis · 1 minuto
+          </span>
+          <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+            ¿Todavía lo dudas? Ve tu plan primero.
+          </h3>
+          <p className="text-green-100/80 text-sm md:text-base mb-6 max-w-md mx-auto leading-relaxed">
+            Responde 6 preguntas y recibe <strong className="text-white">tus calorías y proteína exactas</strong> — sin tarjeta, al instante.
+          </p>
+          <button
+            type="button"
+            onClick={() => setQuizOpen(true)}
+            className="group inline-flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-8 transition-colors"
+          >
+            <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
+            Arma tu plan personalizado
+            <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
+          </button>
+        </div>
+      </section>
+      </FadeIn>
+
       <FadeIn>
       <section className="py-20 px-6 bg-green-50/30">
         <div className="max-w-4xl mx-auto">
-          
+
           <div className="text-center mb-12">
             <Eyebrow>Oferta especial de lanzamiento</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-neutral-dark mb-4">
