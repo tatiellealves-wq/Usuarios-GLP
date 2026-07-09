@@ -379,22 +379,22 @@ export default function App() {
 
       <PlanQuiz open={quizOpen} onClose={() => setQuizOpen(false)} onCheckout={triggerCheckout} />
 
-      <div className="bg-brand-green text-white text-xs font-semibold tracking-wider text-center py-2 px-4 shadow-sm flex items-center justify-center gap-2">
+      <div className="bg-[#0E0E10] text-[#F3EFE7] text-xs font-semibold tracking-wider text-center py-2 px-4 border-b border-brand-gold/15 flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
           Guía nutricional completa para usuarios de Ozempic, Wegovy y Mounjaro — porque el medicamento solo no es suficiente
         </span>
       </div>
 
-      <header className="border-b border-gray-100 py-4 px-6 sticky top-0 bg-white/95 backdrop-blur-md z-40">
+      <header className="border-b border-white/10 py-4 px-6 sticky top-0 bg-[#141416]/95 backdrop-blur-md z-40">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="bg-brand-green text-white p-1.5 rounded-lg flex items-center justify-center">
+            <div className="bg-[#1E1E22] ring-1 ring-brand-gold/30 p-1.5 rounded-lg flex items-center justify-center">
               <Activity className="h-5 w-5 text-brand-gold" />
             </div>
             <div>
-              <span className="font-bold tracking-tight text-lg text-neutral-dark">Guía GLP-1</span>
-              <span className="text-xs text-brand-green font-semibold block -mt-1">Inteligente</span>
+              <span className="font-bold tracking-tight text-lg text-[#F3EFE7]">Guía GLP-1</span>
+              <span className="text-xs text-brand-gold font-semibold block -mt-1">Inteligente</span>
             </div>
           </div>
 
@@ -402,7 +402,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="text-white bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-brand-green-vibrant/20 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="text-[#1A1712] bg-brand-gold hover:bg-[#c9a233] text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-black/30 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold"
             >
               Comprar Ahora
             </a>
@@ -410,7 +410,7 @@ export default function App() {
         </div>
       </header>
 
-      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-[#0D3320]">
+      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-[#0B0B0C] via-[#141416] to-[#1A1712]">
         
         <div className="bg-black/15 border-b border-brand-gold/20 py-3 px-4 mb-8 -mx-6 text-center">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs md:text-sm">
@@ -453,7 +453,7 @@ export default function App() {
                   id="hero-cta-btn"
                   href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                   onClick={triggerCheckout}
-                  className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl animate-pulse-green relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
+                  className="w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-[0_10px_30px_-8px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/50"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     Empezar mi Reto de 21 días — US$ 9.90
@@ -491,7 +491,7 @@ export default function App() {
 
             <div className="lg:col-span-5 flex flex-col justify-center">
               <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-green/25 to-brand-gold/25 blur-3xl opacity-70 -z-10 scale-90" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-gold/20 to-brand-gold/5 blur-3xl opacity-70 -z-10 scale-90" />
 
                 <MockupDispositivos />
 
