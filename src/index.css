@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bodoni Moda", "Times New Roman", Georgia, serif;
+  --font-display: "Spectral", Georgia, "Times New Roman", serif;
   --color-brand-green: #166534;
   --color-brand-green-hover: #14532D;
   --color-brand-green-vibrant: #16A34A;
@@ -41,12 +41,11 @@
   font-optical-sizing: auto;
 }
 
-/* Bodoni es una didona de alto contraste: a escala display no debe apretarse.
-   Neutralizamos el tracking-tight heredado para que las astas finas respiren. */
+/* Spectral: serif legible y calmo. Un leve ajuste de tracking en display. */
 h1.font-display,
 h2.font-display,
 h3.font-display {
-  letter-spacing: -0.005em;
+  letter-spacing: -0.015em;
 }
 
 .tabular-nums {

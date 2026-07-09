@@ -94,47 +94,22 @@ function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; ro
 
 /* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
 function MockupDispositivos() {
+  // Teléfono fotorrealista con la pantalla real de la app compuesta sobre el área de la pantalla.
   return (
-    <div className="relative w-full" style={{ aspectRatio: '5 / 4' }}>
-      {/* Tablet (atrás, asomando a la izquierda) */}
-      <div className="absolute" style={{ width: '32%', left: '-4%', bottom: '3%', zIndex: 10, transform: 'rotate(-5deg)' }}>
-        <div className="rounded-[14px] bg-[#16171b] p-[5px] shadow-xl shadow-black/40">
-          <div className="rounded-[9px] overflow-hidden bg-[#FBF9F5] flex justify-center" style={{ aspectRatio: '3 / 4' }}>
-            <img src="/hero/screen-progreso.webp" alt="Pantalla de progreso de la app" className="h-full w-auto object-cover" loading="lazy" />
-          </div>
-        </div>
-      </div>
-
-      {/* Notebook (centro, el ancla grande) */}
-      <div className="absolute" style={{ width: '84%', left: '3%', top: '3%', zIndex: 20 }}>
-        <div className="rounded-t-[13px] bg-[#17181c] px-[6px] pt-[6px] shadow-2xl shadow-black/50">
-          <div className="rounded-t-[8px] overflow-hidden bg-[#FBF9F5]" style={{ aspectRatio: '16 / 10' }}>
-            {/* barra del navegador */}
-            <div className="h-[11%] min-h-[15px] bg-white border-b border-gray-200 flex items-center gap-[5px] px-[2.5%]">
-              <span className="h-[6px] w-[6px] rounded-full bg-[#FF5F57] shrink-0" />
-              <span className="h-[6px] w-[6px] rounded-full bg-[#FEBC2E] shrink-0" />
-              <span className="h-[6px] w-[6px] rounded-full bg-[#28C840] shrink-0" />
-              <span className="ml-[4%] flex-1 max-w-[60%] rounded-full bg-gray-100 text-[8px] leading-none text-gray-400 flex items-center h-[58%] px-2 truncate">usuariosdeglp-1.site/app</span>
-            </div>
-            {/* app centrada sobre fondo crema (así se ve la PWA en el navegador) */}
-            <div className="relative flex justify-center overflow-hidden bg-[#FBF9F5]" style={{ height: '89%' }}>
-              <img src="/hero/screen-recetas.webp" alt="La app abierta en el navegador de la computadora" className="h-full w-auto object-cover" loading="lazy" />
-            </div>
-          </div>
-        </div>
-        {/* base / bisagra */}
-        <div className="relative mx-[-5%] h-[11px] bg-gradient-to-b from-[#d6d9dd] to-[#9ea3aa] rounded-b-[7px] rounded-t-[2px] shadow-md">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] w-[15%] bg-[#868b92] rounded-b-full" />
-        </div>
-      </div>
-
-      {/* Teléfono (frente, protagonista) */}
-      <div className="absolute" style={{ width: '26%', right: '0%', bottom: '-2%', zIndex: 30, transform: 'rotate(3deg)' }}>
-        <div className="rounded-[18px] bg-[#0e0f13] p-[5px] shadow-2xl shadow-black/50 ring-1 ring-white/10">
-          <div className="relative rounded-[13px] overflow-hidden bg-black">
-            <img src="/hero/screen-hoy.webp" alt="Pantalla Hoy de la app: reto de 21 días" className="w-full block" loading="lazy" />
-          </div>
-        </div>
+    <div className="relative mx-auto w-full max-w-[290px]" style={{ aspectRatio: '1536 / 2048' }}>
+      {/* Marco fotorrealista del teléfono */}
+      <img
+        src="/hero/phone-real.png"
+        alt="La app Guía GLP-1 abierta en el teléfono"
+        className="relative z-0 w-full block select-none pointer-events-none"
+        style={{ filter: 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }}
+      />
+      {/* Pantalla real compuesta sobre el área de la pantalla */}
+      <div
+        className="absolute z-10 overflow-hidden"
+        style={{ left: '26.82%', top: '11.04%', width: '46.35%', height: '73.93%', borderRadius: '9% / 6%' }}
+      >
+        <img src="/hero/screen-hoy.webp" alt="Pantalla de la app: tu plan del día" className="w-full h-full object-cover object-top" loading="lazy" />
       </div>
     </div>
   );
@@ -516,13 +491,11 @@ export default function App() {
 
                 <MockupDispositivos />
 
-                <AppSeal size={96} className="absolute -bottom-4 left-[2%] z-40 hidden sm:block drop-shadow-xl" />
-
-                <div className="mt-5 text-center">
+                <div className="mt-6 text-center">
                   <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
                     <Check className="h-3 w-3" /> App completa + Biblioteca de 4 Guías
                   </span>
-                  <p className="text-xs text-green-100/70 font-medium mt-2">Celular, tablet o computadora — tu plan te sigue a todos lados</p>
+                  <p className="text-xs text-green-100/70 font-medium mt-2">Tu plan del día, siempre en tu bolsillo</p>
                 </div>
               </div>
             </div>
