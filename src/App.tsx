@@ -114,7 +114,7 @@ function MockupDispositivos() {
               <span className="h-[6px] w-[6px] rounded-full bg-[#FF5F57] shrink-0" />
               <span className="h-[6px] w-[6px] rounded-full bg-[#FEBC2E] shrink-0" />
               <span className="h-[6px] w-[6px] rounded-full bg-[#28C840] shrink-0" />
-              <span className="ml-[4%] flex-1 max-w-[60%] rounded-full bg-gray-100 text-[8px] leading-none text-gray-400 flex items-center h-[58%] px-2 truncate">guiaglp1.com/app</span>
+              <span className="ml-[4%] flex-1 max-w-[60%] rounded-full bg-gray-100 text-[8px] leading-none text-gray-400 flex items-center h-[58%] px-2 truncate">usuariosdeglp-1.site/app</span>
             </div>
             {/* app centrada sobre fondo crema (así se ve la PWA en el navegador) */}
             <div className="relative flex justify-center overflow-hidden bg-[#FBF9F5]" style={{ height: '89%' }}>
