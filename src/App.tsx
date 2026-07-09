@@ -393,8 +393,8 @@ export default function App() {
               <Activity className="h-5 w-5 text-brand-gold" />
             </div>
             <div>
-              <span className="font-bold tracking-tight text-lg text-[#F3EFE7]">Guía GLP-1</span>
-              <span className="text-xs text-brand-gold font-semibold block -mt-1">Inteligente</span>
+              <span className="font-bold tracking-tight text-lg text-[#F3EFE7]">Método Proteína Primero</span>
+              <span className="text-xs text-brand-gold font-semibold block -mt-1">Protocolo GLP-1 · 21 días</span>
             </div>
           </div>
 
@@ -434,11 +434,11 @@ export default function App() {
               </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
-                Aprovecha al máximo tu tratamiento con <span className="text-brand-gold">Ozempic, Wegovy y Mounjaro</span>.
+                El <span className="text-brand-gold">Método Proteína Primero</span> para tu tratamiento con Ozempic, Wegovy y Mounjaro.
               </h1>
 
               <p className="text-lg md:text-xl text-[#F3EFE7] font-normal leading-relaxed mb-6 max-w-2xl">
-                Aprende <strong className="text-brand-gold">exactamente qué comer cada día</strong> — sin náuseas, sin perder músculo y sin efecto rebote. Solo abres la app y sigues el plan del día: un reto guiado de 21 días.
+                No es una guía más. Es un <strong className="text-brand-gold">protocolo de 21 días</strong> que te dice exactamente qué comer cada día —qué proteína, cuánta y en qué orden— para no perder músculo, calmar las náuseas y evitar el efecto rebote.
               </p>
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-[#E7E1D3] font-semibold">
@@ -480,7 +480,7 @@ export default function App() {
                     className="group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors"
                   >
                     <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
-                    Arma tu plan personalizado — gratis
+                    Descubre tu protocolo en 60 segundos
                     <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
                   </button>
                   <p className="text-center text-[11px] text-[#C4BEB0]/70 mt-2">Test de 1 minuto · sin tarjeta · resultado al instante</p>
@@ -1153,10 +1153,10 @@ export default function App() {
             <Sparkles className="h-3.5 w-3.5" /> Gratis · 1 minuto
           </span>
           <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
-            ¿Todavía lo dudas? Ve tu plan primero.
+            ¿Todavía lo dudas? Descubre tu protocolo primero.
           </h3>
           <p className="text-[#E7E1D3]/80 text-sm md:text-base mb-6 max-w-md mx-auto leading-relaxed">
-            Responde 6 preguntas y recibe <strong className="text-white">tus calorías y proteína exactas</strong> — sin tarjeta, al instante.
+            Responde 6 preguntas y descubre <strong className="text-white">tu protocolo Proteína Primero</strong> —tus calorías y proteína exactas— sin tarjeta, al instante.
           </p>
           <button
             type="button"
@@ -1164,7 +1164,7 @@ export default function App() {
             className="group inline-flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-8 transition-colors"
           >
             <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
-            Arma tu plan personalizado
+            Descubre tu protocolo — gratis
             <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
           </button>
         </div>
@@ -1181,7 +1181,7 @@ export default function App() {
               Tu medicamento hace su parte.<br className="hidden md:block" /> Este kit hace la tuya.
             </h2>
             <p className="text-[#B7B1A3] text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-              Gastas entre $800 y $1,200 al mes en el GLP-1. Sin el protocolo correcto, sigues con náuseas, sin saber qué comer y perdiendo músculo — haciendo que cada dólar invertido en el tratamiento trabaje a medias. La Guía GLP-1 Inteligente completa la ecuación que tu médico dejó incompleta.
+              Gastas entre $800 y $1,200 al mes en el GLP-1. Sin el protocolo correcto, sigues con náuseas, sin saber qué comer y perdiendo músculo — haciendo que cada dólar invertido en el tratamiento trabaje a medias. El Método Proteína Primero completa la ecuación que tu médico dejó incompleta.
             </p>
           </div>
 
