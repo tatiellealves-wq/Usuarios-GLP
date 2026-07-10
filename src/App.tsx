@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   Check,
-  Utensils,
   Star,
   Award,
   Activity,
@@ -16,16 +15,12 @@ import {
   ChevronUp,
   Clock,
   CheckCircle2,
-  HelpCircle,
   X,
   Globe,
   Thermometer,
   TrendingDown,
-  ZapOff,
   RotateCcw,
-  Smartphone,
-  LineChart,
-  Syringe
+  Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
@@ -508,6 +503,114 @@ export default function App() {
         </div>
       </section>
 
+      <FadeIn>
+      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
+            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
+              El medicamento hace su parte.<br className="hidden md:block" /> Estos 3 problemas los resuelves tú — o nadie.
+            </h2>
+            <p className="text-[#C4BEB0]/70 text-base max-w-xl mx-auto">
+              No es que el GLP-1 no funciona. El problema es que te dieron la mitad de la ecuación.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <Thermometer className="h-5 w-5 text-red-400" />
+              </div>
+              <h3 className="font-bold text-white text-base mb-2">Náuseas y malestar constante</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El GLP-1 reduce el vaciado gástrico. Comer lo incorrecto antes o después de la inyección convierte días normales en jornadas de reflujo, mareos y fatiga que te dejan sin querer hacer nada.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <TrendingDown className="h-5 w-5 text-red-400" />
+              </div>
+              <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El GLP-1 suprime el apetito de forma tan drástica que terminas comiendo poco de todo — incluyendo la proteína que mantiene tus músculos firmes. La piel se va aflojando sin que notes cuándo empezó.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
+              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
+                <RotateCcw className="h-5 w-5 text-red-400" />
+              </div>
+              <h3 className="font-bold text-white text-base mb-2">Miedo al rebote cuando termines el tratamiento</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                El 80% de las personas que dejan el GLP-1 recuperan el peso en menos de 12 meses. Sin un metabolismo protegido y hábitos alimentarios reales, el rebote no es una posibilidad — es casi una certeza.
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-white/80 text-base font-semibold mb-2">
+              Estos 3 problemas tienen una causa en común:
+            </p>
+            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-4">
+              Nadie te enseñó a comer mientras usas el GLP-1.
+            </p>
+            <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
+              Inviertes hasta <strong className="text-white">US$ 1,200 al mes</strong> en el medicamento. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y hace que cada dólar del tratamiento trabaje completo.
+            </p>
+
+            <div className="max-w-xl mx-auto mb-10 text-left">
+              <p className="text-center text-xs font-bold uppercase tracking-widest text-brand-gold mb-4">Lo que cuesta hacerlo bien</p>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">El medicamento GLP-1</p>
+                    <p className="text-white/40 text-xs">Hace su parte — pero no te enseña a comer</p>
+                  </div>
+                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$800–1,200<span className="text-white/40 font-normal">/mes</span></span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">Consulta nutricional privada</p>
+                    <p className="text-white/40 text-xs">Útil, pero cara y puntual</p>
+                  </div>
+                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$40–80<span className="text-white/40 font-normal">/sesión</span></span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                  <div>
+                    <p className="text-white/90 text-sm font-semibold">Improvisar por tu cuenta</p>
+                    <p className="text-white/40 text-xs">Náuseas, pérdida de músculo y efecto rebote</p>
+                  </div>
+                  <span className="text-red-400/80 font-bold text-sm whitespace-nowrap">El más caro</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-xl bg-brand-green-vibrant/15 border-2 border-brand-gold/50 px-4 py-3.5 relative">
+                  <span className="absolute -top-2.5 left-4 bg-brand-gold text-[#F3EFE7] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">La opción inteligente</span>
+                  <div>
+                    <p className="text-white text-sm font-bold">Método Proteína Primero</p>
+                    <p className="text-brand-gold/90 text-xs">El protocolo completo — para siempre</p>
+                  </div>
+                  <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 9.90</span>
+                </div>
+              </div>
+              <p className="text-center text-white/40 text-xs mt-3">Un pago único · acceso inmediato · en tu moneda local</p>
+            </div>
+
+            <a
+              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+              onClick={triggerCheckout}
+              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+            >
+              <span>Empezar mi protocolo — US$ 9.90</span>
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+
+        </div>
+      </section>
+      </FadeIn>
+
       {/* Lo que recibes hoy — respuesta inmediata a "¿qué estoy comprando?" */}
       <FadeIn>
       <section className="py-16 px-6 bg-[#141416] border-b border-[#2A2A2E]/70">
@@ -631,133 +734,6 @@ export default function App() {
       </section>
       </FadeIn>
 
-      <FadeIn>
-      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
-            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
-              Nadie te avisó que el medicamento<br className="hidden md:block" /> viene con 5 problemas que nadie resuelve.
-            </h2>
-            <p className="text-[#C4BEB0]/70 text-base max-w-xl mx-auto">
-              No es que el GLP-1 no funciona. El problema es que te dieron la mitad de la ecuación.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <Thermometer className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">Náuseas y malestar constante</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                El GLP-1 reduce el vaciado gástrico. Comer lo incorrecto antes o después de la inyección convierte días normales en jornadas de reflujo, mareos y fatiga que te dejan sin querer hacer nada.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-amber-900/40 flex items-center justify-center border border-amber-800/30">
-                <HelpCircle className="h-5 w-5 text-amber-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">"No sé qué comer. Nadie me explicó nada."</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Tu médico te recetó el medicamento en 10 minutos. Pero no te dijo qué estructura debe tener tu plato, qué alimentos agravan los síntomas ni cuánto comer. El resultado: improvisas todos los días.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <TrendingDown className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                El GLP-1 suprime el apetito de forma tan drástica que terminas comiendo poco de todo — incluyendo la proteína que mantiene tus músculos firmes. La piel se va aflojando sin que notes cuándo empezó.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-amber-900/40 flex items-center justify-center border border-amber-800/30">
-                <ZapOff className="h-5 w-5 text-amber-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">Sin energía para vivir el día</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Comes poco, no sabes si estás comiendo lo correcto, y el cuerpo entra en modo ahorro. El resultado es una fatiga que no se va con dormir — porque el problema no es el sueño, es la nutrición.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200 md:col-span-2 lg:col-span-1">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <RotateCcw className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">Miedo al rebote cuando termines el tratamiento</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                El 80% de las personas que dejan el GLP-1 recuperan el peso en menos de 12 meses. Sin un metabolismo protegido y hábitos alimentarios reales, el rebote no es una posibilidad — es casi una certeza.
-              </p>
-            </div>
-
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-white/80 text-base font-semibold mb-2">
-              Estos 5 problemas tienen una causa en común:
-            </p>
-            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-4">
-              Nadie te enseñó a comer mientras usas el GLP-1.
-            </p>
-            <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
-              Inviertes hasta <strong className="text-white">US$ 1,200 al mes</strong> en el medicamento. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y hace que cada dólar del tratamiento trabaje completo.
-            </p>
-
-            <div className="max-w-xl mx-auto mb-10 text-left">
-              <p className="text-center text-xs font-bold uppercase tracking-widest text-brand-gold mb-4">Lo que cuesta hacerlo bien</p>
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
-                  <div>
-                    <p className="text-white/90 text-sm font-semibold">El medicamento GLP-1</p>
-                    <p className="text-white/40 text-xs">Hace su parte — pero no te enseña a comer</p>
-                  </div>
-                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$800–1,200<span className="text-white/40 font-normal">/mes</span></span>
-                </div>
-                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
-                  <div>
-                    <p className="text-white/90 text-sm font-semibold">Consulta nutricional privada</p>
-                    <p className="text-white/40 text-xs">Útil, pero cara y puntual</p>
-                  </div>
-                  <span className="text-white/70 font-bold text-sm whitespace-nowrap tabular-nums">$40–80<span className="text-white/40 font-normal">/sesión</span></span>
-                </div>
-                <div className="flex items-center justify-between gap-4 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
-                  <div>
-                    <p className="text-white/90 text-sm font-semibold">Improvisar por tu cuenta</p>
-                    <p className="text-white/40 text-xs">Náuseas, pérdida de músculo y efecto rebote</p>
-                  </div>
-                  <span className="text-red-400/80 font-bold text-sm whitespace-nowrap">El más caro</span>
-                </div>
-                <div className="flex items-center justify-between gap-4 rounded-xl bg-brand-green-vibrant/15 border-2 border-brand-gold/50 px-4 py-3.5 relative">
-                  <span className="absolute -top-2.5 left-4 bg-brand-gold text-[#F3EFE7] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">La opción inteligente</span>
-                  <div>
-                    <p className="text-white text-sm font-bold">Método Proteína Primero</p>
-                    <p className="text-brand-gold/90 text-xs">El protocolo completo — para siempre</p>
-                  </div>
-                  <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 9.90</span>
-                </div>
-              </div>
-              <p className="text-center text-white/40 text-xs mt-3">Un pago único · acceso inmediato · en tu moneda local</p>
-            </div>
-
-            <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-              onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-            >
-              <span>Empezar mi protocolo — US$ 9.90</span>
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-
-        </div>
-      </section>
-      </FadeIn>
 
       <FadeIn>
       <section className="py-14 px-6 bg-[#141416]">
@@ -769,76 +745,14 @@ export default function App() {
               Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-[#B7B1A3] text-lg leading-relaxed max-w-2xl mx-auto">
-              Nada de adivinar. La app genera tu menú por tus calorías y proteína, te muestra estadísticas de tu progreso, incluye la guía de tu medicamento y toda la biblioteca de guías — y avanzas día a día.
+              Es tu nutricionista digital de bolsillo: genera tu menú con las calorías y la proteína ya calculadas, te guía el día de la inyección y avanzas día a día — por un pago único.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-10">
-
-            {/* Mockup del app: plan día a día */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-[280px] rounded-[2.2rem] bg-[#1A1712] p-3 shadow-2xl shadow-brand-green/30 ring-1 ring-black/10">
-                <div className="rounded-[1.7rem] overflow-hidden bg-[#1A1712]">
-                  <div className="px-5 pt-5 pb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-lg bg-brand-gold/20 flex items-center justify-center">
-                          <Activity className="h-4 w-4 text-brand-gold" />
-                        </div>
-                        <span className="text-white font-bold text-sm">Reto GLP-1</span>
-                      </div>
-                      <span className="text-[10px] font-bold text-brand-gold bg-white/10 px-2 py-1 rounded-full tabular-nums">Día 7 / 21</span>
-                    </div>
-
-                    <div className="flex justify-between mt-4">
-                      {['L','M','X','J','V','S','D'].map((d, i) => (
-                        <div key={d + i} className={`h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-bold ${i < 3 ? 'bg-brand-green-vibrant text-[#17140C]' : i === 3 ? 'bg-brand-gold text-[#1A1712] ring-2 ring-white/40' : 'bg-white/10 text-white/50'}`}>
-                          {i < 3 ? <Check className="h-3.5 w-3.5 stroke-[3px]" /> : d}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="bg-[#1A1A1C] rounded-t-[1.4rem] px-5 pt-5 pb-6 space-y-3">
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-gold">Plan de hoy</p>
-
-                    <div className="flex items-center gap-3 bg-[#141416] rounded-xl p-3">
-                      <Utensils className="h-4 w-4 text-brand-gold shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-[#7E7A6E] font-semibold uppercase">Desayuno</p>
-                        <p className="text-xs font-bold text-[#F3EFE7] truncate">Huevos revueltos + avena</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 bg-[#141416] rounded-xl p-3">
-                      <Utensils className="h-4 w-4 text-brand-gold shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-[#7E7A6E] font-semibold uppercase">Almuerzo</p>
-                        <p className="text-xs font-bold text-[#F3EFE7] truncate">Pollo + puré de calabaza</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <div className="bg-brand-green/5 border border-brand-green/10 rounded-xl p-2.5 text-center">
-                        <p className="text-lg font-black text-brand-gold tabular-nums leading-none">102g</p>
-                        <p className="text-[9px] text-[#9E998C] font-semibold mt-1">Proteína meta</p>
-                      </div>
-                      <div className="bg-brand-green/5 border border-brand-green/10 rounded-xl p-2.5 text-center">
-                        <p className="text-lg font-black text-brand-gold tabular-nums leading-none">6/8</p>
-                        <p className="text-[9px] text-[#9E998C] font-semibold mt-1">Vasos de agua</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-brand-gold/10 border border-brand-gold/30 rounded-xl p-2.5">
-                      <Thermometer className="h-4 w-4 text-brand-gold shrink-0" />
-                      <span className="text-[11px] font-bold text-[#1A1712]">Hoy toca inyección — protocolo anti-náusea activo</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="max-w-3xl mx-auto mb-10">
 
             {/* Qué hace la app */}
-            <div className="lg:col-span-7">
+            <div>
               <ul className="space-y-4">
                 {[
                   ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — con las calorías y la proteína ya calculadas. Cambias cualquier plato con un toque.'],
@@ -893,64 +807,6 @@ export default function App() {
       </section>
       </FadeIn>
 
-      {/* Posicionamiento: la app como nutricionista digital especializado */}
-      <FadeIn>
-      <section className="py-14 px-6 bg-[#141416]">
-        <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden relative bg-gradient-to-br from-[#1A1712] via-brand-green to-[#100F0C] ring-1 ring-brand-gold/25 shadow-[0_30px_80px_-40px_rgba(13,51,32,0.85)]">
-          <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
-          <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-brand-green-vibrant/10 blur-3xl pointer-events-none" aria-hidden="true" />
-
-          <div className="relative p-8 md:p-14">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <Eyebrow tone="dark">Tu app, tu especialista</Eyebrow>
-              <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.12] mb-4" style={{ textWrap: 'balance' } as React.CSSProperties}>
-                Tu nutricionista digital,<br className="hidden md:block" /> especializado en GLP‑1
-              </h2>
-              <p className="text-[#E7E1D3]/80 text-base md:text-lg leading-relaxed">
-                Un nutricionista que de verdad entiende el GLP‑1 cobra <strong className="text-white">US$ 40–80 por sesión</strong> — y lo ves una vez al mes. Este te acompaña <strong className="text-brand-gold">cada día, dentro de la app</strong>, por un pago único.
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-x-8 max-w-3xl mx-auto">
-              {[
-                [Activity, 'Calcula tus números', 'Con tu peso, altura y objetivo define tus calorías y proteína del día — como en una primera consulta.'],
-                [Utensils, 'Arma tu menú del día', 'Desayuno, almuerzo, cena y merienda que cumplen tus metas. ¿No te gusta un plato? Lo cambias con un toque.'],
-                [LineChart, 'Vigila tu progreso', 'Peso, IMC, cintura, agua, proteína, calorías y síntomas en gráficos claros — para ver qué funciona.'],
-                [Syringe, 'Conoce tu medicamento', 'Cómo aplicarlo, qué comer y qué esperar de Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus.'],
-                [ShieldCheck, 'Te cuida el día de la dosis', 'Te guía paso a paso antes y después de la inyección para evitar las náuseas.'],
-                [RotateCcw, 'Te prepara para el después', 'El plan de salida de 12 semanas para que el resultado se quede cuando termines el tratamiento.'],
-              ].map(([Icon, t, d]: any) => (
-                <div key={t} className="flex items-start gap-4 py-4 border-b border-white/10">
-                  <span className="h-10 w-10 shrink-0 rounded-xl bg-brand-gold/15 border border-brand-gold/25 flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-brand-gold" />
-                  </span>
-                  <div>
-                    <h3 className="font-bold text-white text-[15px] mb-0.5">{t}</h3>
-                    <p className="text-sm text-[#E7E1D3]/70 leading-relaxed">{d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-10 text-center">
-              <div className="inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs font-semibold text-[#E7E1D3]/70 mb-6">
-                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> Un pago único, sin mensualidad</span>
-                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> 100% offline, en tu bolsillo</span>
-                <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-gold" /> Acceso inmediato</span>
-              </div>
-              <a
-                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-                onClick={triggerCheckout}
-                className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/30 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1712] focus-visible:ring-brand-gold"
-              >
-                <span>Tener mi nutricionista digital — US$ 9.90</span>
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-      </FadeIn>
 
       <FadeIn>
       <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
