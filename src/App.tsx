@@ -207,7 +207,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
         <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-[#242428] shrink-0">
           <div className="flex items-center gap-2">
             <div className="bg-brand-green text-white p-1 rounded-md"><Activity className="h-4 w-4 text-brand-gold" /></div>
-            <span className="font-bold text-sm text-[#F3EFE7]">Tu plan personalizado</span>
+            <span className="font-bold text-sm text-[#F3EFE7]">Tu protocolo personalizado</span>
           </div>
           <button onClick={onClose} aria-label="Cerrar" className="text-[#7E7A6E] hover:text-[#D8D2C4] p-1"><X className="h-5 w-5" /></button>
         </div>
@@ -290,7 +290,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           {step === 6 && (
             <div className="text-center">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 rounded-full px-3 py-1 mb-3"><CheckCircle2 className="h-3.5 w-3.5" /> Plan listo</span>
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7] mb-1">Tu plan personalizado está listo</h3>
+              <h3 className="font-display text-2xl font-bold text-[#F3EFE7] mb-1">Tu protocolo está listo</h3>
               <p className="text-sm text-[#9E998C] mb-4">Calculado con tus datos{d.med && d.med !== 'Aún no empiezo' ? ` y tu tratamiento con ${d.med}` : ''}.</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
@@ -381,8 +381,8 @@ export default function App() {
 
       <div className="bg-[#0E0E10] text-[#F3EFE7] text-xs font-semibold tracking-wider text-center py-2 px-4 border-b border-brand-gold/15 flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
-        <span className="uppercase font-sans tracking-widest text-[10px] md:text-xs">
-          Guía nutricional completa para usuarios de Ozempic, Wegovy y Mounjaro — porque el medicamento solo no es suficiente
+        <span className="uppercase font-sans tracking-[0.14em] text-[10px] md:text-xs whitespace-nowrap">
+          Para usuarios de Ozempic · Wegovy · Mounjaro
         </span>
       </div>
 
@@ -449,17 +449,30 @@ export default function App() {
               </div>
 
               <div className="w-full sm:max-w-md">
-                <a
+                <button
                   id="hero-cta-btn"
-                  href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-                  onClick={triggerCheckout}
-                  className="w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-[0_10px_30px_-8px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/50"
+                  type="button"
+                  onClick={() => setQuizOpen(true)}
+                  className="group w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-[0_10px_30px_-8px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/50"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Empezar mi Reto de 21 días — US$ 9.90
-                    <ArrowRight className="h-5 w-5" />
+                    <Sparkles className="h-5 w-5 shrink-0" />
+                    Descubre tu protocolo — gratis
+                    <ArrowRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform shrink-0" />
                   </span>
-                </a>
+                </button>
+                <p className="text-center text-[11px] text-[#C4BEB0]/80 mt-2">6 preguntas · 60 segundos · sin tarjeta · resultado al instante</p>
+
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <a
+                    href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+                    onClick={triggerCheckout}
+                    className="group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60"
+                  >
+                    Empezar mi protocolo — US$ 9.90
+                    <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
+                  </a>
+                </div>
 
                 <div className="flex items-center justify-center gap-6 mt-3 text-xs text-[#C4BEB0] font-medium">
                   <span className="flex items-center gap-1">
@@ -471,19 +484,6 @@ export default function App() {
                   <span className="flex items-center gap-1">
                     <ShieldCheck className="h-4 w-4 text-brand-gold" /> 7 Días de Garantía
                   </span>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => setQuizOpen(true)}
-                    className="group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors"
-                  >
-                    <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
-                    Descubre tu protocolo en 60 segundos
-                    <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
-                  </button>
-                  <p className="text-center text-[11px] text-[#C4BEB0]/70 mt-2">Test de 1 minuto · sin tarjeta · resultado al instante</p>
                 </div>
               </div>
 
@@ -575,7 +575,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-brand-green-vibrant/20 transition-all duration-300 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/30"
             >
-              Quiero todo esto — US$ 9.90 <ArrowRight className="h-5 w-5" />
+              Empezar mi protocolo — US$ 9.90 <ArrowRight className="h-5 w-5" />
             </a>
             <p className="text-xs text-[#7E7A6E] mt-3 flex items-center justify-center gap-4">
               <span className="inline-flex items-center gap-1"><Lock className="h-3.5 w-3.5 text-brand-gold" /> Pago 100% seguro</span>
@@ -605,10 +605,36 @@ export default function App() {
       </div>
       </FadeIn>
 
+      {/* Acceso al quiz — temprano, para el tráfico frío del funnel de curiosidad */}
       <FadeIn>
-      <section className="py-20 px-6 bg-[#0E0E10] border-t border-white/5">
+      <section className="px-6 pt-10 pb-2">
+        <div className="max-w-2xl mx-auto rounded-3xl bg-gradient-to-br from-[#1A1712] to-[#20201F] p-7 md:p-9 text-center ring-1 ring-brand-gold/25 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-gold mb-3">
+            <Sparkles className="h-3.5 w-3.5" /> Gratis · 1 minuto
+          </span>
+          <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+            Descubre tu protocolo antes de comprar.
+          </h3>
+          <p className="text-[#E7E1D3]/80 text-sm md:text-base mb-6 max-w-md mx-auto leading-relaxed">
+            Responde 6 preguntas y descubre <strong className="text-white">tu protocolo Proteína Primero</strong> —tus calorías y proteína exactas— sin tarjeta, al instante.
+          </p>
+          <button
+            type="button"
+            onClick={() => setQuizOpen(true)}
+            className="group inline-flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-8 transition-colors"
+          >
+            <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
+            Descubre tu protocolo — gratis
+            <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
+          </button>
+        </div>
+      </section>
+      </FadeIn>
+
+      <FadeIn>
+      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
+          <div className="text-center mb-10">
             <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
               Nadie te avisó que el medicamento<br className="hidden md:block" /> viene con 5 problemas que nadie resuelve.
@@ -710,7 +736,7 @@ export default function App() {
                 <div className="flex items-center justify-between gap-4 rounded-xl bg-brand-green-vibrant/15 border-2 border-brand-gold/50 px-4 py-3.5 relative">
                   <span className="absolute -top-2.5 left-4 bg-brand-gold text-[#F3EFE7] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">La opción inteligente</span>
                   <div>
-                    <p className="text-white text-sm font-bold">Guía GLP-1 Inteligente</p>
+                    <p className="text-white text-sm font-bold">Método Proteína Primero</p>
                     <p className="text-brand-gold/90 text-xs">El protocolo completo — para siempre</p>
                   </div>
                   <span className="text-white font-extrabold text-lg whitespace-nowrap tabular-nums">US$ 9.90</span>
@@ -724,7 +750,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Ver el protocolo completo — US$ 9.90</span>
+              <span>Empezar mi protocolo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -734,10 +760,10 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-[#141416]">
+      <section className="py-14 px-6 bg-[#141416]">
         <div className="max-w-6xl mx-auto rounded-3xl p-8 md:p-12 bg-[#1A1A1C] border border-[#2A2A2E]/70 shadow-[0_1px_40px_-12px_rgba(22,101,52,0.12)]">
 
-          <div className="text-center mb-14">
+          <div className="text-center mb-10">
             <Eyebrow>Tu reto, guiado día a día</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
               Tu Reto de 21 días vive en una app
@@ -747,7 +773,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-10">
 
             {/* Mockup del app: plan día a día */}
             <div className="lg:col-span-5 flex justify-center">
@@ -825,7 +851,7 @@ export default function App() {
                 ].map(([t, d]) => (
                   <li key={t} className="flex gap-4">
                     <div className="h-9 w-9 shrink-0 rounded-xl bg-brand-green-vibrant/15 flex items-center justify-center">
-                      <CheckCircle2 className="h-5 w-5 text-brand-gold-vibrant" />
+                      <CheckCircle2 className="h-5 w-5 text-brand-gold" />
                     </div>
                     <div>
                       <h3 className="font-bold text-[#F3EFE7] text-base">{t}</h3>
@@ -858,7 +884,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Empezar mi Reto — US$ 9.90</span>
+              <span>Empezar mi protocolo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -869,7 +895,7 @@ export default function App() {
 
       {/* Posicionamiento: la app como nutricionista digital especializado */}
       <FadeIn>
-      <section className="py-20 px-6 bg-[#141416]">
+      <section className="py-14 px-6 bg-[#141416]">
         <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden relative bg-gradient-to-br from-[#1A1712] via-brand-green to-[#100F0C] ring-1 ring-brand-gold/25 shadow-[0_30px_80px_-40px_rgba(13,51,32,0.85)]">
           <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
           <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-brand-green-vibrant/10 blur-3xl pointer-events-none" aria-hidden="true" />
@@ -927,7 +953,7 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-[#0E0E10] border-t border-white/5">
+      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
         <div className="max-w-6xl mx-auto">
 
           <div className="text-center mb-16">
@@ -945,7 +971,7 @@ export default function App() {
             <div className="lg:col-span-6 space-y-6">
 
               <div className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
-                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold-vibrant">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold">
                   <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
                 </div>
                 <div>
@@ -959,7 +985,7 @@ export default function App() {
               </div>
 
               <div className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
-                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold-vibrant">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold">
                   <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
                 </div>
                 <div>
@@ -967,13 +993,13 @@ export default function App() {
                     35 recetas anti-náusea para cuando casi no tienes hambre ni ganas de cocinar
                   </h4>
                   <p className="text-sm text-white/60">
-                    Mientras otras guías simplemente te dicen "come menos", este kit te da las recetas exactas que funcionan cuando el estómago está sensible — y que aun así te dan toda la proteína que necesitas para no perder músculo.
+                    Mientras otras guías simplemente te dicen "come menos", el método te da las recetas exactas que funcionan cuando el estómago está sensible — y que aun así te dan toda la proteína que necesitas para no perder músculo.
                   </p>
                 </div>
               </div>
 
               <div className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-all">
-                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold-vibrant">
+                <div className="h-10 w-10 shrink-0 bg-brand-green-vibrant/15 rounded-lg flex items-center justify-center text-brand-gold">
                   <CheckCircle2 className="h-6 w-6 stroke-[2.5px]" />
                 </div>
                 <div>
@@ -981,7 +1007,7 @@ export default function App() {
                     El plan de salida que tu médico no te dio
                   </h4>
                   <p className="text-sm text-white/60">
-                    El 80% de las personas que dejan el GLP-1 recuperan el peso en 12 meses. El kit incluye el protocolo de salida de 12 semanas — la diferencia entre mantener tu resultado y empezar de cero.
+                    El 80% de las personas que dejan el GLP-1 recuperan el peso en 12 meses. El método incluye el protocolo de salida de 12 semanas — la diferencia entre mantener tu resultado y empezar de cero.
                   </p>
                 </div>
               </div>
@@ -1018,24 +1044,24 @@ export default function App() {
                     </ul>
                   </div>
 
-                  <div className="p-6 bg-emerald-950/20 text-center relative">
-                    <div className="absolute top-2 right-2 bg-brand-green text-[9px] text-white font-bold tracking-wider py-0.5 px-2 rounded-full">RECOMENDADO</div>
-                    <span className="text-xs font-bold text-emerald-400 tracking-wide uppercase block mb-3">GLP-1 + Sistema de 4 Módulos</span>
+                  <div className="p-6 bg-brand-gold/[0.07] text-center relative">
+                    <div className="absolute top-2 right-2 bg-brand-gold text-[9px] text-[#17140C] font-bold tracking-wider py-0.5 px-2 rounded-full">RECOMENDADO</div>
+                    <span className="text-xs font-bold text-brand-gold tracking-wide uppercase block mb-3">GLP-1 + Método Proteína Primero</span>
                     <ul className="space-y-4 text-xs text-left text-white/70">
                       <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-brand-gold-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <Check className="h-4 w-4 text-brand-gold stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong className="text-white/90">Sin náuseas:</strong> Sabes exactamente qué comer antes y después de la inyección para evitar el malestar.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-brand-gold-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <Check className="h-4 w-4 text-brand-gold stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong className="text-white/90">Claridad total:</strong> Estructura de platos, lista de compras, recetas — sin adivinar, sin ansiedad.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-brand-gold-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <Check className="h-4 w-4 text-brand-gold stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong className="text-white/90">Músculo y tono preservados:</strong> Alta proteína sin esfuerzo, incluso cuando casi no tienes hambre.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-brand-gold-vibrant stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
+                        <Check className="h-4 w-4 text-brand-gold stroke-[3px] shrink-0 mt-0.5" aria-hidden="true" />
                         <span><strong className="text-white/90">Resultado duradero:</strong> Metabolismo protegido — el peso se queda afuera cuando termina el tratamiento.</span>
                       </li>
                     </ul>
@@ -1053,7 +1079,7 @@ export default function App() {
               onClick={triggerCheckout}
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
-              <span>Quiero el protocolo completo — US$ 9.90</span>
+              <span>Empezar mi protocolo — US$ 9.90</span>
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
@@ -1063,15 +1089,15 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-[#141416]/40 border-t border-[#2A2A2E]/60">
+      <section className="py-14 px-6 bg-[#141416]/40 border-t border-[#2A2A2E]/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <Eyebrow>Resultados reales</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Lo que dicen nuestros pacientes
+              Lo que dicen nuestras usuarias
             </h2>
             <p className="text-[#B7B1A3] text-sm leading-relaxed max-w-lg mx-auto">
-              Pacientes que ya combinan su tratamiento GLP-1 con el Sistema de 4 Módulos.
+              Usuarias reales que ya combinan su tratamiento GLP-1 con el Método Proteína Primero.
             </p>
           </div>
 
@@ -1085,7 +1111,7 @@ export default function App() {
                 "Llevaba semanas con náuseas terribles después de cada inyección. Mi médico me dijo 'es normal'. Con el recetario del kit entendí que estaba comiendo exactamente los alimentos que empeoran el malestar. <strong className="text-[#F3EFE7]">En 10 días las náuseas casi desaparecieron. Bajé 9 kilos y por primera vez estoy disfrutando el proceso.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-emerald-600 border-2 border-[#2A2A2E] flex items-center justify-center text-[11px] font-bold text-white">VM</div>
+                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">VM</div>
                 <div>
                   <p className="text-xs font-bold text-[#F3EFE7]">Valentina M.</p>
                   <p className="text-[10px] text-[#7E7A6E]">Monterrey, México · Ozempic 1mg</p>
@@ -1101,7 +1127,7 @@ export default function App() {
                 "Mi médica me recetó Wegovy y me dijo 'come menos'. Eso fue todo. No saber qué comer me generaba una ansiedad enorme. Con la guía de alimentación entendí la estructura exacta de mi plato. <strong className="text-[#F3EFE7]">Sin adivinar. Sin ansiedad. En 2 meses bajé 11 kg y mi piel sigue firme.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-teal-600 border-2 border-[#2A2A2E] flex items-center justify-center text-[11px] font-bold text-white">CB</div>
+                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">CB</div>
                 <div>
                   <p className="text-xs font-bold text-[#F3EFE7]">Carolina B.</p>
                   <p className="text-[10px] text-[#7E7A6E]">Buenos Aires, Argentina · Wegovy</p>
@@ -1118,7 +1144,7 @@ export default function App() {
                 "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-[#F3EFE7]">En 6 semanas recuperé la energía y perdí 7 kg de grasa.</strong> Le doy 4 estrellas porque me hubiera gustado más recetas de desayuno, pero el resto es excelente."
               </p>
               <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#26262A] border-2 border-[#2A2A2E] flex items-center justify-center text-[11px] font-bold text-white">DR</div>
+                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">DR</div>
                 <div>
                   <p className="text-xs font-bold text-[#F3EFE7]">Daniela R.</p>
                   <p className="text-[10px] text-[#7E7A6E]">Santiago, Chile · Mounjaro</p>
@@ -1145,40 +1171,14 @@ export default function App() {
       </section>
       </FadeIn>
 
-      {/* Segundo acceso al quiz — atrapa a quien bajó hasta aquí sin decidir */}
       <FadeIn>
-      <section className="px-6 pt-4 pb-2">
-        <div className="max-w-2xl mx-auto rounded-3xl bg-gradient-to-br from-[#1A1712] to-[#20201F] p-7 md:p-9 text-center ring-1 ring-brand-gold/25 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-gold mb-3">
-            <Sparkles className="h-3.5 w-3.5" /> Gratis · 1 minuto
-          </span>
-          <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
-            ¿Todavía lo dudas? Descubre tu protocolo primero.
-          </h3>
-          <p className="text-[#E7E1D3]/80 text-sm md:text-base mb-6 max-w-md mx-auto leading-relaxed">
-            Responde 6 preguntas y descubre <strong className="text-white">tu protocolo Proteína Primero</strong> —tus calorías y proteína exactas— sin tarjeta, al instante.
-          </p>
-          <button
-            type="button"
-            onClick={() => setQuizOpen(true)}
-            className="group inline-flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-8 transition-colors"
-          >
-            <Sparkles className="h-5 w-5 text-brand-gold shrink-0" />
-            Descubre tu protocolo — gratis
-            <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </button>
-        </div>
-      </section>
-      </FadeIn>
-
-      <FadeIn>
-      <section className="py-20 px-6 bg-[#141416]/30">
+      <section className="py-14 px-6 bg-[#141416]/30">
         <div className="max-w-4xl mx-auto">
 
           <div className="text-center mb-12">
             <Eyebrow>Oferta especial de lanzamiento</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Tu medicamento hace su parte.<br className="hidden md:block" /> Este kit hace la tuya.
+              Tu medicamento hace su parte.<br className="hidden md:block" /> Este método hace la tuya.
             </h2>
             <p className="text-[#B7B1A3] text-sm md:text-base leading-relaxed max-w-xl mx-auto">
               Gastas entre $800 y $1,200 al mes en el GLP-1. Sin el protocolo correcto, sigues con náuseas, sin saber qué comer y perdiendo músculo — haciendo que cada dólar invertido en el tratamiento trabaje a medias. El Método Proteína Primero completa la ecuación que tu médico dejó incompleta.
@@ -1201,7 +1201,7 @@ export default function App() {
               <div className="flex flex-col items-center mb-2">
                 <AppSeal size={64} rotate={0} className="mb-3" />
                 <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest">
-                  Guía GLP-1 Inteligente Completo
+                  Método Proteína Primero — Acceso Completo
                 </h3>
               </div>
 
@@ -1318,7 +1318,7 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-20 px-6 bg-[#0E0E10] border-t border-white/5">
+      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
         <div className="max-w-4xl mx-auto">
 
           <div className="text-center mb-12">
@@ -1329,7 +1329,7 @@ export default function App() {
               Preguntas Frecuentes
             </h2>
             <p className="text-[#C4BEB0]/70 text-sm leading-relaxed max-w-lg mx-auto">
-              Todo lo que necesitas saber antes de asegurar tu acceso a la Guía GLP-1 Inteligente.
+              Todo lo que necesitas saber antes de asegurar tu acceso al Método Proteína Primero.
             </p>
           </div>
 
@@ -1362,7 +1362,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed space-y-2">
                       <p>
-                        Sí — y es uno de los problemas más frecuentes que resuelve el kit. La mayoría de las náuseas con GLP-1 no son inevitables: son el resultado de comer los alimentos incorrectos en el momento incorrecto. El recetario anti-náuseas del kit incluye qué comer antes de la inyección, qué evitar las primeras 24 horas y qué texturas tolera mejor el estómago durante el tratamiento. Las pacientes que aplican este protocolo reportan una reducción notable del malestar en los primeros 7-10 días.
+                        Sí — y es uno de los problemas más frecuentes que resuelve el método. La mayoría de las náuseas con GLP-1 no son inevitables: son el resultado de comer los alimentos incorrectos en el momento incorrecto. El recetario anti-náuseas del método incluye qué comer antes de la inyección, qué evitar las primeras 24 horas y qué texturas tolera mejor el estómago durante el tratamiento. Las usuarias que aplican este protocolo reportan una reducción notable del malestar en los primeros 7-10 días.
                       </p>
                     </div>
                   </motion.div>
@@ -1412,7 +1412,7 @@ export default function App() {
                 className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
               >
                 <span className="font-bold text-white text-sm md:text-base pr-4">
-                  No sé absolutamente nada de nutrición. ¿Este kit es para mí o necesito conocimientos previos?
+                  No sé absolutamente nada de nutrición. ¿Este método es para mí o necesito conocimientos previos?
                 </span>
                 {activeFaq === 3 ? (
                   <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
@@ -1432,7 +1432,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        Es exactamente para ti. El kit fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
+                        Es exactamente para ti. El método fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
                       </p>
                     </div>
                   </motion.div>
@@ -1519,7 +1519,7 @@ export default function App() {
               className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Quiero mi Kit GLP-1 — US$ 9.90</span>
+              <span>Empezar mi protocolo — US$ 9.90</span>
             </a>
             <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
@@ -1533,7 +1533,7 @@ export default function App() {
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="flex items-center gap-2">
               <Activity className="h-6 w-6 text-brand-gold" />
-              <span className="font-bold tracking-tight text-xl text-white">Guía GLP-1 Inteligente</span>
+              <span className="font-bold tracking-tight text-xl text-white">Método Proteína Primero</span>
             </div>
             <p className="text-xs text-white/70">Nutrición clínica para un cambio real y duradero.</p>
           </div>
@@ -1547,7 +1547,7 @@ export default function App() {
           </div>
 
           <div className="text-xs text-white/60 border-t border-white/10 pt-8">
-            <p>© 2026 Guía GLP-1 Inteligente. Todos los derechos reservados.</p>
+            <p>© 2026 Método Proteína Primero. Todos los derechos reservados.</p>
           </div>
 
           <div className="max-w-4xl mx-auto text-xs leading-relaxed text-white/75 bg-white/5 p-5 rounded-2xl border border-white/10 text-left">
@@ -1557,17 +1557,17 @@ export default function App() {
       </footer>
 
       {/* Botón fijo mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur border-t border-[#2E2E33] px-3 pt-3 pb-2 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#111113]/92 backdrop-blur-md border-t border-brand-gold/25 px-3 pt-3 pb-2 shadow-[0_-12px_32px_rgba(0,0,0,0.5)]">
         <a
           href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
           onClick={triggerCheckout}
-          className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-green-vibrant/30 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+          className="w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113] focus-visible:ring-brand-gold"
         >
           <ShoppingCart className="h-4 w-4" />
-          <span>Comprar Ahora — US$ 9.90</span>
+          <span>Empezar mi protocolo — US$ 9.90</span>
           <Lock className="h-3.5 w-3.5 opacity-70" />
         </a>
-        <p className="text-center text-[10px] text-[#9E998C] font-medium mt-1.5 flex items-center justify-center gap-1">
+        <p className="text-center text-[10px] text-[#C4BEB0] font-medium mt-1.5 flex items-center justify-center gap-1">
           <Globe className="h-3 w-3 text-brand-gold shrink-0" aria-hidden="true" />
           Pagas en tu moneda local · Garantía de 7 días
         </p>
@@ -1584,8 +1584,8 @@ export default function App() {
                 <div>
                   <h3 className="text-xl font-bold text-[#F3EFE7] mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-brand-gold" /> Terminos y Condiciones de Uso</h3>
                   <div className="space-y-4 text-xs text-[#B7B1A3] leading-relaxed text-justify">
-                    <p>Bienvenido a Guía GLP-1 Inteligente, comercializado con fines divulgativos de estilo de vida saludable.</p>
-                    <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el Kit está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa o redistribución no autorizada.</p>
+                    <p>Bienvenido a Método Proteína Primero, comercializado con fines divulgativos de estilo de vida saludable.</p>
+                    <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el producto está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa o redistribución no autorizada.</p>
                     <p><strong>2. Uso del Contenido:</strong> El material se vende como material educativo suplementario y no constituye un canal terapéutico presencial.</p>
                     <p><strong>3. Políticas de Envío:</strong> Los archivos PDF se entregan automáticamente por correo tras procesarse el pago de US$ 9.90.</p>
                   </div>
