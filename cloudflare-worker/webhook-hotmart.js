@@ -105,24 +105,37 @@ export default {
 
     const rawBody = await request.text();
 
-    // DEBUG temporal: registra exactamente lo que Hotmart envía, para
-    // confirmar dónde viaja el hottok (body, query string o header).
-    console.log('DEBUG query hottok:', url.searchParams.get('hottok'));
-    console.log('DEBUG headers:', JSON.stringify(Object.fromEntries(request.headers)));
-    console.log('DEBUG raw body:', rawBody);
-
-    let payload;
+    let payload = {};
     try {
       payload = JSON.parse(rawBody);
     } catch {
-      return json({ ok: false, error: 'invalid_json' }, 400);
+      // seguimos: quizás el hottok viaja fuera del body
     }
 
-    const hottok = String(
-      payload?.hottok ?? url.searchParams.get('hottok') ?? request.headers.get('x-hotmart-hottok') ?? ''
-    );
-    if (!hottok || hottok !== env.HOTMART_HOTTOK) {
-      return json({ ok: false, error: 'invalid_hottok' }, 401);
+    const fromBody = payload?.hottok;
+    const fromQuery = url.searchParams.get('hottok');
+    const fromHeader = request.headers.get('x-hotmart-hottok');
+    const hottok = String(fromBody ?? fromQuery ?? fromHeader ?? '');
+    const expected = String(env.HOTMART_HOTTOK ?? '');
+
+    if (!hottok || hottok !== expected) {
+      // DEBUG TEMPORAL: diagnóstico visible en la respuesta (sin exponer
+      // los valores). Quitar después de que funcione.
+      return json({
+        ok: false,
+        error: 'invalid_hottok',
+        _debug: {
+          hottok_en_body: fromBody != null,
+          hottok_en_query: fromQuery != null,
+          hottok_en_header: fromHeader != null,
+          largo_recibido: hottok.length,
+          largo_esperado: expected.length,
+          secret_configurada: expected.length > 0,
+          coincide: hottok === expected,
+          event: payload?.event ?? null,
+          claves_raiz: payload && typeof payload === 'object' ? Object.keys(payload) : [],
+        },
+      }, 401);
     }
 
     const event = String(payload?.event ?? '');
