@@ -26,6 +26,9 @@ jobs:
         run: |
           cat > public/api/config.php <<PHP
           <?php
+          // build ${{ github.run_id }}.${{ github.run_attempt }} — content varies per deploy
+          // on purpose, so FTP-Deploy-Action's remote state cache never treats this
+          // file as "unchanged" and skips re-uploading it.
           define('RESEND_API_KEY', '${{ secrets.RESEND_API_KEY }}');
           define('HOTMART_HOTTOK', '${{ secrets.HOTMART_HOTTOK }}');
           define('FROM_EMAIL', '${{ secrets.RESEND_FROM_EMAIL }}');
