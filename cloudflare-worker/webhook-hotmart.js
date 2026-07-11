@@ -119,23 +119,7 @@ export default {
     const expected = String(env.HOTMART_HOTTOK ?? '');
 
     if (!hottok || hottok !== expected) {
-      // DEBUG TEMPORAL: diagnóstico visible en la respuesta (sin exponer
-      // los valores). Quitar después de que funcione.
-      return json({
-        ok: false,
-        error: 'invalid_hottok',
-        _debug: {
-          hottok_en_body: fromBody != null,
-          hottok_en_query: fromQuery != null,
-          hottok_en_header: fromHeader != null,
-          largo_recibido: hottok.length,
-          largo_esperado: expected.length,
-          secret_configurada: expected.length > 0,
-          coincide: hottok === expected,
-          event: payload?.event ?? null,
-          claves_raiz: payload && typeof payload === 'object' ? Object.keys(payload) : [],
-        },
-      }, 401);
+      return json({ ok: false, error: 'invalid_hottok' }, 401);
     }
 
     const event = String(payload?.event ?? '');
