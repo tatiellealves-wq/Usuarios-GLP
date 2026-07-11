@@ -8,10 +8,13 @@ declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
 
-$configPath = __DIR__ . '/config.php';
+// Nombre deliberadamente distinto de "config.php": algunos hostings
+// compartidos ponen en cuarentena/eliminan automáticamente cualquier
+// archivo con ese nombre exacto (blanco típico de fugas de credenciales).
+$configPath = __DIR__ . '/secrets.inc.php';
 if (!is_file($configPath)) {
     http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'config.php ausente']);
+    echo json_encode(['ok' => false, 'error' => 'secrets.inc.php ausente']);
     exit;
 }
 require $configPath;

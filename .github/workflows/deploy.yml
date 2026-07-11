@@ -24,7 +24,7 @@ jobs:
 
       - name: Write server-side API config (Resend + Hotmart)
         run: |
-          cat > public/api/config.php <<PHP
+          cat > public/api/secrets.inc.php <<PHP
           <?php
           // build ${{ github.run_id }}.${{ github.run_attempt }} — content varies per deploy
           // on purpose, so FTP-Deploy-Action's remote state cache never treats this
