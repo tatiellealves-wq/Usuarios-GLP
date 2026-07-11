@@ -97,18 +97,30 @@ function emailHtml(nombre, codigo) {
 
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+
     if (request.method !== 'POST') {
       return json({ ok: false, error: 'method_not_allowed' }, 405);
     }
 
+    const rawBody = await request.text();
+
+    // DEBUG temporal: registra exactamente lo que Hotmart envía, para
+    // confirmar dónde viaja el hottok (body, query string o header).
+    console.log('DEBUG query hottok:', url.searchParams.get('hottok'));
+    console.log('DEBUG headers:', JSON.stringify(Object.fromEntries(request.headers)));
+    console.log('DEBUG raw body:', rawBody);
+
     let payload;
     try {
-      payload = await request.json();
+      payload = JSON.parse(rawBody);
     } catch {
       return json({ ok: false, error: 'invalid_json' }, 400);
     }
 
-    const hottok = String(payload?.hottok ?? '');
+    const hottok = String(
+      payload?.hottok ?? url.searchParams.get('hottok') ?? request.headers.get('x-hotmart-hottok') ?? ''
+    );
     if (!hottok || hottok !== env.HOTMART_HOTTOK) {
       return json({ ok: false, error: 'invalid_hottok' }, 401);
     }
