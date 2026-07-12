@@ -125,6 +125,10 @@ export const hoyISO = () => {
 };
 
 export const lbAKg = (lb: number) => Math.round(lb * 0.453592 * 10) / 10;
+export const kgALb = (kg: number) => Math.round((kg / 0.453592) * 10) / 10;
+
+// Muestra un peso guardado (siempre kg) en la unidad elegida por la usuaria.
+export const pesoEnUnidad = (kg: number, unidad: 'kg' | 'lb') => (unidad === 'lb' ? kgALb(kg) : kg);
 
 // Meta de proteína recalculada con el peso más reciente (si existe):
 // al bajar de peso, la meta acompaña — como indica la guía (1.6–1.8 g/kg).

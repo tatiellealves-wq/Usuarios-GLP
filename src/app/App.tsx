@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   AlertTriangle, Bell, BookOpen, Calendar, CalendarClock, Camera, Check, ChevronDown, ChevronUp, Clock, Download, Droplets,
   Flame, Home, KeyRound, LineChart, Lock, NotebookPen, Pill, Printer, RefreshCw, Ruler, Search, ShieldCheck,
-  ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, Utensils, X,
+  ShoppingBag, ShoppingCart, Sparkles, Syringe, Upload, UserRound, Utensils, X,
 } from 'lucide-react';
 import {
   ALIMENTOS_EVITAR, CLAVE_ACCESO, FASES_SALIDA, GUIA_CAPITULOS, LISTA_SUPER, MEDICAMENTOS, PASOS_INYECCION,
@@ -11,7 +11,7 @@ import {
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
   borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, imc,
-  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, proximaDosis, racha, semanaSalida, serieDiaria,
+  importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, pesoEnUnidad, proximaDosis, racha, semanaSalida, serieDiaria,
   tendenciaSemanal, useEstado,
   type Comida, type DosisRegistro, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
   type PlanSemanal, type RegistroDia, type SexoBio,
@@ -256,7 +256,10 @@ function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
               </label>
               <input
                 value={clave}
-                onChange={(e) => { setClave(e.target.value); setError(false); }}
+                onChange={(e) => { setClave(e.target.value.toUpperCase()); setError(false); }}
+                autoCapitalize="characters"
+                autoCorrect="off"
+                spellCheck={false}
                 placeholder="GLP1-XXXX-XXXX"
                 className="w-full rounded-2xl bg-white/[.08] border border-white/20 text-white placeholder-white/40 px-4 py-4 text-center tracking-widest font-semibold focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
               />
@@ -360,8 +363,26 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
   const dias = racha(registros);
   const fecha = new Date().toLocaleDateString('es-419', { weekday: 'long', day: 'numeric', month: 'long' });
 
-  const diaReto = Math.min(21, Math.max(1, Math.floor((Date.now() - new Date(perfil.fechaInicio + 'T00:00:00').getTime()) / 86400000) + 1));
+  // El reto avanza en ciclos de 21 días: al terminar uno, empieza el siguiente
+  // (día 22 = ciclo 2, día 1). Así el hábito nunca se queda "congelado" en 21.
+  const diasDesdeInicio = Math.max(1, Math.floor((Date.now() - new Date(perfil.fechaInicio + 'T00:00:00').getTime()) / 86400000) + 1);
+  const cicloReto = Math.ceil(diasDesdeInicio / 21);
+  const diaReto = ((diasDesdeInicio - 1) % 21) + 1;
   const pctReto = Math.round((diaReto / 21) * 100);
+
+  // Celebración al completar cada ciclo de 21 días (una sola vez por ciclo).
+  React.useEffect(() => {
+    if (diaReto !== 21) return;
+    const clave = `glp1-reto-ciclo-${cicloReto}`;
+    if (localStorage.getItem(clave)) return;
+    localStorage.setItem(clave, '1');
+    celebrar(
+      '¡Reto de 21 días completado! 🏆',
+      cicloReto === 1
+        ? 'Construiste el hábito. Mañana empieza tu ciclo 2 — ahora es tu estilo de vida.'
+        : `Ciclo ${cicloReto} terminado. La constancia es tu superpoder.`,
+    );
+  }, [diaReto, cicloReto]);
   const proteinaPct = Math.min(100, Math.round((proteinaPlan / meta) * 100));
 
   const pathRef = React.useRef<HTMLDivElement>(null);
@@ -391,7 +412,10 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
 
       {/* Progreso del reto */}
       <div className="flex items-center justify-between mb-1.5">
-        <p className="text-sm font-extrabold text-[#1F2430]">Día {diaReto} <span className="text-gray-400 font-bold">de 21</span></p>
+        <p className="text-sm font-extrabold text-[#1F2430]">
+          Día {diaReto} <span className="text-gray-400 font-bold">de 21</span>
+          {cicloReto > 1 && <span className="ml-2 text-[10px] font-bold uppercase tracking-wide text-[#B08621] bg-[#FFF4D6] rounded-full px-2 py-0.5">Ciclo {cicloReto}</span>}
+        </p>
         <span className="text-xs font-extrabold text-[#16A34A]">{pctReto}%</span>
       </div>
       <div className="barra h-3.5 bg-[#ECE7DD] mb-4">
@@ -1056,14 +1080,18 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
   const [modo, setModo] = useState<'form' | 'plan'>(guardado?.comidas ? 'plan' : 'form');
   const [cambiando, setCambiando] = useState<Comida | null>(null);
 
-  const [peso, setPeso] = useState(String(guardado?.peso ?? pesoActual ?? perfil.pesoInicial ?? ''));
+  // El peso se muestra y se escribe en la unidad de la usuaria (kg o lb); el cálculo interno usa kg.
+  const unidad = perfil.unidad;
+  const pesoKgInicial = guardado?.peso ?? pesoActual ?? perfil.pesoInicial;
+  const [peso, setPeso] = useState(pesoKgInicial ? String(pesoEnUnidad(pesoKgInicial, unidad)) : '');
   const [altura, setAltura] = useState(String(guardado?.altura ?? perfil.altura ?? ''));
   const [edad, setEdad] = useState(guardado?.edad ? String(guardado.edad) : '');
   const [sexo, setSexo] = useState<SexoBio>(guardado?.sexo ?? 'F');
   const [objetivo, setObjetivo] = useState<ObjetivoPlan>(guardado?.objetivo ?? 'perder');
   const [suave, setSuave] = useState<boolean>(guardado?.suave ?? false);
 
-  const pesoN = Number(peso), alturaN = Number(altura), edadN = Number(edad);
+  const pesoN = unidad === 'lb' ? lbAKg(Number(peso)) : Number(peso);
+  const alturaN = Number(altura), edadN = Number(edad);
   const valido = pesoN >= 30 && pesoN <= 300 && alturaN >= 120 && alturaN <= 220 && edadN >= 14 && edadN <= 100;
 
   const metas = guardado ? metasPlan(guardado) : null;
@@ -1123,7 +1151,7 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
         {modo === 'form' ? (
           <div className="anim-fade-up">
             <div className="grid grid-cols-3 gap-2">
-              <div><label className="lbl">Peso (kg)</label><input className="inp" type="number" inputMode="decimal" value={peso} onChange={(e) => setPeso(e.target.value)} placeholder="75" /></div>
+              <div><label className="lbl">Peso ({unidad})</label><input className="inp" type="number" inputMode="decimal" value={peso} onChange={(e) => setPeso(e.target.value)} placeholder={unidad === 'lb' ? '165' : '75'} /></div>
               <div><label className="lbl">Altura (cm)</label><input className="inp" type="number" inputMode="numeric" value={altura} onChange={(e) => setAltura(e.target.value)} placeholder="165" /></div>
               <div><label className="lbl">Edad</label><input className="inp" type="number" inputMode="numeric" value={edad} onChange={(e) => setEdad(e.target.value)} placeholder="40" /></div>
             </div>
@@ -1255,9 +1283,21 @@ function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
   const [verInforme, setVerInforme] = useState(false);
   const [verStats, setVerStats] = useState(false);
 
-  const tendencia = tendenciaSemanal(estado.pesos);
+  // La usuaria escribe y lee su peso en SU unidad (kg o lb); internamente todo se guarda en kg.
+  const unidad = perfil.unidad;
+  const tendencia = tendenciaSemanal(estado.pesos).map((t) => ({ ...t, kg: pesoEnUnidad(t.kg, unidad) }));
   const ultimo = estado.pesos.length ? [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha)).at(-1)!.kg : null;
-  const delta = ultimo !== null ? Math.round((ultimo - perfil.pesoInicial) * 10) / 10 : null;
+  const delta = ultimo !== null ? Math.round(pesoEnUnidad(ultimo - perfil.pesoInicial, unidad) * 10) / 10 : null;
+
+  // Progreso hacia el peso objetivo (si lo definió y es de pérdida)
+  const objetivoInfo = (() => {
+    if (!perfil.objetivo || ultimo === null || perfil.pesoInicial <= perfil.objetivo) return null;
+    const total = perfil.pesoInicial - perfil.objetivo;
+    const perdido = Math.max(0, perfil.pesoInicial - ultimo);
+    const pct = Math.min(100, Math.round((perdido / total) * 100));
+    const faltan = Math.round(pesoEnUnidad(Math.max(0, ultimo - perfil.objetivo), unidad) * 10) / 10;
+    return { pct, faltan };
+  })();
 
   const ultimos14 = useMemo(() => {
     const out: { fecha: string; nauseas?: number; energia?: number }[] = [];
@@ -1292,10 +1332,24 @@ function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
           <h2 className="font-bold">Peso</h2>
           {delta !== null && (
             <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${delta <= 0 ? 'bg-[#EAF4EC] text-[#166534]' : 'bg-amber-50 text-amber-700'}`}>
-              {delta > 0 ? '+' : ''}{delta} kg desde el inicio
+              {delta > 0 ? '+' : ''}{delta} {unidad} desde el inicio
             </span>
           )}
         </div>
+        {objetivoInfo && (
+          <div className="mb-3">
+            <div className="flex justify-between items-baseline mb-1">
+              <span className="text-xs font-bold text-[#8A6D1C]">Hacia tu objetivo ({pesoEnUnidad(perfil.objetivo!, unidad)} {unidad})</span>
+              <span className="text-xs font-extrabold text-[#16A34A]">{objetivoInfo.pct}%</span>
+            </div>
+            <div className="barra h-2.5 bg-[#ECE7DD]">
+              <div className="barra-fill bg-[#E7B93B]" style={{ width: `${objetivoInfo.pct}%` }} />
+            </div>
+            <p className="text-[11px] text-gray-500 mt-1">
+              {objetivoInfo.faltan <= 0 ? '¡Llegaste a tu objetivo! 🎉' : <>Te faltan <b>{objetivoInfo.faltan} {unidad}</b> — ya recorriste el {objetivoInfo.pct}%.</>}
+            </p>
+          </div>
+        )}
         {tendencia.length >= 2 ? <GraficoLinea datos={tendencia} /> : (
           <div className="flex items-center gap-4 mb-3">
             <svg viewBox="0 0 72 56" className="h-14 shrink-0" fill="none" aria-hidden="true">
@@ -1308,9 +1362,13 @@ function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
           </div>
         )}
         <div className="flex gap-2 mt-2">
-          <input value={pesoInput} onChange={(e) => setPesoInput(e.target.value)} type="number" inputMode="decimal" placeholder={`Peso de hoy (kg)`} className="inp flex-1 !mb-0" />
+          <input value={pesoInput} onChange={(e) => setPesoInput(e.target.value)} type="number" inputMode="decimal" placeholder={`Peso de hoy (${unidad})`} className="inp flex-1 !mb-0" />
           <button
-            onClick={() => { const v = Number(pesoInput); if (v >= 30 && v <= 300) { onPeso(v); setPesoInput(''); } }}
+            onClick={() => {
+              const v = Number(pesoInput);
+              const kg = unidad === 'lb' ? lbAKg(v) : v;
+              if (kg >= 30 && kg <= 300) { onPeso(kg); setPesoInput(''); }
+            }}
             className="btn3d px-5 rounded-2xl text-sm"
           >Guardar</button>
         </div>
@@ -1583,10 +1641,11 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
   const perfil = estado.perfil!;
   const [alturaInput, setAlturaInput] = useState('');
 
+  const unidad = perfil.unidad;
   const pesos = [...estado.pesos].sort((a, b) => a.fecha.localeCompare(b.fecha));
-  const pesoSerie = pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: p.kg }));
+  const pesoSerie = pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: pesoEnUnidad(p.kg, unidad) }));
   const pesoAct = pesos.length ? pesos.at(-1)!.kg : null;
-  const pesoDelta = pesoAct !== null ? Math.round((pesoAct - perfil.pesoInicial) * 10) / 10 : null;
+  const pesoDelta = pesoAct !== null ? Math.round(pesoEnUnidad(pesoAct - perfil.pesoInicial, unidad) * 10) / 10 : null;
 
   const altura = perfil.altura;
   const imcSerie = altura ? pesos.slice(-14).map((p) => ({ etiqueta: etqFecha(p.fecha), v: imc(p.kg, altura) })) : [];
@@ -1625,10 +1684,10 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
 
       {/* Peso */}
       <TarjetaStat titulo="Peso" hay={pesoSerie.length >= 2}
-        valor={pesoDelta !== null ? `${pesoDelta > 0 ? '+' : ''}${pesoDelta} kg` : undefined}
+        valor={pesoDelta !== null ? `${pesoDelta > 0 ? '+' : ''}${pesoDelta} ${unidad}` : undefined}
         color={pesoDelta !== null && pesoDelta <= 0 ? '#16A34A' : '#8A6D1C'}
         vacio="Registra tu peso al menos 2 veces en Progreso para ver la curva.">
-        <MiniLinea datos={pesoSerie} color="#166534" decimales={1} unidad=" kg" />
+        <MiniLinea datos={pesoSerie} color="#166534" decimales={1} unidad={` ${unidad}`} />
       </TarjetaStat>
 
       {/* IMC */}
@@ -1696,8 +1755,9 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
 function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
   estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1]; onPlanIA: () => void; onMeds: () => void;
 }) {
-  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo'>('menu');
+  const [vista, setVista] = useState<'menu' | 'guia' | 'cuerpo' | 'salida' | 'super' | 'respaldo' | 'perfil'>('menu');
 
+  if (vista === 'perfil') return <ConVolver onVolver={() => setVista('menu')}><EditarPerfil estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'guia') return <ConVolver onVolver={() => setVista('menu')}><PantallaGuia /></ConVolver>;
   if (vista === 'cuerpo') return <ConVolver onVolver={() => setVista('menu')}><CuerpoFirme estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'salida') return <ConVolver onVolver={() => setVista('menu')}><PlanSalida estado={estado} setEstado={setEstado} /></ConVolver>;
@@ -1705,6 +1765,7 @@ function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
   if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
   const items = [
+    { id: 'perfil' as const, icon: <UserRound className="h-5 w-5" />, bg: '#F7F0DF', fg: '#8A6D1C', titulo: 'Mi perfil', sub: `${estado.perfil?.nombre ?? ''} · ${estado.perfil?.medicamento ?? ''} — nombre, medicamento, unidad y objetivo` },
     { id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
     { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5" />, bg: '#FDF3D8', fg: '#B08621', titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5" />, bg: '#FCE7E4', fg: '#EF4444', titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
@@ -1744,6 +1805,69 @@ function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
       <p className="text-[10px] text-gray-400 text-center mt-4">
         Recurso educativo · no sustituye a tu equipo de salud · soporte@guiaglp1.com
       </p>
+    </div>
+  );
+}
+
+/* ---------- Editar perfil ---------- */
+function EditarPerfil({ estado, setEstado }: {
+  estado: ReturnType<typeof useEstado>[0]; setEstado: ReturnType<typeof useEstado>[1];
+}) {
+  const perfil = estado.perfil!;
+  const [nombre, setNombre] = useState(perfil.nombre);
+  const [medicamento, setMedicamento] = useState<Perfil['medicamento']>(perfil.medicamento);
+  const [unidad, setUnidad] = useState<'kg' | 'lb'>(perfil.unidad);
+  const [objetivo, setObjetivo] = useState(perfil.objetivo ? String(pesoEnUnidad(perfil.objetivo, perfil.unidad)) : '');
+  const [guardado, setGuardado] = useState(false);
+
+  // Al cambiar de unidad, convertimos el número visible para que siga
+  // significando lo mismo (75 kg ↔ 165.3 lb).
+  const cambiarUnidad = (u: 'kg' | 'lb') => {
+    if (u === unidad) return;
+    const n = Number(objetivo);
+    if (objetivo && n > 0) setObjetivo(String(u === 'lb' ? Math.round((n / 0.453592) * 10) / 10 : lbAKg(n)));
+    setUnidad(u);
+  };
+
+  const guardar = () => {
+    const objetivoKg = objetivo ? (unidad === 'lb' ? lbAKg(Number(objetivo)) : Number(objetivo)) : undefined;
+    setEstado((e) => (e.perfil ? {
+      ...e,
+      perfil: { ...e.perfil, nombre: nombre.trim() || e.perfil.nombre, medicamento, unidad, objetivo: objetivoKg },
+    } : e));
+    setGuardado(true);
+    setTimeout(() => setGuardado(false), 2500);
+  };
+
+  return (
+    <div className="max-w-md mx-auto px-5 pt-4">
+      <h1 className="text-2xl font-bold mb-1">Mi perfil</h1>
+      <p className="text-sm text-gray-500 mb-5">Tu tratamiento cambia con el tiempo — tu app te acompaña. El día y la hora de tu dosis se editan en la Agenda de dosis.</p>
+
+      <label className="lbl">Tu nombre</label>
+      <input className="inp" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
+
+      <label className="lbl">Tu medicamento</label>
+      <div className="grid grid-cols-3 gap-2">
+        {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
+          <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+        ))}
+      </div>
+
+      <label className="lbl">Unidad de peso</label>
+      <div className="grid grid-cols-2 gap-2">
+        {(['kg', 'lb'] as const).map((u) => (
+          <button key={u} onClick={() => cambiarUnidad(u)} className={`seg py-3 text-sm ${unidad === u ? 'seg-on' : ''}`}>{u.toUpperCase()}</button>
+        ))}
+      </div>
+
+      <label className="lbl">Peso objetivo (opcional, en {unidad})</label>
+      <input className="inp" type="number" inputMode="decimal" value={objetivo} onChange={(e) => setObjetivo(e.target.value)} placeholder={unidad === 'lb' ? 'Ej. 150' : 'Ej. 68'} />
+
+      <button onClick={guardar} className="btn3d w-full mt-4 py-4 rounded-2xl">Guardar cambios</button>
+      {guardado && (
+        <p className="text-sm font-semibold text-center rounded-xl px-4 py-3 mt-3 bg-[#EAF4EC] text-[#166534]" role="status">Perfil actualizado ✓</p>
+      )}
     </div>
   );
 }

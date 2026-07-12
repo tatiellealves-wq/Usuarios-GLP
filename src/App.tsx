@@ -179,7 +179,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
     rebote: 'Incluye el plan de salida de 12 semanas para que no recuperes el peso.',
   };
 
-  const Opt = ({ label, sub, onClick, active }: { label: string; sub?: string; onClick: () => void; active?: boolean }) => (
+  const Opt: React.FC<{ label: string; sub?: string; onClick: () => void; active?: boolean }> = ({ label, sub, onClick, active }) => (
     <button
       type="button"
       onClick={onClick}
