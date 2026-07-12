@@ -383,6 +383,22 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
         : `Ciclo ${cicloReto} terminado. La constancia es tu superpoder.`,
     );
   }, [diaReto, cicloReto]);
+
+  // Hitos de racha: la constancia también merece confeti (una vez por hito).
+  React.useEffect(() => {
+    const HITOS: Record<number, string> = {
+      7: 'Una semana entera sin fallar — así se construye un hábito.',
+      14: 'Dos semanas seguidas. Tu registro ya cuenta una historia.',
+      30: 'Un mes completo. Esto ya no es fuerza de voluntad: es rutina.',
+      50: '50 días. Estás en el 1% más constante.',
+      100: '100 días. Nivel leyenda — tu médico no lo va a creer.',
+    };
+    if (!HITOS[dias]) return;
+    const clave = `glp1-racha-${dias}`;
+    if (localStorage.getItem(clave)) return;
+    localStorage.setItem(clave, '1');
+    celebrar(`¡Racha de ${dias} días! 🔥`, HITOS[dias]);
+  }, [dias]);
   const proteinaPct = Math.min(100, Math.round((proteinaPlan / meta) * 100));
 
   const pathRef = React.useRef<HTMLDivElement>(null);
@@ -445,45 +461,26 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
         })}
       </div>
 
-      {/* Acceso al Plan alimentario inteligente */}
-      <button onClick={onPlanIA} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-3 flex items-center gap-3 shadow-lg anim-bounce-in">
-        <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><Sparkles className="h-5 w-5 text-[#D4AF37]" /></span>
-        <span className="min-w-0 flex-1">
-          <span className="font-bold text-sm block">Plan alimentario inteligente</span>
-          <span className="text-xs text-green-100/70">Tu día completo, generado por tus calorías y proteína</span>
-        </span>
-        <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
-      </button>
-
-      {/* Acceso a la Guía de medicamentos */}
-      <button onClick={onMeds} className="card w-full text-left flex items-center gap-3 !mb-3">
-        <span className="h-11 w-11 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
-        <span className="min-w-0 flex-1">
-          <span className="font-bold text-sm block">Guía de medicamentos</span>
-          <span className="text-xs text-gray-500">{perfil.medicamento && perfil.medicamento !== 'Otro' ? `Cómo usar tu ${perfil.medicamento}, efectos y alimentación` : 'Cómo aplicar, efectos, alimentación y dudas'}</span>
-        </span>
-        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
-      </button>
-
-      {/* Acceso a la Agenda de dosis (recordatorio + historial para el médico) */}
-      <button onClick={onDosis} className="card w-full text-left flex items-center gap-3 !mb-4">
-        <span className="h-11 w-11 rounded-2xl bg-[#FFF0DA] text-[#C9891A] flex items-center justify-center shrink-0"><CalendarClock className="h-5 w-5" /></span>
-        <span className="min-w-0 flex-1">
-          <span className="font-bold text-sm block">Agenda de dosis</span>
-          <span className="text-xs text-gray-500">
-            {prox.esHoy && !prox.aplicadaHoy
-              ? <b className="text-[#C9891A]">Hoy es tu día de dosis</b>
-              : prox.aplicadaHoy && prox.esHoy
-                ? 'Dosis de hoy registrada ✓'
-                : prox.dias === 1 ? 'Tu próxima dosis es mañana'
-                  : `Tu próxima dosis en ${prox.dias} días`}
+      {/* Accesos rápidos en una sola fila compacta: así el registro del día
+          (la acción diaria de verdad) sube y queda a la vista sin tanto scroll. */}
+      <div className="grid grid-cols-3 gap-2 mb-4 anim-bounce-in">
+        <button onClick={onPlanIA} className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white px-2 py-3 flex flex-col items-center gap-1.5 shadow-md">
+          <Sparkles className="h-5 w-5 text-[#D4AF37]" />
+          <span className="text-[11px] font-bold leading-tight text-center">Plan del día</span>
+        </button>
+        <button onClick={onMeds} className="rounded-2xl bg-white border-2 border-[#ECE7DD] px-2 py-3 flex flex-col items-center gap-1.5">
+          <Syringe className="h-5 w-5 text-[#0C87C4]" />
+          <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">Medicamentos</span>
+        </button>
+        <button onClick={onDosis} className={`rounded-2xl px-2 py-3 flex flex-col items-center gap-1.5 border-2 ${prox.esHoy && !prox.aplicadaHoy ? 'bg-[#FFF0DA] border-[#F1DE9E]' : 'bg-white border-[#ECE7DD]'}`}>
+          <CalendarClock className="h-5 w-5 text-[#C9891A]" />
+          <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">
+            {prox.esHoy && !prox.aplicadaHoy ? <b className="text-[#C9891A]">Dosis ¡hoy!</b>
+              : prox.esHoy && prox.aplicadaHoy ? 'Dosis hoy ✓'
+              : prox.dias === 1 ? 'Dosis mañana' : `Dosis: ${prox.dias} días`}
           </span>
-        </span>
-        <span className="text-right shrink-0">
-          <span className="block text-lg font-extrabold text-[#C9891A] tabular-nums leading-none">{prox.esHoy && !prox.aplicadaHoy ? '¡Hoy!' : prox.dias}</span>
-          {!(prox.esHoy && !prox.aplicadaHoy) && <span className="block text-[9px] font-bold text-[#C9891A]/60 uppercase">{prox.dias === 1 ? 'día' : 'días'}</span>}
-        </span>
-      </button>
+        </button>
+      </div>
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
 
@@ -499,9 +496,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
           <div className="space-y-2">
             {comidasHoy.map(({ c, r }) => (
               <div key={c} className="flex items-center gap-3 rounded-2xl bg-[#F7F5EF] border-2 border-[#ECE7DD] px-3 py-2.5">
-                <span className="h-9 w-9 rounded-xl bg-white border-2 border-[#ECE7DD] flex items-center justify-center shrink-0">
-                  <Utensils className="h-4 w-4 text-[#16A34A]" />
-                </span>
+                <FotoReceta id={r.id} className="h-10 w-10 rounded-xl" />
                 <div className="min-w-0 flex-1">
                   <p className="text-[9px] uppercase tracking-widest font-bold text-[#C9A035] capitalize">{c}</p>
                   <p className="text-sm font-bold text-[#1F2430] truncate">{r.nombre}</p>
@@ -516,7 +511,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
       <div className="card">
         <h2 className="font-extrabold mb-3">Registro de hoy</h2>
         <Escala titulo="Náuseas" valor={reg.nauseas} onSet={(v) => setReg({ nauseas: v })} colores={['#16A34A', '#84CC16', '#F59E0B', '#DC2626']} />
-        <Escala titulo="Energía" valor={reg.energia} onSet={(v) => setReg({ energia: v })} colores={['#DC2626', '#F59E0B', '#84CC16', '#16A34A']} />
+        <Escala titulo="Energía" valor={reg.energia} onSet={(v) => setReg({ energia: v })} colores={['#DC2626', '#F59E0B', '#84CC16', '#16A34A']} labels={['Nula', 'Baja', 'Media', 'Alta']} />
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center gap-2">
@@ -564,7 +559,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
             <input type="number" inputMode="numeric" value={reg.caloriasKcal ?? ''} onChange={(e) => setReg({ caloriasKcal: e.target.value ? Number(e.target.value) : undefined })} placeholder="kcal" className="inp !mb-0 !py-2.5 mt-1" />
           </div>
         </div>
-        <p className="text-[10px] text-gray-400 mt-1.5">Se completan solos al aplicar tu Plan alimentario inteligente — o anótalos aquí. Alimentan tus Estadísticas.</p>
+        <p className="text-[11px] text-gray-400 mt-1.5">Se completan solos al aplicar tu Plan alimentario inteligente — o anótalos aquí. Alimentan tus Estadísticas.</p>
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <p className="text-sm font-bold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
@@ -575,7 +570,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
             rows={2}
             className="w-full bg-[#FBF9F5] border-2 border-[#ECE7DD] rounded-2xl px-3.5 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#166534]/30"
           />
-          <p className="text-[10px] text-gray-400 mt-1">Con el tiempo, tus notas revelan qué alimentos te caen bien y cuáles no — evidencia de oro para tu próxima consulta.</p>
+          <p className="text-[11px] text-gray-400 mt-1">Con el tiempo, tus notas revelan qué alimentos te caen bien y cuáles no — evidencia de oro para tu próxima consulta.</p>
         </div>
       </div>
 
@@ -595,20 +590,21 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
   );
 }
 
-function Escala({ titulo, valor, onSet, colores }: { titulo: string; valor?: number; onSet: (v: number) => void; colores: string[] }) {
-  const labels = ['0', '1', '2', '3'];
+function Escala({ titulo, valor, onSet, colores, labels }: {
+  titulo: string; valor?: number; onSet: (v: number) => void; colores: string[]; labels?: string[];
+}) {
+  // Palabras en vez de números: nadie tiene que leer una leyenda para
+  // saber qué significa "2".
+  const etiquetas = labels ?? ['Nada', 'Leve', 'Media', 'Fuerte'];
   return (
     <div className="mb-3">
-      <div className="flex justify-between items-baseline mb-1.5">
-        <span className="text-sm font-semibold">{titulo}</span>
-        <span className="text-[10px] text-gray-400">0 = sin molestias · 3 = fuerte</span>
-      </div>
+      <span className="text-sm font-semibold block mb-1.5">{titulo}</span>
       <div className="grid grid-cols-4 gap-2">
-        {labels.map((l, i) => (
+        {etiquetas.map((l, i) => (
           <button
             key={l}
             onClick={() => onSet(i)}
-            className="py-2.5 rounded-xl font-bold text-sm border transition-all"
+            className="py-2.5 rounded-xl font-bold text-xs border transition-all"
             style={valor === i
               ? { background: colores[i], color: '#fff', borderColor: colores[i] }
               : { background: '#fff', color: '#6B7280', borderColor: '#E5E7EB' }}
@@ -804,6 +800,28 @@ function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
   );
 }
 
+/* ---------- Foto de receta (con respaldo al ícono si falta el archivo) ---------- */
+function FotoReceta({ id, className }: { id: number; className?: string }) {
+  const [err, setErr] = useState(false);
+  if (err) {
+    return (
+      <span className={`${className ?? ''} bg-[#EAF4EC] flex items-center justify-center shrink-0`}>
+        <Utensils className="h-4 w-4 text-[#16A34A]" />
+      </span>
+    );
+  }
+  return (
+    <img
+      src={`/app/recetas/${id}.webp`}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      onError={() => setErr(true)}
+      className={`${className ?? ''} object-cover shrink-0 bg-[#F7F5EF]`}
+    />
+  );
+}
+
 /* ---------- Recetas ---------- */
 function PantallaRecetas() {
   const [filtro, setFiltro] = useState<'todas' | 'suaves'>('todas');
@@ -848,17 +866,19 @@ function PantallaRecetas() {
 
       {lista.map((r) => (
         <div key={r.id} className="card !p-0 overflow-hidden">
-          <button onClick={() => setAbierta(abierta === r.id ? null : r.id)} className="w-full text-left p-4">
-            <div className="flex justify-between items-start gap-2">
-              <h3 className="font-bold text-sm leading-snug">{r.nombre}</h3>
-              {abierta === r.id ? <ChevronUp className="h-4 w-4 text-gray-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-400 shrink-0" />}
-            </div>
-            <div className="flex gap-1.5 mt-2 flex-wrap">
-              <span className="tag bg-[#EAF4EC] text-[#166534]">~{r.proteina} g proteína</span>
-              <span className="tag bg-[#F7F0DF] text-[#8A6D1C]">{r.min} min</span>
-              <span className="tag bg-gray-100 text-gray-500">{r.porciones} porción{r.porciones > 1 ? 'es' : ''}</span>
-              {r.suave && <span className="tag bg-[#EAF1FB] text-[#28415E]">Suave</span>}
-              {r.exclusiva && <span className="tag bg-[#C9A035] text-white">✦ Solo App</span>}
+          <button onClick={() => setAbierta(abierta === r.id ? null : r.id)} className="w-full text-left p-3.5 flex gap-3 items-start">
+            <FotoReceta id={r.id} className="h-[68px] w-[68px] rounded-xl" />
+            <div className="min-w-0 flex-1">
+              <div className="flex justify-between items-start gap-2">
+                <h3 className="font-bold text-sm leading-snug">{r.nombre}</h3>
+                {abierta === r.id ? <ChevronUp className="h-4 w-4 text-gray-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-400 shrink-0" />}
+              </div>
+              <div className="flex gap-1.5 mt-2 flex-wrap">
+                <span className="tag bg-[#EAF4EC] text-[#166534]">~{r.proteina} g proteína</span>
+                <span className="tag bg-[#F7F0DF] text-[#8A6D1C]">{r.min} min</span>
+                {r.suave && <span className="tag bg-[#EAF1FB] text-[#28415E]">Suave</span>}
+                {r.exclusiva && <span className="tag bg-[#C9A035] text-white">✦ App</span>}
+              </div>
             </div>
           </button>
           {abierta === r.id && (
@@ -976,8 +996,9 @@ function PantallaPlan({ meta, plan, setPlan, comprasHechas, toggleCompra }: {
       {COMIDAS.map((c) => {
         const r = RECETAS.find((x) => x.id === planDia[c.id]);
         return (
-          <button key={c.id} onClick={() => setEligiendo(c.id)} className="card w-full text-left !mb-2.5 flex items-center justify-between gap-3">
-            <div>
+          <button key={c.id} onClick={() => setEligiendo(c.id)} className="card w-full text-left !mb-2.5 flex items-center gap-3">
+            {r && <FotoReceta id={r.id} className="h-11 w-11 rounded-xl" />}
+            <div className="min-w-0 flex-1">
               <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{c.label}</p>
               {r ? (
                 <p className="text-sm font-semibold">{r.nombre} <span className="text-xs text-gray-400 font-normal">· {r.proteina} g · {r.min} min</span></p>
@@ -1026,9 +1047,12 @@ function SelectorReceta({ cats, onPick, onQuitar, onCerrar }: {
           <button onClick={() => setSoloSuaves(!soloSuaves)} className={`text-xs font-bold px-3 py-1.5 rounded-full border ${soloSuaves ? 'bg-[#28415E] text-white border-[#28415E]' : 'border-gray-200 text-gray-500'}`}>Solo suaves</button>
         </div>
         {lista.map((r) => (
-          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-3 border-t border-gray-100">
-            <p className="text-sm font-semibold">{r.nombre}</p>
-            <p className="text-xs text-gray-400">{r.proteina} g proteína · {r.min} min{r.suave ? ' · suave' : ''}</p>
+          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-2.5 border-t border-gray-100 flex items-center gap-3">
+            <FotoReceta id={r.id} className="h-11 w-11 rounded-xl" />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold">{r.nombre}</p>
+              <p className="text-xs text-gray-400">{r.proteina} g proteína · {r.min} min{r.suave ? ' · suave' : ''}</p>
+            </div>
           </button>
         ))}
         <button onClick={onQuitar} className="w-full mt-3 py-3 rounded-xl text-sm font-bold text-red-500 bg-red-50">Quitar de este día</button>
@@ -1138,6 +1162,29 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
     onCerrar();
   };
 
+  // Llena los 7 días de la pestaña Semana de una vez: hoy con el menú visible,
+  // el resto con combinaciones variadas de las mismas metas.
+  const aplicarASemana = () => {
+    if (!guardado) return;
+    const m = metasPlan(guardado);
+    const hoyIdx = new Date().getDay();
+    const hoy = hoyISO();
+    const planSemana: PlanSemanal = {};
+    for (let d = 0; d < 7; d++) {
+      planSemana[d] = d === hoyIdx ? { ...guardado.comidas } : generarComidas(m.calorias, guardado.suave, true);
+    }
+    setEstado((e) => {
+      const reg = e.registros[hoy] ?? { fecha: hoy, agua: 0, proteina: false };
+      return {
+        ...e,
+        plan: planSemana,
+        registros: { ...e.registros, [hoy]: { ...reg, proteinaG: totalProt, caloriasKcal: totalCal } },
+      };
+    });
+    celebrar('¡Semana completa planificada! 📅', 'Los 7 días quedaron con menú y lista de compras listos en la pestaña Semana.');
+    onCerrar();
+  };
+
   return (
     <div className="fixed inset-0 z-40 bg-[#FBF9F5] overflow-y-auto pb-24">
       <div className="max-w-md mx-auto px-5 pt-6">
@@ -1208,7 +1255,7 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
               const r = RECETAS.find((x) => x.id === comidas[c.id]);
               return (
                 <div key={c.id} className="card flex items-center gap-3">
-                  <span className="h-10 w-10 rounded-xl bg-[#EAF4EC] flex items-center justify-center shrink-0"><Utensils className="h-4 w-4 text-[#16A34A]" /></span>
+                  {r ? <FotoReceta id={r.id} className="h-11 w-11 rounded-xl" /> : <span className="h-11 w-11 rounded-xl bg-[#EAF4EC] flex items-center justify-center shrink-0"><Utensils className="h-4 w-4 text-[#16A34A]" /></span>}
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] uppercase tracking-widest font-bold text-[#C9A035]">{c.label}</p>
                     <p className="text-sm font-bold truncate">{r?.nombre ?? '—'}</p>
@@ -1221,6 +1268,7 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
 
             <button onClick={regenerar} className="btn3d btn3d-soft w-full mt-2 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm"><RefreshCw className="h-4 w-4" /> Generar otra combinación</button>
             <button onClick={aplicarAHoy} className="btn3d w-full mt-2.5 py-4 rounded-2xl flex items-center justify-center gap-2"><Check className="h-4 w-4" /> Aplicar a mi día de hoy</button>
+            <button onClick={aplicarASemana} className="btn3d btn3d-gold w-full mt-2.5 py-4 rounded-2xl flex items-center justify-center gap-2"><Calendar className="h-4 w-4" /> Aplicar a toda mi semana</button>
             <button onClick={() => setModo('form')} className="w-full mt-2 py-3 text-sm font-bold text-gray-500">Editar mis datos</button>
             <p className="text-[11px] text-gray-400 mt-2 mb-4 text-center leading-relaxed">Plan orientativo generado a partir de tus datos. Ajusta las porciones a tu apetito y consulta a tu médico o nutricionista.</p>
           </div>
@@ -1257,8 +1305,9 @@ function SelectorComida({ slot, objetivoCal, suave, onPick, onCerrar }: {
         </div>
         <p className="text-xs text-gray-400 mb-2">Ordenadas por cercanía a ~{Math.round(objetivoCal)} kcal para esta comida.</p>
         {lista.map((r) => (
-          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-3 border-t border-gray-100 flex items-center justify-between gap-3">
-            <div className="min-w-0">
+          <button key={r.id} onClick={() => onPick(r.id)} className="w-full text-left py-2.5 border-t border-gray-100 flex items-center gap-3">
+            <FotoReceta id={r.id} className="h-11 w-11 rounded-xl" />
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold truncate">{r.nombre}</p>
               <p className="text-xs text-gray-400">{r.cal} kcal · {r.proteina} g proteína{r.suave ? ' · suave' : ''}</p>
             </div>
@@ -1282,6 +1331,17 @@ function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
   const [med, setMed] = useState<Medidas>({ fecha: hoyISO() });
   const [verInforme, setVerInforme] = useState(false);
   const [verStats, setVerStats] = useState(false);
+
+  // Recordatorio suave de respaldo: tras 7+ días de uso, si no hay respaldo
+  // reciente (14 días) y no se pospuso hace poco. Los datos viven solo en el
+  // dispositivo — un respaldo periódico es el único seguro.
+  const [verRespaldo, setVerRespaldo] = useState(() => {
+    try {
+      const hace = (iso: string | null) => (iso ? (Date.now() - new Date(iso + 'T00:00:00').getTime()) / 86400000 : Infinity);
+      const diasUso = (Date.now() - new Date(perfil.fechaInicio + 'T00:00:00').getTime()) / 86400000;
+      return diasUso >= 7 && hace(localStorage.getItem('glp1-ultimo-respaldo')) > 14 && hace(localStorage.getItem('glp1-respaldo-despues')) > 14;
+    } catch { return false; }
+  });
 
   // La usuaria escribe y lee su peso en SU unidad (kg o lb); internamente todo se guarda en kg.
   const unidad = perfil.unidad;
@@ -1317,6 +1377,23 @@ function PantallaProgreso({ estado, setEstado, onPeso, onMedidas }: {
   return (
     <div className="max-w-md mx-auto px-5 pt-8">
       <h1 className="text-2xl font-bold mb-4">Mi progreso</h1>
+
+      {verRespaldo && (
+        <div className="rounded-2xl bg-[#FDF6E3] border-2 border-[#E5D7B2] p-4 mb-4">
+          <p className="text-sm font-bold text-[#8A6D1C] mb-1 flex items-center gap-2"><ShieldCheck className="h-4 w-4 shrink-0" /> ¿Hace cuánto no respaldas tus datos?</p>
+          <p className="text-xs text-gray-600 mb-3">Todo vive solo en este dispositivo. Un respaldo toma 10 segundos y te protege si cambias de teléfono.</p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { exportarDatos(estado); setVerRespaldo(false); }}
+              className="btn3d flex-1 py-2.5 rounded-xl text-sm flex items-center justify-center gap-1.5"
+            ><Download className="h-4 w-4" /> Respaldar ahora</button>
+            <button
+              onClick={() => { try { localStorage.setItem('glp1-respaldo-despues', hoyISO()); } catch { /* ok */ } setVerRespaldo(false); }}
+              className="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-400"
+            >Después</button>
+          </div>
+        </div>
+      )}
 
       <button onClick={() => setVerStats(true)} className="w-full text-left rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white p-4 mb-4 flex items-center gap-3 shadow-lg">
         <span className="h-11 w-11 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center shrink-0"><LineChart className="h-5 w-5 text-[#D4AF37]" /></span>
@@ -1420,6 +1497,11 @@ function FotosProgreso() {
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [cargado, setCargado] = useState(false);
   const [grande, setGrande] = useState<Foto | null>(null);
+  const [comparar, setComparar] = useState(false);
+
+  // listarFotos ordena descendente: [0] = más reciente, [al final] = la primera.
+  const primera = fotos.at(-1);
+  const ultima = fotos[0];
 
   React.useEffect(() => {
     listarFotos().then((f) => { setFotos(f); setCargado(true); }).catch(() => setCargado(true));
@@ -1440,14 +1522,36 @@ function FotosProgreso() {
         + Agregar foto de hoy
         <input type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) agregar(f); e.target.value = ''; }} />
       </label>
+      {cargado && fotos.length >= 2 && (
+        <button onClick={() => setComparar(true)} className="btn3d btn3d-soft w-full mt-3 py-3 rounded-2xl text-sm flex items-center justify-center gap-2">
+          <Camera className="h-4 w-4" /> Comparar antes y después
+        </button>
+      )}
       {cargado && fotos.length > 0 && (
         <div className="grid grid-cols-3 gap-2 mt-3">
           {fotos.map((f) => (
             <button key={f.fecha} onClick={() => setGrande(f)} className="relative rounded-xl overflow-hidden aspect-[3/4] bg-gray-100">
-              <img src={f.data} alt="" className="w-full h-full object-cover" />
+              <img src={f.data} alt="" loading="lazy" className="w-full h-full object-cover" />
               <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] font-semibold py-0.5 text-center">{f.fecha.slice(0, 10)}</span>
             </button>
           ))}
+        </div>
+      )}
+      {comparar && primera && ultima && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4" onClick={() => setComparar(false)}>
+          <p className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-3">Tu evolución</p>
+          <div className="grid grid-cols-2 gap-2 w-full max-w-md">
+            {[{ f: primera, l: 'Antes' }, { f: ultima, l: 'Hoy' }].map(({ f, l }) => (
+              <figure key={l} className="m-0">
+                <img src={f.data} alt="" className="w-full rounded-2xl aspect-[3/4] object-cover" />
+                <figcaption className="text-center mt-2">
+                  <span className="text-white font-bold text-sm block">{l}</span>
+                  <span className="text-white/50 text-xs">{f.fecha.slice(0, 10)}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <button onClick={() => setComparar(false)} className="mt-5 text-white/70 text-sm font-bold bg-white/10 rounded-xl px-6 py-2.5">Cerrar</button>
         </div>
       )}
       {grande && (

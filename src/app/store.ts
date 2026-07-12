@@ -99,6 +99,8 @@ export function exportarDatos(estado: Estado): void {
   a.download = `guia-glp1-respaldo-${hoyISO()}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
+  // Recuerda cuándo fue el último respaldo, para el recordatorio suave en Progreso.
+  try { localStorage.setItem('glp1-ultimo-respaldo', hoyISO()); } catch { /* sin espacio: no es crítico */ }
 }
 
 export function importarDatos(file: File): Promise<Estado> {
