@@ -8,3 +8,4 @@ coverage/
 !.env.example
 __pycache__/
 public/api/secrets.inc.php
+videos/**/node_modules/

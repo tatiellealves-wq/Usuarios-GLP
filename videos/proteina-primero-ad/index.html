@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>Proteína Primero — Ad</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  :root {
+    --ink: #14110B;
+    --canvas: #F4F1EA;
+    --green: #1B5E3F;
+    --yellow: #F5C518;
+    --red: #E4572E;
+    --gold: #E6B93B;
+    --grey: #8A8574;
+    --disp: 'Archivo', 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; font-family: var(--disp); }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .clip { position: absolute; inset: 0; overflow: hidden; }
+  .bg { position: absolute; inset: 0; }
+  .bg-dark { background:
+      radial-gradient(1100px 700px at 80% 8%, rgba(230,185,59,.10), transparent 60%),
+      linear-gradient(165deg, #1B1710, #14110B 60%); }
+  .bg-light { background:
+      radial-gradient(1000px 700px at 82% 6%, rgba(245,197,24,.16), transparent 60%),
+      #F4F1EA; }
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 120px 90px; }
+
+  .pill { display: inline-block; align-self: flex-start; font-weight: 900;
+    text-transform: uppercase; letter-spacing: .5px; border-radius: 999px;
+    padding: 20px 34px; font-size: 33px; line-height: 1; }
+  .pill-yellow { background: var(--yellow); color: #14110B; }
+  .pill-green { background: var(--green); color: #fff; }
+  .eyebrow { font-weight: 900; text-transform: uppercase; letter-spacing: 6px;
+    font-size: 30px; }
+
+  .huge { font-weight: 900; text-transform: uppercase; line-height: .96;
+    letter-spacing: -1px; }
+  .d-cream { color: #F6F1E7; }
+  .d-ink { color: var(--ink); }
+  .a-gold { color: var(--gold); }
+  .a-green { color: var(--green); }
+
+  .row { display: flex; align-items: center; gap: 26px; }
+  .chip { display: flex; align-items: center; gap: 18px; background: #fff;
+    border: 3px solid var(--ink); border-radius: 20px; padding: 22px 26px;
+    box-shadow: 8px 8px 0 var(--ink); }
+  .dot { width: 34px; height: 34px; border-radius: 50%; flex: none; }
+  .chip-t { font-weight: 900; text-transform: uppercase; font-size: 34px; letter-spacing: .3px; }
+
+  .phone { border-radius: 44px; border: 8px solid #14110B; overflow: hidden;
+    box-shadow: 16px 18px 0 rgba(20,17,11,.18); background:#000; }
+  .foodcard { border-radius: 22px; overflow: hidden; border: 4px solid #14110B;
+    box-shadow: 8px 8px 0 var(--ink); }
+  .foodcard img, .phone img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .btn { align-self: center; background: var(--yellow); color: #14110B;
+    font-weight: 900; text-transform: uppercase; font-size: 42px; letter-spacing: .5px;
+    padding: 40px 66px; border-radius: 22px; box-shadow: 10px 10px 0 var(--ink);
+    border: 4px solid var(--ink); }
+  .strike { position: relative; color: var(--grey); }
+  .strike::after { content:''; position:absolute; left:-4%; right:-4%; top:52%;
+    height:7px; background: var(--red); transform: rotate(-8deg); }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="23">
+
+    <!-- F1 GANCHO (dolor) -->
+    <section class="clip" data-start="0" data-duration="3.5" data-track-index="1">
+      <div class="bg bg-dark"></div>
+      <div class="wrap">
+        <div class="pill pill-yellow" id="f1pill">¿USAS OZEMPIC · MOUNJARO · WEGOVY?</div>
+        <div class="huge d-cream" style="font-size:128px;margin-top:54px">
+          <div id="f1a">BAJAS DE PESO</div>
+          <div id="f1b">PERO NO SABES</div>
+          <div class="a-gold" id="f1c">QUÉ COMER.</div>
+        </div>
+        <div class="eyebrow" style="color:var(--grey);margin-top:60px" id="f1d">DESLIZA ↓</div>
+      </div>
+    </section>
+
+    <!-- F2 AGITACIÓN -->
+    <section class="clip" data-start="3.5" data-duration="3.5" data-track-index="1">
+      <div class="bg bg-dark"></div>
+      <div class="wrap">
+        <div class="eyebrow" style="color:var(--red)" id="f2e">LO QUE NADIE TE CUENTA</div>
+        <div style="display:flex;flex-direction:column;gap:34px;margin-top:56px">
+          <div class="huge d-cream" style="font-size:96px" id="f2a">SIN ENERGÍA</div>
+          <div class="huge d-cream" style="font-size:96px" id="f2b">ANTOJOS QUE NO ENTIENDES</div>
+          <div class="huge d-cream" style="font-size:96px" id="f2c">MIEDO A RECUPERARLO</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- F3 PUENTE -->
+    <section class="clip" data-start="7" data-duration="3" data-track-index="1">
+      <div class="bg bg-dark"></div>
+      <div class="wrap" style="justify-content:center">
+        <div class="huge d-cream" style="font-size:104px" id="f3a">No es falta de disciplina.</div>
+        <div class="huge a-gold" style="font-size:104px;margin-top:30px" id="f3b">Es no tener un método.</div>
+        <div class="eyebrow" style="color:var(--grey);margin-top:48px" id="f3c">HASTA AHORA.</div>
+      </div>
+    </section>
+
+    <!-- F4 SOLUCIÓN -->
+    <section class="clip" data-start="10" data-duration="3.5" data-track-index="1">
+      <div class="bg bg-light"></div>
+      <div class="wrap" style="justify-content:flex-start;padding-top:110px">
+        <div class="pill pill-green" id="f4pill">LA SOLUCIÓN</div>
+        <div class="huge d-ink" style="font-size:88px;margin-top:40px" id="f4t">
+          UNA APP QUE TE DICE <span class="a-green">QUÉ COMER,</span> PASO A PASO.
+        </div>
+        <div class="phone" id="f4phone" style="width:430px;height:660px;align-self:center;margin-top:44px">
+          <img src="capture/assets/app-hoy.png" id="img-hoy" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- F5 PRUEBA -->
+    <section class="clip" data-start="13.5" data-duration="3" data-track-index="1">
+      <div class="bg bg-light"></div>
+      <div class="wrap">
+        <div class="pill" id="f5pill" style="background:var(--ink);color:#fff">45 RECETAS CON FOTO</div>
+        <div class="huge d-ink" style="font-size:104px;margin-top:36px" id="f5t">SABES QUÉ <span class="a-green">PREPARAR.</span></div>
+        <div class="row" style="margin-top:50px;justify-content:center">
+          <div class="foodcard" id="f5a" style="width:290px;height:360px"><img src="capture/assets/food-salmon.webp" alt=""/></div>
+          <div class="foodcard" id="f5b" style="width:290px;height:360px;margin-top:-30px"><img src="capture/assets/food-bowl.webp" alt=""/></div>
+          <div class="foodcard" id="f5c" style="width:290px;height:360px"><img src="capture/assets/food-yogur.webp" alt=""/></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- F6 VALOR -->
+    <section class="clip" data-start="16.5" data-duration="3" data-track-index="1">
+      <div class="bg bg-light"></div>
+      <div class="wrap" style="justify-content:center">
+        <div class="huge d-ink" style="font-size:78px" id="f6h">TODO ESTO EN TU APP</div>
+        <div style="display:flex;flex-direction:column;gap:22px;margin-top:40px">
+          <div class="chip" id="f6a"><span class="dot" style="background:var(--green)"></span><span class="chip-t">45 recetas con foto</span></div>
+          <div class="chip" id="f6b"><span class="dot" style="background:var(--green)"></span><span class="chip-t">Listas de compra</span></div>
+          <div class="chip" id="f6c"><span class="dot" style="background:var(--green)"></span><span class="chip-t">Guía semana a semana</span></div>
+          <div class="chip" id="f6d"><span class="dot" style="background:var(--green)"></span><span class="chip-t">Diario y progreso</span></div>
+        </div>
+        <div class="huge" style="font-size:64px;margin-top:44px;color:var(--ink)" id="f6v">VALOR <span class="strike">US$62</span></div>
+      </div>
+    </section>
+
+    <!-- F7 CTA -->
+    <section class="clip" data-start="19.5" data-duration="3.5" data-track-index="1">
+      <div class="bg bg-light"></div>
+      <div class="wrap" style="justify-content:center;align-items:center;text-align:center">
+        <div class="eyebrow" style="color:var(--red)" id="f7e">OFERTA ESPECIAL</div>
+        <div class="huge a-green" style="font-size:190px;margin-top:20px" id="f7price">US$9,90</div>
+        <div class="huge" style="font-size:48px;margin-top:-6px;color:var(--ink)" id="f7old"><span class="strike">US$62</span></div>
+        <div class="btn" id="f7btn" style="margin-top:44px">TOCA «MÁS INFORMACIÓN»</div>
+        <div style="font-weight:700;color:var(--grey);font-size:34px;margin-top:30px" id="f7sub">Acceso inmediato · menos que un café</div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    const ease = "power3.out";
+
+    // F1
+    tl.from("#f1pill", { y:-30, opacity:0, duration:.5, ease }, 0.1);
+    tl.from("#f1a", { y:60, opacity:0, duration:.5, ease }, 0.5);
+    tl.from("#f1b", { y:60, opacity:0, duration:.5, ease }, 0.7);
+    tl.from("#f1c", { y:60, opacity:0, duration:.5, ease }, 0.9);
+    tl.from("#f1d", { opacity:0, duration:.5, ease }, 1.6);
+
+    // F2
+    tl.from("#f2e", { opacity:0, y:-20, duration:.4, ease }, 3.6);
+    tl.from("#f2a", { x:-50, opacity:0, duration:.45, ease }, 3.9);
+    tl.from("#f2b", { x:-50, opacity:0, duration:.45, ease }, 4.3);
+    tl.from("#f2c", { x:-50, opacity:0, duration:.45, ease }, 4.7);
+
+    // F3
+    tl.from("#f3a", { opacity:0, y:40, duration:.55, ease }, 7.15);
+    tl.from("#f3b", { opacity:0, y:40, duration:.55, ease }, 7.6);
+    tl.from("#f3c", { opacity:0, duration:.5, ease }, 8.6);
+
+    // F4
+    tl.from("#f4pill", { scale:.6, opacity:0, duration:.45, ease:"back.out(2)" }, 10.1);
+    tl.from("#f4t", { y:40, opacity:0, duration:.5, ease }, 10.35);
+    tl.from("#f4phone", { y:120, opacity:0, duration:.6, ease }, 10.7);
+
+    // F5
+    tl.from("#f5pill", { scale:.6, opacity:0, duration:.4, ease:"back.out(2)" }, 13.6);
+    tl.from("#f5t", { y:40, opacity:0, duration:.5, ease }, 13.85);
+    tl.from("#f5a", { y:80, opacity:0, duration:.45, ease }, 14.25);
+    tl.from("#f5b", { y:80, opacity:0, duration:.45, ease }, 14.4);
+    tl.from("#f5c", { y:80, opacity:0, duration:.45, ease }, 14.55);
+
+    // F6
+    tl.from("#f6h", { y:30, opacity:0, duration:.45, ease }, 16.6);
+    tl.from("#f6a", { x:-40, opacity:0, duration:.35, ease }, 16.9);
+    tl.from("#f6b", { x:-40, opacity:0, duration:.35, ease }, 17.05);
+    tl.from("#f6c", { x:-40, opacity:0, duration:.35, ease }, 17.2);
+    tl.from("#f6d", { x:-40, opacity:0, duration:.35, ease }, 17.35);
+    tl.from("#f6v", { scale:.7, opacity:0, duration:.45, ease:"back.out(2)" }, 17.8);
+
+    // F7
+    tl.from("#f7e", { opacity:0, y:-20, duration:.4, ease }, 19.6);
+    tl.from("#f7price", { scale:.5, opacity:0, duration:.6, ease:"back.out(1.8)" }, 19.85);
+    tl.from("#f7old", { opacity:0, duration:.4, ease }, 20.3);
+    tl.from("#f7btn", { y:40, opacity:0, duration:.5, ease }, 20.6);
+    tl.from("#f7sub", { opacity:0, duration:.5, ease }, 21.1);
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>
