@@ -1,18 +1,27 @@
 // Persistencia local (privacidad por defecto: todo queda en el dispositivo)
 import { useEffect, useState } from 'react';
 
+// Enfoque principal del usuario: decide qué módulos ve la app.
+// 'glp1' muestra agenda de dosis, modo inyección, náuseas, guía de
+// medicamentos y plan de salida; los demás enfoques ocultan todo eso.
+export type Enfoque = 'perder' | 'ganar' | 'mantener' | 'saludable' | 'glp1';
+
 export type Perfil = {
   nombre: string;
+  enfoque: Enfoque;
   pesoInicial: number; // kg
   altura?: number; // cm — para IMC (opcional; se completa en el plan o en estadísticas)
   unidad: 'kg' | 'lb';
-  medicamento: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Zepbound' | 'Rybelsus' | 'Otro';
-  diaDosis: number; // 0=domingo … 6=sábado
+  medicamento?: 'Ozempic' | 'Wegovy' | 'Mounjaro' | 'Zepbound' | 'Rybelsus' | 'Otro'; // solo enfoque glp1
+  diaDosis?: number; // 0=domingo … 6=sábado — solo enfoque glp1
   horaDosis?: string; // HH:MM — para el recordatorio
   dosisMg?: string; // dosis actual, ej. "0.5 mg" (titulación)
   objetivo?: number; // kg
   fechaInicio: string;
 };
+
+// ¿El perfil usa los módulos de tratamiento GLP-1?
+export const esModoGLP1 = (p?: Perfil): boolean => p?.enfoque === 'glp1';
 
 // Registro histórico de una aplicación (para mostrar al médico)
 export type DosisRegistro = {
@@ -30,6 +39,8 @@ export type RegistroDia = {
   proteina: boolean;
   proteinaG?: number; // gramos de proteína del día (se autocompleta al aplicar el plan)
   caloriasKcal?: number; // calorías del día (se autocompleta al aplicar el plan)
+  carbosG?: number; // carbohidratos del día (registro manual)
+  grasasG?: number; // grasas del día (registro manual)
   pasosInyeccion?: string[];
   nota?: string; // diario: qué comí, cómo me sentí
 };
@@ -77,7 +88,15 @@ const inicial: Estado = { activado: false, registros: {}, pesos: [], medidas: []
 function cargar(): Estado {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...inicial, ...JSON.parse(raw) };
+    if (raw) {
+      const estado: Estado = { ...inicial, ...JSON.parse(raw) };
+      // Migración: los perfiles creados antes del enfoque llegaron todos por
+      // el onboarding GLP-1 — conservan sus módulos sin notar el cambio.
+      if (estado.perfil && !estado.perfil.enfoque) {
+        estado.perfil = { ...estado.perfil, enfoque: 'glp1' };
+      }
+      return estado;
+    }
   } catch { /* datos corruptos → empezar de cero */ }
   return inicial;
 }
@@ -132,14 +151,16 @@ export const kgALb = (kg: number) => Math.round((kg / 0.453592) * 10) / 10;
 // Muestra un peso guardado (siempre kg) en la unidad elegida por la usuaria.
 export const pesoEnUnidad = (kg: number, unidad: 'kg' | 'lb') => (unidad === 'lb' ? kgALb(kg) : kg);
 
-// Meta de proteína recalculada con el peso más reciente (si existe):
-// al bajar de peso, la meta acompaña — como indica la guía (1.6–1.8 g/kg).
+// Meta de proteína recalculada con el peso más reciente (si existe) y
+// ajustada al enfoque: ganar músculo pide más (2.0 g/kg), perder peso
+// protege el músculo (1.8), mantener/saludable/glp1 siguen la guía (1.7).
 export function metaProteina(perfil: Perfil, pesoActual?: number): number {
-  return Math.round((pesoActual ?? perfil.pesoInicial) * 1.7);
+  const factor = perfil.enfoque === 'ganar' ? 2.0 : perfil.enfoque === 'perder' ? 1.8 : 1.7;
+  return Math.round((pesoActual ?? perfil.pesoInicial) * factor);
 }
 
 export function esDiaDosis(perfil: Perfil, fecha = new Date()): boolean {
-  return fecha.getDay() === perfil.diaDosis;
+  return perfil.diaDosis !== undefined && fecha.getDay() === perfil.diaDosis;
 }
 
 // Próxima aplicación: día de la semana del perfil; si hoy es día de dosis y ya se
@@ -150,7 +171,8 @@ export function proximaDosis(perfil: Perfil, dosis: DosisRegistro[]): {
   const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
   const isoHoy = hoyISO();
   const aplicadaHoy = dosis.some((d) => d.fecha === isoHoy);
-  let diff = (perfil.diaDosis - hoy.getDay() + 7) % 7;
+  const diaDosis = perfil.diaDosis ?? hoy.getDay(); // solo se usa en modo GLP-1
+  let diff = (diaDosis - hoy.getDay() + 7) % 7;
   if (diff === 0 && aplicadaHoy) diff = 7;
   const fecha = new Date(hoy); fecha.setDate(hoy.getDate() + diff);
   const iso = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
@@ -174,7 +196,7 @@ export function clasificarIMC(v: number): { label: string; color: string } {
 // Serie de los últimos `dias` de un campo numérico del registro diario.
 export function serieDiaria(
   registros: Record<string, RegistroDia>,
-  campo: 'agua' | 'proteinaG' | 'caloriasKcal' | 'nauseas' | 'energia',
+  campo: 'agua' | 'proteinaG' | 'caloriasKcal' | 'carbosG' | 'grasasG' | 'nauseas' | 'energia',
   dias = 21,
 ): { fecha: string; valor?: number }[] {
   const out: { fecha: string; valor?: number }[] = [];

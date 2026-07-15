@@ -10,10 +10,10 @@ import {
 } from './data';
 import { normalizarCodigo, validarCodigo } from './codigos';
 import {
-  borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, exportarDatos, guardarFoto, hoyISO, imc,
+  borrarFoto, clasificarIMC, comprimirImagen, esDiaDosis, esModoGLP1, exportarDatos, guardarFoto, hoyISO, imc,
   importarDatos, lbAKg, listarFotos, metaProteina, metasPlan, pesoEnUnidad, proximaDosis, racha, semanaSalida, serieDiaria,
   tendenciaSemanal, useEstado,
-  type Comida, type DosisRegistro, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
+  type Comida, type DosisRegistro, type Enfoque, type Foto, type Medidas, type ObjetivoPlan, type Perfil, type PlanInteligente,
   type PlanSemanal, type RegistroDia, type SexoBio,
 } from './store';
 
@@ -32,7 +32,7 @@ export default function App() {
   // y con permiso concedido, avisamos una vez.
   useEffect(() => {
     const p = estado.perfil;
-    if (!p || typeof window === 'undefined' || !('Notification' in window) || Notification.permission !== 'granted') return;
+    if (!p || !esModoGLP1(p) || typeof window === 'undefined' || !('Notification' in window) || Notification.permission !== 'granted') return;
     if (!esDiaDosis(p) || estado.dosis.some((d) => d.fecha === hoyISO())) return;
     const clave = 'glp1-noti-' + hoyISO();
     if (localStorage.getItem(clave)) return;
@@ -277,16 +277,27 @@ function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
 }
 
 /* ---------- Onboarding ---------- */
+const ENFOQUES: { id: Enfoque; emoji: string; label: string }[] = [
+  { id: 'perder', emoji: '🔥', label: 'Perder peso' },
+  { id: 'ganar', emoji: '💪', label: 'Ganar músculo' },
+  { id: 'mantener', emoji: '⚖️', label: 'Mantener mi peso' },
+  { id: 'saludable', emoji: '❤️', label: 'Comer más saludable' },
+  { id: 'glp1', emoji: '💉', label: 'Uso GLP-1 (Ozempic, etc.)' },
+];
+
 function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
   const [nombre, setNombre] = useState('');
+  const [enfoque, setEnfoque] = useState<Enfoque | null>(null);
   const [peso, setPeso] = useState('');
   const [unidad, setUnidad] = useState<'kg' | 'lb'>('kg');
   const [medicamento, setMedicamento] = useState<Perfil['medicamento']>('Ozempic');
   const [diaDosis, setDiaDosis] = useState(1);
   const [objetivo, setObjetivo] = useState('');
 
+  const esGLP1 = enfoque === 'glp1';
   const pesoKg = unidad === 'lb' ? lbAKg(Number(peso)) : Number(peso);
-  const valido = nombre.trim().length > 0 && pesoKg >= 30 && pesoKg <= 300;
+  const valido = nombre.trim().length > 0 && enfoque !== null && pesoKg >= 30 && pesoKg <= 300;
+  const factorProteina = enfoque === 'ganar' ? 2.0 : enfoque === 'perder' ? 1.8 : 1.7;
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] p-6 flex flex-col justify-center">
@@ -294,13 +305,26 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         <div className="anim-fade-up">
           <EmblemaBotanico className="h-14 w-14 -ml-1 mb-1" color="#166534" />
           <p className="text-[#C9A035] font-bold text-xs uppercase tracking-widest mb-2">Te damos la bienvenida</p>
-          <h1 className="text-2xl font-bold mb-1">Personalicemos tu guía</h1>
+          <h1 className="text-2xl font-bold mb-1">Personalicemos tu app</h1>
           <p className="text-sm text-gray-500 mb-7">2 minutos — el app calcula tus metas con esto.</p>
         </div>
         <div className="anim-fade-up d2">
 
         <label className="lbl">¿Cómo te llamas?</label>
         <input className="inp" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
+
+        <label className="lbl">¿Cuál es tu objetivo?</label>
+        <div className="flex flex-col gap-2 mb-1">
+          {ENFOQUES.map((e) => (
+            <button
+              key={e.id}
+              onClick={() => setEnfoque(e.id)}
+              className={`seg py-3 px-4 text-sm text-left flex items-center gap-3 ${enfoque === e.id ? 'seg-on' : ''}`}
+            >
+              <span className="text-lg" aria-hidden="true">{e.emoji}</span> {e.label}
+            </button>
+          ))}
+        </div>
 
         <label className="lbl">Tu peso actual</label>
         <div className="flex gap-2">
@@ -310,17 +334,21 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
           ))}
         </div>
 
-        <label className="lbl">Tu medicamento</label>
-        <div className="grid grid-cols-3 gap-2">
-          {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
-            <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
-          ))}
-        </div>
+        {esGLP1 && (
+          <>
+            <label className="lbl">Tu medicamento</label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
+                <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+              ))}
+            </div>
 
-        <label className="lbl">¿Qué día te aplicas la dosis?</label>
-        <select className="inp" value={diaDosis} onChange={(e) => setDiaDosis(Number(e.target.value))}>
-          {DIAS.map((d, i) => <option key={d} value={i}>{d}</option>)}
-        </select>
+            <label className="lbl">¿Qué día te aplicas la dosis?</label>
+            <select className="inp" value={diaDosis} onChange={(e) => setDiaDosis(Number(e.target.value))}>
+              {DIAS.map((d, i) => <option key={d} value={i}>{d}</option>)}
+            </select>
+          </>
+        )}
 
         <label className="lbl">Peso objetivo (opcional, en {unidad})</label>
         <input className="inp" type="number" inputMode="decimal" value={objetivo} onChange={(e) => setObjetivo(e.target.value)} placeholder="Puedes definirlo después" />
@@ -328,14 +356,16 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
         {valido && (
           <div className="mt-5 rounded-xl bg-[#EAF4EC] border border-[#CBE3D1] p-4 text-sm">
             <p className="font-bold text-[#166534] mb-1">Tus metas diarias</p>
-            <p className="text-gray-600">Proteína: <b>{Math.round(pesoKg * 1.7)} g</b> · Agua: <b>8 vasos</b> · Registro: <b>2 min/día</b></p>
+            <p className="text-gray-600">Proteína: <b>{Math.round(pesoKg * factorProteina)} g</b> · Agua: <b>8 vasos</b> · Registro: <b>2 min/día</b></p>
           </div>
         )}
 
         <button
           disabled={!valido}
           onClick={() => onDone({
-            nombre: nombre.trim(), pesoInicial: pesoKg, unidad, medicamento, diaDosis,
+            nombre: nombre.trim(), enfoque: enfoque!, pesoInicial: pesoKg, unidad,
+            medicamento: esGLP1 ? medicamento : undefined,
+            diaDosis: esGLP1 ? diaDosis : undefined,
             objetivo: objetivo ? (unidad === 'lb' ? lbAKg(Number(objetivo)) : Number(objetivo)) : undefined,
             fechaInicio: hoyISO(),
           })}
@@ -353,7 +383,8 @@ function Onboarding({ onDone }: { onDone: (p: Perfil) => void }) {
 function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlanIA, onMeds, onDosis }: {
   perfil: Perfil; meta: number; reg: RegistroDia; setReg: (r: Partial<RegistroDia>) => void; registros: Record<string, RegistroDia>; dosis: DosisRegistro[]; plan: PlanSemanal; onPlanIA: () => void; onMeds: () => void; onDosis: () => void;
 }) {
-  const dosisHoy = esDiaDosis(perfil);
+  const esGLP1 = esModoGLP1(perfil);
+  const dosisHoy = esGLP1 && esDiaDosis(perfil);
   const prox = proximaDosis(perfil, dosis);
   const planHoy = plan[new Date().getDay()] ?? {};
   const comidasHoy = (Object.entries(planHoy) as [Comida, number][])
@@ -463,24 +494,31 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
 
       {/* Accesos rápidos en una sola fila compacta: así el registro del día
           (la acción diaria de verdad) sube y queda a la vista sin tanto scroll. */}
-      <div className="grid grid-cols-3 gap-2 mb-4 anim-bounce-in">
-        <button onClick={onPlanIA} className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white px-2 py-3 flex flex-col items-center gap-1.5 shadow-md">
+      {esGLP1 ? (
+        <div className="grid grid-cols-3 gap-2 mb-4 anim-bounce-in">
+          <button onClick={onPlanIA} className="rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white px-2 py-3 flex flex-col items-center gap-1.5 shadow-md">
+            <Sparkles className="h-5 w-5 text-[#D4AF37]" />
+            <span className="text-[11px] font-bold leading-tight text-center">Plan del día</span>
+          </button>
+          <button onClick={onMeds} className="rounded-2xl bg-white border-2 border-[#ECE7DD] px-2 py-3 flex flex-col items-center gap-1.5">
+            <Syringe className="h-5 w-5 text-[#0C87C4]" />
+            <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">Medicamentos</span>
+          </button>
+          <button onClick={onDosis} className={`rounded-2xl px-2 py-3 flex flex-col items-center gap-1.5 border-2 ${prox.esHoy && !prox.aplicadaHoy ? 'bg-[#FFF0DA] border-[#F1DE9E]' : 'bg-white border-[#ECE7DD]'}`}>
+            <CalendarClock className="h-5 w-5 text-[#C9891A]" />
+            <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">
+              {prox.esHoy && !prox.aplicadaHoy ? <b className="text-[#C9891A]">Dosis ¡hoy!</b>
+                : prox.esHoy && prox.aplicadaHoy ? 'Dosis hoy ✓'
+                : prox.dias === 1 ? 'Dosis mañana' : `Dosis: ${prox.dias} días`}
+            </span>
+          </button>
+        </div>
+      ) : (
+        <button onClick={onPlanIA} className="w-full rounded-2xl bg-gradient-to-br from-[#0D3320] to-[#17452A] text-white px-4 py-4 mb-4 flex items-center justify-center gap-3 shadow-md anim-bounce-in">
           <Sparkles className="h-5 w-5 text-[#D4AF37]" />
-          <span className="text-[11px] font-bold leading-tight text-center">Plan del día</span>
+          <span className="text-sm font-bold">Plan alimentario del día — con tus macros</span>
         </button>
-        <button onClick={onMeds} className="rounded-2xl bg-white border-2 border-[#ECE7DD] px-2 py-3 flex flex-col items-center gap-1.5">
-          <Syringe className="h-5 w-5 text-[#0C87C4]" />
-          <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">Medicamentos</span>
-        </button>
-        <button onClick={onDosis} className={`rounded-2xl px-2 py-3 flex flex-col items-center gap-1.5 border-2 ${prox.esHoy && !prox.aplicadaHoy ? 'bg-[#FFF0DA] border-[#F1DE9E]' : 'bg-white border-[#ECE7DD]'}`}>
-          <CalendarClock className="h-5 w-5 text-[#C9891A]" />
-          <span className="text-[11px] font-bold leading-tight text-center text-[#1F2430]">
-            {prox.esHoy && !prox.aplicadaHoy ? <b className="text-[#C9891A]">Dosis ¡hoy!</b>
-              : prox.esHoy && prox.aplicadaHoy ? 'Dosis hoy ✓'
-              : prox.dias === 1 ? 'Dosis mañana' : `Dosis: ${prox.dias} días`}
-          </span>
-        </button>
-      </div>
+      )}
 
       {dosisHoy && <ModoInyeccion reg={reg} setReg={setReg} />}
 
@@ -510,7 +548,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
 
       <div className="card">
         <h2 className="font-extrabold mb-3">Registro de hoy</h2>
-        <Escala titulo="Náuseas" valor={reg.nauseas} onSet={(v) => setReg({ nauseas: v })} colores={['#16A34A', '#84CC16', '#F59E0B', '#DC2626']} />
+        {esGLP1 && <Escala titulo="Náuseas" valor={reg.nauseas} onSet={(v) => setReg({ nauseas: v })} colores={['#16A34A', '#84CC16', '#F59E0B', '#DC2626']} />}
         <Escala titulo="Energía" valor={reg.energia} onSet={(v) => setReg({ energia: v })} colores={['#DC2626', '#F59E0B', '#84CC16', '#16A34A']} labels={['Nula', 'Baja', 'Media', 'Alta']} />
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
@@ -558,8 +596,16 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
             <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Calorías hoy</span>
             <input type="number" inputMode="numeric" value={reg.caloriasKcal ?? ''} onChange={(e) => setReg({ caloriasKcal: e.target.value ? Number(e.target.value) : undefined })} placeholder="kcal" className="inp !mb-0 !py-2.5 mt-1" />
           </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Carbohidratos (g)</span>
+            <input type="number" inputMode="numeric" value={reg.carbosG ?? ''} onChange={(e) => setReg({ carbosG: e.target.value ? Number(e.target.value) : undefined })} placeholder="opcional" className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Grasas (g)</span>
+            <input type="number" inputMode="numeric" value={reg.grasasG ?? ''} onChange={(e) => setReg({ grasasG: e.target.value ? Number(e.target.value) : undefined })} placeholder="opcional" className="inp !mb-0 !py-2.5 mt-1" />
+          </div>
         </div>
-        <p className="text-[11px] text-gray-400 mt-1.5">Se completan solos al aplicar tu Plan alimentario inteligente — o anótalos aquí. Alimentan tus Estadísticas.</p>
+        <p className="text-[11px] text-gray-400 mt-1.5">Proteína y calorías se completan solas al aplicar tu Plan alimentario inteligente — o anótalas aquí. Todo alimenta tus Estadísticas.</p>
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <p className="text-sm font-bold mb-1.5 flex items-center gap-2"><NotebookPen className="h-4 w-4 text-[#C9A035]" /> Diario del día</p>
@@ -574,7 +620,7 @@ function PantallaHoy({ perfil, meta, reg, setReg, registros, dosis, plan, onPlan
         </div>
       </div>
 
-      {!dosisHoy && (
+      {esGLP1 && !dosisHoy && perfil.diaDosis !== undefined && (
         <div className="card flex items-center gap-3">
           <Syringe className="h-5 w-5 text-[#C9A035] shrink-0" />
           <p className="text-sm text-gray-600">
@@ -666,7 +712,7 @@ function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
     const iso = hoyISO();
     const nueva: DosisRegistro = {
       fecha: iso,
-      med: perfil.medicamento,
+      med: perfil.medicamento ?? 'GLP-1',
       mg: perfil.dosisMg,
       hora: new Date().toLocaleTimeString('es-419', { hour: '2-digit', minute: '2-digit' }),
     };
@@ -680,7 +726,7 @@ function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
     if (!notiSoportada) return;
     const perm = await Notification.requestPermission();
     if (perm === 'granted') {
-      new Notification('Recordatorio activado ✓', { body: `Te avisaremos el día de tu dosis (${DIAS[perfil.diaDosis]}) al abrir el app.` });
+      new Notification('Recordatorio activado ✓', { body: `Te avisaremos el día de tu dosis (${DIAS[perfil.diaDosis ?? 1]}) al abrir el app.` });
     }
   };
 
@@ -704,7 +750,7 @@ function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-2xl font-extrabold leading-tight">
-              {prox.esHoy && !prox.aplicadaHoy ? '¡Es hoy!' : prox.esHoy && prox.aplicadaHoy ? 'Registrada ✓' : DIAS[perfil.diaDosis]}
+              {prox.esHoy && !prox.aplicadaHoy ? '¡Es hoy!' : prox.esHoy && prox.aplicadaHoy ? 'Registrada ✓' : DIAS[perfil.diaDosis ?? 1]}
             </p>
             <p className="text-sm text-green-100/80">
               {perfil.medicamento}{perfil.dosisMg ? ` · ${perfil.dosisMg}` : ''}{perfil.horaDosis ? ` · ${perfil.horaDosis}` : ''}
@@ -751,7 +797,7 @@ function PantallaAgendaDosis({ perfil, dosis, setEstado, onVolver }: {
       <div className="card !mb-4">
         <p className="font-bold text-sm mb-3 flex items-center gap-2"><Clock className="h-4 w-4 text-[#C9891A]" /> Tu esquema</p>
         <label className="text-xs font-semibold text-gray-500 block mb-1">Día de aplicación</label>
-        <select value={perfil.diaDosis} onChange={(e) => guardarConfig({ diaDosis: Number(e.target.value) })}
+        <select value={perfil.diaDosis ?? 1} onChange={(e) => guardarConfig({ diaDosis: Number(e.target.value) })}
           className="w-full rounded-xl border-2 border-[#ECE7DD] bg-white px-3 py-2.5 text-sm font-semibold mb-3 outline-none focus:border-[#C9891A]">
           {DIAS.map((d, i) => <option key={i} value={i}>{d}</option>)}
         </select>
@@ -1111,7 +1157,9 @@ function PantallaPlanInteligente({ estado, setEstado, pesoActual, onCerrar }: {
   const [altura, setAltura] = useState(String(guardado?.altura ?? perfil.altura ?? ''));
   const [edad, setEdad] = useState(guardado?.edad ? String(guardado.edad) : '');
   const [sexo, setSexo] = useState<SexoBio>(guardado?.sexo ?? 'F');
-  const [objetivo, setObjetivo] = useState<ObjetivoPlan>(guardado?.objetivo ?? 'perder');
+  // El objetivo del plan arranca alineado al enfoque elegido en el onboarding.
+  const objetivoInicial: ObjetivoPlan = perfil.enfoque === 'ganar' ? 'ganar' : perfil.enfoque === 'mantener' || perfil.enfoque === 'saludable' ? 'mantener' : 'perder';
+  const [objetivo, setObjetivo] = useState<ObjetivoPlan>(guardado?.objetivo ?? objetivoInicial);
   const [suave, setSuave] = useState<boolean>(guardado?.suave ?? false);
 
   const pesoN = unidad === 'lb' ? lbAKg(Number(peso)) : Number(peso);
@@ -1627,7 +1675,12 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
       <div className="card">
         <p className="text-[#C9A035] font-bold text-[10px] uppercase tracking-widest">Guía GLP-1 Inteligente</p>
         <h1 className="text-xl font-bold mb-1">Informe para consulta médica</h1>
-        <p className="text-xs text-gray-500 mb-4">{perfil.nombre} · {perfil.medicamento} · dosis los {DIAS[perfil.diaDosis].toLowerCase()}s · generado el {new Date().toLocaleDateString('es-419')}</p>
+        <p className="text-xs text-gray-500 mb-4">
+          {perfil.nombre}
+          {esModoGLP1(perfil) && perfil.medicamento ? ` · ${perfil.medicamento}` : ''}
+          {esModoGLP1(perfil) && perfil.diaDosis !== undefined ? ` · dosis los ${DIAS[perfil.diaDosis].toLowerCase()}s` : ''}
+          {' · generado el '}{new Date().toLocaleDateString('es-419')}
+        </p>
 
         <h2 className="font-bold text-sm mb-2">Últimos 30 días de registro</h2>
         <table className="w-full text-xs mb-4">
@@ -1772,6 +1825,11 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
   const metaCal = estado.planInteligente ? metasPlan(estado.planInteligente).calorias : undefined;
   const calProm = calSerie.length ? Math.round(calSerie.reduce((s, d) => s + d.v, 0) / calSerie.length) : 0;
 
+  const carbSerie = serieDiaria(estado.registros, 'carbosG', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const carbProm = carbSerie.length ? Math.round(carbSerie.reduce((s, d) => s + d.v, 0) / carbSerie.length) : 0;
+  const grasaSerie = serieDiaria(estado.registros, 'grasasG', 30).filter((d) => d.valor !== undefined).map((d) => ({ etiqueta: etqFecha(d.fecha), v: d.valor! }));
+  const grasaProm = grasaSerie.length ? Math.round(grasaSerie.reduce((s, d) => s + d.v, 0) / grasaSerie.length) : 0;
+
   const naus = serieDiaria(estado.registros, 'nauseas', 14);
   const ener = serieDiaria(estado.registros, 'energia', 14);
   const sintomas = naus.map((d, i) => ({ fecha: d.fecha.slice(8), nauseas: d.valor, energia: ener[i].valor }));
@@ -1840,6 +1898,20 @@ function PantallaEstadisticas({ estado, setEstado, onCerrar }: {
         <MiniLinea datos={calSerie} color="#166534" meta={metaCal} unidad="" />
       </TarjetaStat>
 
+      {/* Carbohidratos */}
+      <TarjetaStat titulo="Carbohidratos (g)" hay={carbSerie.length >= 1}
+        valor={carbSerie.length ? `prom. ${carbProm} g` : undefined} color="#B08621"
+        vacio="Anota tus carbohidratos del día en la pestaña Hoy.">
+        <MiniLinea datos={carbSerie} color="#B08621" unidad=" g" />
+      </TarjetaStat>
+
+      {/* Grasas */}
+      <TarjetaStat titulo="Grasas (g)" hay={grasaSerie.length >= 1}
+        valor={grasaSerie.length ? `prom. ${grasaProm} g` : undefined} color="#C9891A"
+        vacio="Anota tus grasas del día en la pestaña Hoy.">
+        <MiniLinea datos={grasaSerie} color="#C9891A" unidad=" g" />
+      </TarjetaStat>
+
       {/* Síntomas */}
       <TarjetaStat titulo="Náuseas y energía · 14 días" hay={sintomasHay}
         vacio="Registra náuseas y energía en la pestaña Hoy.">
@@ -1868,12 +1940,15 @@ function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
   if (vista === 'super') return <ConVolver onVolver={() => setVista('menu')}><PantallaSuper estado={estado} setEstado={setEstado} /></ConVolver>;
   if (vista === 'respaldo') return <ConVolver onVolver={() => setVista('menu')}><CopiaSeguridad estado={estado} setEstado={setEstado} /></ConVolver>;
 
+  const esGLP1 = esModoGLP1(estado.perfil);
   const items = [
-    { id: 'perfil' as const, icon: <UserRound className="h-5 w-5" />, bg: '#F7F0DF', fg: '#8A6D1C', titulo: 'Mi perfil', sub: `${estado.perfil?.nombre ?? ''} · ${estado.perfil?.medicamento ?? ''} — nombre, medicamento, unidad y objetivo` },
-    { id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' },
+    { id: 'perfil' as const, icon: <UserRound className="h-5 w-5" />, bg: '#F7F0DF', fg: '#8A6D1C', titulo: 'Mi perfil', sub: `${estado.perfil?.nombre ?? ''} — objetivo, unidad y metas` },
+    // La "Guía completa" y el "Plan de Salida" son contenido del método GLP-1;
+    // los demás enfoques no los ven.
+    ...(esGLP1 ? [{ id: 'guia' as const, icon: <BookOpen className="h-5 w-5" />, bg: '#EAF4EC', fg: '#16A34A', titulo: 'Guía completa', sub: 'El método entero, capítulo por capítulo, offline' }] : []),
     { id: 'super' as const, icon: <ShoppingBag className="h-5 w-5" />, bg: '#FDF3D8', fg: '#B08621', titulo: 'Lista de Supermercado Inteligente', sub: 'Qué sí llevar y qué no — con el porqué de cada uno' },
     { id: 'cuerpo' as const, icon: <Flame className="h-5 w-5" />, bg: '#FCE7E4', fg: '#EF4444', titulo: 'Cuerpo Firme', sub: 'Rutinas de 12–15 min en casa, con cronómetro' },
-    { id: 'salida' as const, icon: <Sparkles className="h-5 w-5" />, bg: '#E7F1FC', fg: '#0C87C4', titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' },
+    ...(esGLP1 ? [{ id: 'salida' as const, icon: <Sparkles className="h-5 w-5" />, bg: '#E7F1FC', fg: '#0C87C4', titulo: 'Plan de Salida', sub: estado.salida ? `Activo · semana ${semanaSalida(estado.salida)} de 12` : '12 semanas contra el rebote — cuando llegue el momento' }] : []),
     { id: 'respaldo' as const, icon: <ShieldCheck className="h-5 w-5" />, bg: '#F0EAFB', fg: '#A855F7', titulo: 'Copia de seguridad', sub: 'Respalda o restaura tus datos — todo queda contigo' },
   ];
 
@@ -1888,14 +1963,16 @@ function PantallaMas({ estado, setEstado, onPlanIA, onMeds }: {
         </span>
         <ChevronDown className="h-4 w-4 text-white/50 -rotate-90 shrink-0" />
       </button>
-      <button onClick={onMeds} className="card w-full text-left flex items-center gap-4">
-        <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
-        <span className="min-w-0 flex-1">
-          <span className="font-bold text-sm block">Guía de medicamentos</span>
-          <span className="text-xs text-gray-500">Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus{estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}</span>
-        </span>
-        <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
-      </button>
+      {esGLP1 && (
+        <button onClick={onMeds} className="card w-full text-left flex items-center gap-4">
+          <span className="h-12 w-12 rounded-2xl bg-[#E7F1FC] text-[#0C87C4] flex items-center justify-center shrink-0"><Syringe className="h-5 w-5" /></span>
+          <span className="min-w-0 flex-1">
+            <span className="font-bold text-sm block">Guía de medicamentos</span>
+            <span className="text-xs text-gray-500">Mounjaro, Zepbound, Ozempic, Wegovy y Rybelsus{estado.perfil?.medicamento && estado.perfil.medicamento !== 'Otro' ? ` · tu ${estado.perfil.medicamento}` : ''}</span>
+          </span>
+          <ChevronDown className="h-4 w-4 text-gray-300 -rotate-90 shrink-0" />
+        </button>
+      )}
       {items.map((it) => (
         <button key={it.id} onClick={() => setVista(it.id)} className="card w-full text-left flex items-center gap-4">
           <span className="h-12 w-12 rounded-2xl flex items-center justify-center shrink-0" style={{ background: it.bg, color: it.fg }}>{it.icon}</span>
@@ -1919,7 +1996,8 @@ function EditarPerfil({ estado, setEstado }: {
 }) {
   const perfil = estado.perfil!;
   const [nombre, setNombre] = useState(perfil.nombre);
-  const [medicamento, setMedicamento] = useState<Perfil['medicamento']>(perfil.medicamento);
+  const [enfoque, setEnfoque] = useState<Enfoque>(perfil.enfoque);
+  const [medicamento, setMedicamento] = useState<Perfil['medicamento']>(perfil.medicamento ?? 'Ozempic');
   const [unidad, setUnidad] = useState<'kg' | 'lb'>(perfil.unidad);
   const [objetivo, setObjetivo] = useState(perfil.objetivo ? String(pesoEnUnidad(perfil.objetivo, perfil.unidad)) : '');
   const [guardado, setGuardado] = useState(false);
@@ -1935,9 +2013,19 @@ function EditarPerfil({ estado, setEstado }: {
 
   const guardar = () => {
     const objetivoKg = objetivo ? (unidad === 'lb' ? lbAKg(Number(objetivo)) : Number(objetivo)) : undefined;
+    const esGLP1 = enfoque === 'glp1';
     setEstado((e) => (e.perfil ? {
       ...e,
-      perfil: { ...e.perfil, nombre: nombre.trim() || e.perfil.nombre, medicamento, unidad, objetivo: objetivoKg },
+      perfil: {
+        ...e.perfil,
+        nombre: nombre.trim() || e.perfil.nombre,
+        enfoque,
+        unidad,
+        objetivo: objetivoKg,
+        medicamento: esGLP1 ? medicamento : undefined,
+        // al activar GLP-1 sin día de dosis configurado, arranca en lunes (editable en la Agenda)
+        diaDosis: esGLP1 ? (e.perfil.diaDosis ?? 1) : undefined,
+      },
     } : e));
     setGuardado(true);
     setTimeout(() => setGuardado(false), 2500);
@@ -1951,12 +2039,29 @@ function EditarPerfil({ estado, setEstado }: {
       <label className="lbl">Tu nombre</label>
       <input className="inp" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
 
-      <label className="lbl">Tu medicamento</label>
-      <div className="grid grid-cols-3 gap-2">
-        {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
-          <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+      <label className="lbl">Tu objetivo</label>
+      <div className="flex flex-col gap-2 mb-1">
+        {ENFOQUES.map((e) => (
+          <button
+            key={e.id}
+            onClick={() => setEnfoque(e.id)}
+            className={`seg py-3 px-4 text-sm text-left flex items-center gap-3 ${enfoque === e.id ? 'seg-on' : ''}`}
+          >
+            <span className="text-lg" aria-hidden="true">{e.emoji}</span> {e.label}
+          </button>
         ))}
       </div>
+
+      {enfoque === 'glp1' && (
+        <>
+          <label className="lbl">Tu medicamento</label>
+          <div className="grid grid-cols-3 gap-2">
+            {(['Ozempic', 'Wegovy', 'Mounjaro', 'Zepbound', 'Rybelsus', 'Otro'] as const).map((m) => (
+              <button key={m} onClick={() => setMedicamento(m)} className={`seg py-3 text-xs leading-tight ${medicamento === m ? 'seg-on' : ''}`}>{m}</button>
+            ))}
+          </div>
+        </>
+      )}
 
       <label className="lbl">Unidad de peso</label>
       <div className="grid grid-cols-2 gap-2">
