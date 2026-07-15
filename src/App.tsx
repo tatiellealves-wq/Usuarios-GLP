@@ -89,7 +89,7 @@ function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; ro
 
 /* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
 // Teléfono fotorrealista con la pantalla real del app compuesta sobre la pantalla. Reutilizable.
-function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 'La app Guía GLP-1 en el teléfono', shadow = 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }: {
+function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 'La app del Método Proteína Primero en el teléfono', shadow = 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }: {
   className?: string; screen?: string; alt?: string; shadow?: string;
 }) {
   return (
@@ -111,7 +111,7 @@ function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 
 }
 
 function MockupDispositivos() {
-  return <TelefonoReal className="mx-auto w-full max-w-[290px]" alt="La app Guía GLP-1 abierta en el teléfono" />;
+  return <TelefonoReal className="mx-auto w-full max-w-[290px]" alt="La app del Método Proteína Primero abierta en el teléfono" />;
 }
 
 /* Navegación de pasos numéricos del quiz */
@@ -140,12 +140,13 @@ function PlanQuiz({ open, onClose, onCheckout }: {
 }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
+  const [unidadPeso, setUnidadPeso] = useState<'kg' | 'lb'>('kg');
   const [d, setD] = useState<Partial<{
     sexo: 'mujer' | 'hombre'; edad: number; peso: number; altura: number;
     med: string; objetivo: 'perder' | 'muscular' | 'mantener'; problema: string;
   }>>({});
 
-  useEffect(() => { if (open) { setStep(0); setD({}); } }, [open]);
+  useEffect(() => { if (open) { setStep(0); setD({}); setUnidadPeso('kg'); } }, [open]);
 
   useEffect(() => {
     if (open && step === 6 && typeof window !== 'undefined' && (window as any).fbq) {
@@ -161,14 +162,15 @@ function PlanQuiz({ open, onClose, onCheckout }: {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  const peso = d.peso || 0, altura = d.altura || 0, edad = d.edad || 0;
+  const pesoKg = (d.peso || 0) * (unidadPeso === 'lb' ? 0.453592 : 1);
+  const altura = d.altura || 0, edad = d.edad || 0;
   const bmr = d.sexo === 'hombre'
-    ? 10 * peso + 6.25 * altura - 5 * edad + 5
-    : 10 * peso + 6.25 * altura - 5 * edad - 161;
+    ? 10 * pesoKg + 6.25 * altura - 5 * edad + 5
+    : 10 * pesoKg + 6.25 * altura - 5 * edad - 161;
   const tdee = bmr * 1.375;
   const kcalRaw = d.objetivo === 'perder' ? tdee - 500 : d.objetivo === 'muscular' ? tdee - 250 : tdee;
   const kcal = Math.max(1200, Math.round(kcalRaw / 10) * 10);
-  const prot = Math.round((peso * 1.85) / 5) * 5;
+  const prot = Math.round((pesoKg * 1.85) / 5) * 5;
 
   const numOk = (v: number | undefined, min: number, max: number) => typeof v === 'number' && v >= min && v <= max;
 
@@ -236,10 +238,23 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           {step === 2 && (
             <div className="space-y-4">
               <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">Tu peso y estatura actuales</h3>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-[#B7B1A3]">Unidad de peso:</span>
+                {(['kg', 'lb'] as const).map((u) => (
+                  <button
+                    key={u}
+                    type="button"
+                    onClick={() => setUnidadPeso(u)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-colors ${unidadPeso === u ? 'border-brand-gold bg-brand-gold/15 text-brand-gold' : 'border-[#2E2E33] text-[#9E998C] hover:border-brand-gold/50'}`}
+                  >
+                    {u}
+                  </button>
+                ))}
+              </div>
               <div className="grid grid-cols-2 gap-3">
-                <label className="text-sm font-medium text-[#B7B1A3] block">Peso (kg)
+                <label className="text-sm font-medium text-[#B7B1A3] block">Peso ({unidadPeso})
                   <input
-                    type="number" inputMode="numeric" placeholder="80" value={d.peso ?? ''}
+                    type="number" inputMode="numeric" placeholder={unidadPeso === 'kg' ? '80' : '176'} value={d.peso ?? ''}
                     onChange={(e) => set({ peso: e.target.value === '' ? undefined : Number(e.target.value) })}
                     className="mt-1 w-full rounded-xl border border-[#2E2E33] px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
                   />
@@ -252,14 +267,15 @@ function PlanQuiz({ open, onClose, onCheckout }: {
                   />
                 </label>
               </div>
-              <QuizNav onBack={back} onNext={next} nextDisabled={!numOk(d.peso, 40, 250) || !numOk(d.altura, 120, 220)} />
+              <QuizNav onBack={back} onNext={next} nextDisabled={!numOk(d.peso, unidadPeso === 'kg' ? 40 : 88, unidadPeso === 'kg' ? 250 : 550) || !numOk(d.altura, 120, 220)} />
             </div>
           )}
           {step === 3 && (
             <div className="space-y-3">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Qué medicamento usas?</h3>
+              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Usas algún medicamento GLP-1?</h3>
+              <p className="text-sm text-[#9E998C] !mt-1 mb-1">Si usas uno, la app activa el modo GLP-1 y adapta tu plan.</p>
               <div className="grid grid-cols-2 gap-2.5">
-                {['Ozempic', 'Mounjaro', 'Wegovy', 'Rybelsus', 'Zepbound', 'Aún no empiezo'].map((m) => (
+                {['Ozempic', 'Mounjaro', 'Wegovy', 'Rybelsus', 'Zepbound', 'No uso medicación'].map((m) => (
                   <Opt key={m} label={m} active={d.med === m} onClick={() => pick({ med: m })} />
                 ))}
               </div>
@@ -269,24 +285,24 @@ function PlanQuiz({ open, onClose, onCheckout }: {
             <div className="space-y-3">
               <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Cuál es tu objetivo principal?</h3>
               <Opt label="Perder grasa" sub="Bajar de peso de forma sostenida" active={d.objetivo === 'perder'} onClick={() => pick({ objetivo: 'perder' })} />
-              <Opt label="Cuidar mi músculo" sub="No perder tono mientras adelgazo" active={d.objetivo === 'muscular'} onClick={() => pick({ objetivo: 'muscular' })} />
-              <Opt label="Mantener mi peso" sub="Estabilizar y comer mejor" active={d.objetivo === 'mantener'} onClick={() => pick({ objetivo: 'mantener' })} />
+              <Opt label="Ganar músculo" sub="Subir masa o proteger tu tono al adelgazar" active={d.objetivo === 'muscular'} onClick={() => pick({ objetivo: 'muscular' })} />
+              <Opt label="Mantener y comer mejor" sub="Estabilizar tu peso con hábitos reales" active={d.objetivo === 'mantener'} onClick={() => pick({ objetivo: 'mantener' })} />
             </div>
           )}
           {step === 5 && (
             <div className="space-y-3">
               <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Qué es lo que más te cuesta hoy?</h3>
-              <Opt label="Las náuseas" active={d.problema === 'nauseas'} onClick={() => pick({ problema: 'nauseas' })} />
               <Opt label="No sé qué comer" active={d.problema === 'comer'} onClick={() => pick({ problema: 'comer' })} />
               <Opt label="Miedo a perder músculo" active={d.problema === 'musculo'} onClick={() => pick({ problema: 'musculo' })} />
               <Opt label="Miedo al efecto rebote" active={d.problema === 'rebote'} onClick={() => pick({ problema: 'rebote' })} />
+              <Opt label="Náuseas o poco apetito" active={d.problema === 'nauseas'} onClick={() => pick({ problema: 'nauseas' })} />
             </div>
           )}
           {step === 6 && (
             <div className="text-center">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 rounded-full px-3 py-1 mb-3"><CheckCircle2 className="h-3.5 w-3.5" /> Plan listo</span>
               <h3 className="font-display text-2xl font-bold text-[#F3EFE7] mb-1">Tu protocolo está listo</h3>
-              <p className="text-sm text-[#9E998C] mb-4">Calculado con tus datos{d.med && d.med !== 'Aún no empiezo' ? ` y tu tratamiento con ${d.med}` : ''}.</p>
+              <p className="text-sm text-[#9E998C] mb-4">Calculado con tus datos{d.med && d.med !== 'No uso medicación' ? ` y tu tratamiento con ${d.med}` : ' y tu objetivo'}.</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
                   <div className="text-3xl font-black text-brand-gold tabular-nums">{kcal}</div>
@@ -298,7 +314,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
                 </div>
               </div>
               {d.problema && <p className="text-sm text-[#B7B1A3] leading-relaxed mb-1">{problemaLinea[d.problema]}</p>}
-              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5">Dentro de la app tienes tu menú día a día con estos números, <strong className="text-[#F3EFE7]">35 recetas anti-náusea</strong> y la guía de tu medicamento.</p>
+              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5">Dentro de la app tienes tu menú día a día con estos números, <strong className="text-[#F3EFE7]">35 recetas altas en proteína</strong>{d.med && d.med !== 'No uso medicación' ? ' y la guía de tu medicamento' : ' y tus macros de cada día'}.</p>
               <a
                 href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                 onClick={onCheckout}
@@ -377,7 +393,7 @@ export default function App() {
       <div className="bg-[#0E0E10] text-[#F3EFE7] text-xs font-semibold tracking-wider text-center py-2 px-4 border-b border-brand-gold/15 flex items-center justify-center gap-2">
         <ShieldCheck className="h-4 w-4 text-brand-gold" />
         <span className="uppercase font-sans tracking-[0.14em] text-[10px] md:text-xs whitespace-nowrap">
-          Para usuarios de Ozempic · Wegovy · Mounjaro
+          Dieta · Gym · Usuarios GLP-1 (Ozempic, Wegovy…)
         </span>
       </div>
 
@@ -389,7 +405,7 @@ export default function App() {
             </div>
             <div>
               <span className="font-bold tracking-tight text-lg text-[#F3EFE7]">Método Proteína Primero</span>
-              <span className="text-xs text-brand-gold font-semibold block -mt-1">Protocolo GLP-1 · 21 días</span>
+              <span className="text-xs text-brand-gold font-semibold block -mt-1">Nutrición inteligente · 21 días</span>
             </div>
           </div>
 
@@ -425,21 +441,22 @@ export default function App() {
             
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
               <p className="text-base md:text-lg text-[#C4BEB0]/80 mb-4 font-medium tracking-wide italic max-w-2xl">
-                Mientras otros luchan con náuseas y no saben qué comer…
+                Mientras otros adivinan qué comer y abandonan en la primera semana…
               </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
-                El <span className="text-brand-gold">Método Proteína Primero</span> para tu tratamiento con Ozempic, Wegovy y Mounjaro.
+                El <span className="text-brand-gold">Método Proteína Primero</span>: el plan que te dice exactamente qué comer para lograr tu objetivo.
               </h1>
 
               <p className="text-lg md:text-xl text-[#F3EFE7] font-normal leading-relaxed mb-6 max-w-2xl">
-                No es una guía más. Es un <strong className="text-brand-gold">protocolo de 21 días</strong> que te dice exactamente qué comer cada día —qué proteína, cuánta y en qué orden— para no perder músculo, calmar las náuseas y evitar el efecto rebote.
+                No es una dieta más. Es un <strong className="text-brand-gold">protocolo de 21 días</strong> con tu menú diario —calorías, proteína y macros calculados para ti— para perder grasa sin perder músculo, ganar masa o simplemente comer mejor. ¿Usas Ozempic, Wegovy o Mounjaro? La app incluye un <strong className="text-brand-gold">modo GLP-1</strong> que se adapta a tu tratamiento.
               </p>
 
               <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-[#E7E1D3] font-semibold">
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Plan día a día · 21 días</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Calorías y proteína a tu medida</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">Compatible con todos los GLP-1</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">🔥 Perder peso</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💪 Ganar músculo</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">❤️ Comer más saludable</span>
+                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💉 Modo GLP-1</span>
                 <span className="bg-brand-gold/15 border border-brand-gold/40 text-brand-gold rounded-full px-3 py-1.5">Un solo pago · sin suscripción</span>
               </div>
 
@@ -509,10 +526,10 @@ export default function App() {
           <div className="text-center mb-10">
             <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
-              El medicamento hace su parte.<br className="hidden md:block" /> Estos 3 problemas los resuelves tú — o nadie.
+              El esfuerzo lo pones tú.<br className="hidden md:block" /> Estos 3 problemas los resuelve un método — o nadie.
             </h2>
             <p className="text-[#C4BEB0]/70 text-base max-w-xl mx-auto">
-              No es que el GLP-1 no funciona. El problema es que te dieron la mitad de la ecuación.
+              No es falta de disciplina. Es que te dijeron cuánto bajar — pero nadie te enseñó cómo comer.
             </p>
           </div>
 
@@ -522,9 +539,9 @@ export default function App() {
               <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
                 <Thermometer className="h-5 w-5 text-red-400" />
               </div>
-              <h3 className="font-bold text-white text-base mb-2">Náuseas y malestar constante</h3>
+              <h3 className="font-bold text-white text-base mb-2">No sabes qué comer — y adivinar agota</h3>
               <p className="text-sm text-white/60 leading-relaxed">
-                El GLP-1 reduce el vaciado gástrico. Comer lo incorrecto antes o después de la inyección convierte días normales en jornadas de reflujo, mareos y fatiga que te dejan sin querer hacer nada.
+                Mil dietas que se contradicen, apps que solo cuentan calorías y ningún plan concreto. "Come menos" no es un método. Y si usas GLP-1, comer lo incorrecto además significa náuseas, reflujo y días perdidos.
               </p>
             </div>
 
@@ -534,7 +551,7 @@ export default function App() {
               </div>
               <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
               <p className="text-sm text-white/60 leading-relaxed">
-                El GLP-1 suprime el apetito de forma tan drástica que terminas comiendo poco de todo — incluyendo la proteína que mantiene tus músculos firmes. La piel se va aflojando sin que notes cuándo empezó.
+                Al comer menos —por dieta o porque el medicamento apaga tu apetito— la proteína es lo primero que falta. Bajas de peso en la báscula, pero pierdes el músculo que te mantiene firme, fuerte y con energía.
               </p>
             </div>
 
@@ -542,9 +559,9 @@ export default function App() {
               <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
                 <RotateCcw className="h-5 w-5 text-red-400" />
               </div>
-              <h3 className="font-bold text-white text-base mb-2">Miedo al rebote cuando termines el tratamiento</h3>
+              <h3 className="font-bold text-white text-base mb-2">El efecto rebote que borra tu progreso</h3>
               <p className="text-sm text-white/60 leading-relaxed">
-                El 80% de las personas que dejan el GLP-1 recuperan el peso en menos de 12 meses. Sin un metabolismo protegido y hábitos alimentarios reales, el rebote no es una posibilidad — es casi una certeza.
+                El 80% de las personas que bajan de peso —con dieta o al dejar el GLP-1— lo recuperan en menos de 12 meses. Sin hábitos reales y un metabolismo protegido, el rebote no es una posibilidad: es casi una certeza.
               </p>
             </div>
 
@@ -555,10 +572,10 @@ export default function App() {
               Estos 3 problemas tienen una causa en común:
             </p>
             <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-4">
-              Nadie te enseñó a comer mientras usas el GLP-1.
+              Nadie te dijo exactamente qué comer para tu objetivo.
             </p>
             <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
-              Inviertes hasta <strong className="text-white">US$ 1,200 al mes</strong> en el medicamento. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y hace que cada dólar del tratamiento trabaje completo.
+              Inviertes en gimnasio, suplementos — o hasta <strong className="text-white">US$ 1,200 al mes</strong> si usas GLP-1. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y es la parte que hace que todo lo demás funcione.
             </p>
 
             <a
@@ -592,14 +609,14 @@ export default function App() {
             <div className="absolute -top-12 -right-12 h-44 w-44 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
             <div className="relative flex items-center gap-4 md:gap-6">
               {/* teléfono fotorrealista con la pantalla real */}
-              <TelefonoReal className="shrink-0 w-[88px] md:w-[112px]" shadow="drop-shadow(0 12px 18px rgba(0,0,0,0.45))" alt="Pantalla Hoy de la app del Reto GLP-1" />
+              <TelefonoReal className="shrink-0 w-[88px] md:w-[112px]" shadow="drop-shadow(0 12px 18px rgba(0,0,0,0.45))" alt="Pantalla Hoy de la app del Reto de 21 días" />
               <div className="min-w-0 flex-1">
                 <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold bg-white/10 border border-brand-gold/30 rounded-full px-2.5 py-1 mb-2">
                   <Smartphone className="h-3 w-3" /> Producto principal · App
                 </span>
                 <h3 className="text-white font-bold font-display text-xl md:text-2xl leading-tight">App del Reto de 21 días</h3>
                 <p className="text-[#E7E1D3]/90 text-sm md:text-base leading-snug mt-1">
-                  Tu plan día a día con menús inteligentes por calorías y proteína, estadísticas de tu progreso y la guía de tu medicamento — todo en un solo lugar.
+                  Tu plan día a día con menús inteligentes por calorías, proteína y macros, IMC y estadísticas de tu progreso — con modo GLP-1 y guía de medicamentos si los usas.
                 </p>
               </div>
               <AppSeal size={72} rotate={-6} className="hidden md:block -mr-1" />
@@ -613,7 +630,7 @@ export default function App() {
           <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
             {[
               { t: 'Guía nutricional completa', s: 'El método entero, capítulo por capítulo' },
-              { t: '35 recetas anti-náusea', s: 'Con la proteína de cada plato ya calculada' },
+              { t: '35 recetas altas en proteína', s: 'Con los macros de cada plato ya calculados — incluye opciones suaves anti-náusea' },
               { t: 'Lista de compras inteligente', s: 'Qué sí llevar y qué evitar en el súper' },
               { t: 'Plan de salida anti-rebote', s: '12 semanas para no recuperar el peso' },
               { t: 'Diario alimentario', s: 'Registra cómo te sientes y descubre tus patrones' },
@@ -662,11 +679,11 @@ export default function App() {
           </div>
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-[#F3EFE7] tabular-nums">35</p>
-            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">recetas anti-náusea<br className="hidden md:block" /> con proteína calculada</p>
+            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">recetas altas en proteína<br className="hidden md:block" /> con macros calculados</p>
           </div>
           <div className="text-center px-2 md:px-6">
             <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">12</p>
-            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">semanas de plan de salida<br className="hidden md:block" /> contra el efecto rebote</p>
+            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">semanas de plan anti-rebote<br className="hidden md:block" /> para mantener tu resultado</p>
           </div>
         </div>
       </div>
@@ -682,7 +699,7 @@ export default function App() {
               Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-[#B7B1A3] text-lg leading-relaxed max-w-2xl mx-auto">
-              Es tu nutricionista digital de bolsillo: genera tu menú con las calorías y la proteína ya calculadas, te guía el día de la inyección y avanzas día a día — por un pago único.
+              Es tu nutricionista digital de bolsillo: genera tu menú con calorías, proteína y macros ya calculados, se adapta a tu objetivo —perder, ganar músculo o mantener— y avanzas día a día, por un pago único.
             </p>
           </div>
 
@@ -692,12 +709,12 @@ export default function App() {
             <div>
               <ul className="space-y-4">
                 {[
-                  ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — con las calorías y la proteína ya calculadas. Cambias cualquier plato con un toque.'],
-                  ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista para cuando casi no tienes hambre.'],
-                  ['Guía de tu medicamento', 'Cómo aplicarlo, efectos y alimentación de Ozempic, Wegovy, Mounjaro, Zepbound y Rybelsus — con tu tratamiento destacado.'],
-                  ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, calorías y síntomas — en gráficos claros que puedes llevar a tu médico.'],
-                  ['Registro diario en segundos', 'Síntomas, energía y agua; con el tiempo descubres qué te cae bien y qué no.'],
-                  ['Plan de salida de 12 semanas', 'Ves tu avance y evitas el efecto rebote cuando reduces la dosis.'],
+                  ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — calorías, proteína, carbohidratos y grasas ya calculados. Cambias cualquier plato con un toque.'],
+                  ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista — sin pensarlo ni pesar nada.'],
+                  ['Elige tu objetivo y la app se ajusta', 'Perder peso, ganar músculo, mantener o comer más saludable — tus metas de proteína y calorías se recalculan solas.'],
+                  ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, macros y energía — en gráficos claros que puedes llevar a tu médico o nutricionista.'],
+                  ['Modo GLP-1 (si lo usas)', '¿Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus? Actívalo y tienes la guía de tu medicamento, tu día de dosis y registro de síntomas.'],
+                  ['Plan de salida de 12 semanas', 'Consolida tu resultado y evita el efecto rebote al terminar el reto o el tratamiento.'],
                   ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
                 ].map(([t, d]) => (
                   <li key={t} className="flex gap-4">
@@ -755,7 +772,7 @@ export default function App() {
               Lo que dicen nuestras usuarias
             </h2>
             <p className="text-[#B7B1A3] text-sm leading-relaxed max-w-lg mx-auto">
-              Usuarias reales que ya combinan su tratamiento GLP-1 con el Método Proteína Primero.
+              Personas reales que ya siguen el Método Proteína Primero — muchas combinándolo con su tratamiento GLP-1.
             </p>
           </div>
 
@@ -836,10 +853,10 @@ export default function App() {
           <div className="text-center mb-12">
             <Eyebrow>Oferta especial de lanzamiento</Eyebrow>
             <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Tu medicamento hace su parte.<br className="hidden md:block" /> Este método hace la tuya.
+              Tú pones el esfuerzo.<br className="hidden md:block" /> Este método pone el plan.
             </h2>
             <p className="text-[#B7B1A3] text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-              Gastas entre $800 y $1,200 al mes en el GLP-1. Sin el protocolo correcto, sigues con náuseas, sin saber qué comer y perdiendo músculo — haciendo que cada dólar invertido en el tratamiento trabaje a medias. El Método Proteína Primero completa la ecuación que tu médico dejó incompleta.
+              Inviertes en gimnasio, suplementos — o hasta $1,200 al mes si usas GLP-1. Sin el plan correcto sigues adivinando qué comer, perdiendo músculo y volviendo a empezar cada lunes. El Método Proteína Primero completa la ecuación que nadie te dio.
             </p>
           </div>
 
@@ -869,7 +886,7 @@ export default function App() {
                   <span className="h-8 w-8 shrink-0 rounded-lg bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
                     <Smartphone className="h-4 w-4 text-brand-gold" />
                   </span>
-                  <span><strong className="text-white">App del Reto GLP-1 de 21 días</strong> — plan inteligente por calorías y proteína, estadísticas y guía de medicamentos <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
+                  <span><strong className="text-white">App del Reto de 21 días</strong> — plan inteligente por calorías, proteína y macros, IMC, estadísticas y modo GLP-1 incluido <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
                 </div>
 
                 <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
@@ -923,7 +940,7 @@ export default function App() {
 
               <p className="text-xs text-[#E7E1D3]/80 leading-relaxed font-medium mb-6 flex items-center justify-center gap-1.5 max-w-sm mx-auto">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-brand-gold" />
-                Empieza hoy y llega a tu próxima inyección con el plan correcto desde el primer día.
+                Empieza hoy y llega a tu próxima comida con un plan exacto — desde el primer día.
               </p>
 
               <div className="border-t border-white/10 pt-6">
@@ -967,7 +984,7 @@ export default function App() {
               Garantía "Léelo Todo" — 7 días, sin preguntas.
             </h3>
             <p className="text-sm text-[#B7B1A3] leading-relaxed">
-              Descarga los 4 módulos, prueba 3 recetas y sigue el protocolo en tu próxima inyección. Si al final de los 7 días no sientes diferencia, escribe un correo y te devolvemos el 100% — sin preguntas, sin formularios, sin esperas. Todo el riesgo lo tomamos nosotros.
+              Descarga los 4 módulos, prueba 3 recetas y sigue el protocolo durante una semana. Si al final de los 7 días no sientes diferencia, escribe un correo y te devolvemos el 100% — sin preguntas, sin formularios, sin esperas. Todo el riesgo lo tomamos nosotros.
             </p>
           </div>
 
@@ -992,7 +1009,42 @@ export default function App() {
           </div>
 
           <div className="space-y-4">
-            
+
+            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
+              <button
+                type="button"
+                onClick={() => toggleFaq(6)}
+                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
+              >
+                <span className="font-bold text-white text-sm md:text-base pr-4">
+                  No uso Ozempic ni ningún medicamento. ¿El método sirve para mí?
+                </span>
+                {activeFaq === 6 ? (
+                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {activeFaq === 6 && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-white/10"
+                  >
+                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
+                      <p>
+                        Sí, completamente. El corazón del método es la nutrición proteína-primero: tu menú diario con calorías, proteína y macros calculados para tu objetivo — perder grasa, ganar músculo, mantener tu peso o simplemente comer más saludable. En la app eliges tu objetivo y todo se ajusta a ti. El modo GLP-1 es solo una función opcional para quienes usan esos medicamentos; si no los usas, nunca lo verás.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
               <button
                 type="button"
@@ -1090,7 +1142,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        Es exactamente para ti. El método fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que empiezan con GLP-1. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones. Sin términos médicos complicados ni conteo de macros. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
+                        Es exactamente para ti. El método fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que intentan cambiar su alimentación. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones, y la app calcula las calorías y los macros por ti. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
                       </p>
                     </div>
                   </motion.div>
@@ -1125,7 +1177,7 @@ export default function App() {
                   >
                     <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
                       <p>
-                        La información suelta, sí. Lo que no encontrarás gratis es el sistema: qué comer exactamente el día de la inyección, 35 recetas con la proteína ya calculada para tu objetivo, la lista de compras que evita los alimentos que agravan los síntomas y el plan de salida de 12 semanas — todo organizado, verificado y en un solo lugar. Pagas por no tener que armar el rompecabezas tú misma, con tu salud, entre miles de artículos que se contradicen.
+                        La información suelta, sí. Lo que no encontrarás gratis es el sistema: tu menú exacto según tu objetivo, 35 recetas con la proteína ya calculada, la lista de compras inteligente, el plan de 12 semanas para mantener el resultado — y si usas GLP-1, qué comer exactamente el día de la inyección. Todo organizado, verificado y en un solo lugar. Pagas por no tener que armar el rompecabezas tú misma, con tu salud, entre miles de artículos que se contradicen.
                       </p>
                     </div>
                   </motion.div>
