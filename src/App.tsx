@@ -423,7 +423,7 @@ export default function App() {
 
       <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-[#0B0B0C] via-[#141416] to-[#1A1712]">
         
-        <div className="bg-black/15 border-b border-brand-gold/20 py-3 px-4 mb-8 -mx-6 text-center">
+        <div className="bg-black/15 border-b border-brand-gold/20 py-2.5 px-4 mb-6 -mx-6 text-center">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs md:text-sm">
             <span className="h-px w-6 bg-brand-gold/50 hidden sm:block" aria-hidden="true" />
             <span className="select-none flex items-center gap-2.5 flex-wrap justify-center text-[#E7E1D3]/85 font-medium tracking-wide">
@@ -445,7 +445,7 @@ export default function App() {
               </p>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
-                El <span className="text-brand-gold">Método Proteína Primero</span>: el plan que te dice exactamente qué comer para lograr tu objetivo.
+                Sabes <span className="text-brand-gold">exactamente qué comer</span> cada día para lograr tu objetivo.
               </h1>
 
               <p className="text-lg md:text-xl text-[#F3EFE7] font-normal leading-relaxed mb-6 max-w-2xl">
