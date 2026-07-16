@@ -623,34 +623,43 @@ export default function App() {
             </div>
           </div>
 
-          {/* Lo que viene incluido dentro de la app — sección única de entregables */}
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-gold/80 mt-8 mb-3 text-center">
-            Y todo esto, incluido dentro de la app
+          {/* Lo que la app hace por ti — lista única (fusión de las dos secciones anteriores) */}
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-gold/80 mt-8 mb-4 text-center">
+            Y esto es lo que la app hace por ti
           </p>
-          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+          <ul className="space-y-4 max-w-2xl mx-auto">
             {[
-              { t: 'Guía nutricional completa', s: 'El método entero, capítulo por capítulo' },
-              { t: '35 recetas altas en proteína', s: 'Con los macros de cada plato ya calculados — incluye opciones suaves anti-náusea' },
-              { t: 'Lista de compras inteligente', s: 'Qué sí llevar y qué evitar en el súper' },
-              { t: 'Plan de salida anti-rebote', s: '12 semanas para no recuperar el peso' },
-              { t: 'Diario alimentario', s: 'Registra cómo te sientes y descubre tus patrones' },
-              { t: 'Actualizaciones futuras', s: 'Nuevas recetas y mejoras, sin costo extra' },
-            ].map((it) => (
-              <div key={it.t} className="flex items-start gap-3 py-3 border-b border-[#2A2A2E]/70">
-                <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-brand-gold/10 flex items-center justify-center">
-                  <Check className="h-3.5 w-3.5 text-brand-gold stroke-[3px]" />
-                </span>
-                <div>
-                  <p className="font-bold text-[#F3EFE7] text-[15px] leading-tight">{it.t}</p>
-                  <p className="text-sm text-[#B7B1A3] leading-snug">{it.s}</p>
+              ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — calorías, proteína, carbohidratos y grasas ya calculados. Cambias cualquier plato con un toque.'],
+              ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista — sin pensarlo ni pesar nada.'],
+              ['Elige tu objetivo y la app se ajusta', 'Perder peso, ganar músculo, mantener o comer más saludable — tus metas de proteína y calorías se recalculan solas.'],
+              ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, macros y energía — en gráficos claros que puedes llevar a tu médico o nutricionista.'],
+              ['Lista de compras inteligente', 'Qué sí llevar y qué evitar en el súper, lista para cada semana.'],
+              ['Modo GLP-1 (si lo usas)', '¿Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus? Actívalo y tienes la guía de tu medicamento, tu día de dosis y registro de síntomas.'],
+              ['Plan de salida anti-rebote de 12 semanas', 'Consolida tu resultado y evita recuperar el peso al terminar el reto.'],
+              ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
+            ].map(([t, d]) => (
+              <li key={t} className="flex gap-4">
+                <div className="h-9 w-9 shrink-0 rounded-xl bg-brand-green-vibrant/15 flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5 text-brand-gold" />
                 </div>
-              </div>
+                <div>
+                  <h3 className="font-bold text-[#F3EFE7] text-base">{t}</h3>
+                  <p className="text-sm text-[#B7B1A3] leading-relaxed">{d}</p>
+                </div>
+              </li>
             ))}
+          </ul>
+
+          <div className="mt-6 max-w-2xl mx-auto flex items-start gap-2 bg-[#141416] border border-[#33333A]/60 rounded-xl p-4">
+            <Award className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
+            <p className="text-sm text-[#F3EFE7] leading-relaxed">
+              <strong>Sin mensualidad.</strong> Apps como BetterMe cobran cada mes. Aquí pagas <strong>una sola vez</strong> y el método es tuyo para siempre.
+            </p>
           </div>
 
           <p className="text-center text-xs text-[#9E998C] mt-5 flex items-center justify-center gap-1.5">
             <FileText className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-            Las 4 guías también las descargas en PDF, para leer o imprimir cuando quieras.
+            Incluye además 4 guías completas en PDF y una guía para instalar la app en tu celular en 2 minutos.
           </p>
 
           <div className="mt-8 text-center">
@@ -690,80 +699,6 @@ export default function App() {
       </FadeIn>
 
       <FadeIn>
-      <section className="py-14 px-6 bg-[#141416]">
-        <div className="max-w-6xl mx-auto rounded-3xl p-8 md:p-12 bg-[#1A1A1C] border border-[#2A2A2E]/70 shadow-[0_1px_40px_-12px_rgba(22,101,52,0.12)]">
-
-          <div className="text-center mb-10">
-            <Eyebrow>Tu reto, guiado día a día</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Tu Reto de 21 días vive en una app
-            </h2>
-            <p className="text-[#B7B1A3] text-lg leading-relaxed max-w-2xl mx-auto">
-              Es tu nutricionista digital de bolsillo: genera tu menú con calorías, proteína y macros ya calculados, se adapta a tu objetivo —perder, ganar músculo o mantener— y avanzas día a día, por un pago único.
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto mb-10">
-
-            {/* Qué hace la app */}
-            <div>
-              <ul className="space-y-4">
-                {[
-                  ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — calorías, proteína, carbohidratos y grasas ya calculados. Cambias cualquier plato con un toque.'],
-                  ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista — sin pensarlo ni pesar nada.'],
-                  ['Elige tu objetivo y la app se ajusta', 'Perder peso, ganar músculo, mantener o comer más saludable — tus metas de proteína y calorías se recalculan solas.'],
-                  ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, macros y energía — en gráficos claros que puedes llevar a tu médico o nutricionista.'],
-                  ['Modo GLP-1 (si lo usas)', '¿Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus? Actívalo y tienes la guía de tu medicamento, tu día de dosis y registro de síntomas.'],
-                  ['Plan de salida de 12 semanas', 'Consolida tu resultado y evita el efecto rebote al terminar el reto o el tratamiento.'],
-                  ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
-                ].map(([t, d]) => (
-                  <li key={t} className="flex gap-4">
-                    <div className="h-9 w-9 shrink-0 rounded-xl bg-brand-green-vibrant/15 flex items-center justify-center">
-                      <CheckCircle2 className="h-5 w-5 text-brand-gold" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-[#F3EFE7] text-base">{t}</h3>
-                      <p className="text-sm text-[#B7B1A3] leading-relaxed">{d}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 flex items-start gap-2 bg-[#141416] border border-[#33333A]/60 rounded-xl p-4">
-                <Award className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
-                <p className="text-sm text-[#F3EFE7] leading-relaxed">
-                  <strong>Sin mensualidad.</strong> Apps como BetterMe cobran cada mes. Aquí pagas <strong>una sola vez</strong> y el Reto es tuyo para siempre.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[#2A2A2E] pt-8">
-            <p className="text-center text-sm text-[#B7B1A3] flex items-center justify-center gap-2 max-w-xl mx-auto">
-              <CheckCircle2 className="h-4 w-4 text-brand-gold shrink-0" />
-              <span>Adentro también viven las <strong className="text-[#F3EFE7]">4 guías completas</strong>, y una guía paso a paso para instalar el app en tu celular en 2 minutos.</span>
-            </p>
-          </div>
-
-          <div className="text-center mt-10">
-            <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-              onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span>Empezar mi protocolo — US$ 9.90</span>
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-
-        </div>
-      </section>
-      </FadeIn>
-
-
-
-      <FadeIn>
       <section className="py-14 px-6 bg-[#141416]/40 border-t border-[#2A2A2E]/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
@@ -772,7 +707,7 @@ export default function App() {
               Lo que dicen nuestras usuarias
             </h2>
             <p className="text-[#B7B1A3] text-sm leading-relaxed max-w-lg mx-auto">
-              Personas reales que ya siguen el Método Proteína Primero — muchas combinándolo con su tratamiento GLP-1.
+              Personas reales que ya siguen el Método Proteína Primero para perder grasa, ganar músculo o comer mejor.
             </p>
           </div>
 
@@ -783,13 +718,13 @@ export default function App() {
                 {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
               </div>
               <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5 italic flex-1">
-                "Llevaba semanas con náuseas terribles después de cada inyección. Mi médico me dijo 'es normal'. Con el recetario del kit entendí que estaba comiendo exactamente los alimentos que empeoran el malestar. <strong className="text-[#F3EFE7]">En 10 días las náuseas casi desaparecieron. Bajé 9 kilos y por primera vez estoy disfrutando el proceso.</strong>"
+                "Probé todas las dietas y siempre las dejaba porque no sabía qué cocinar. Ahora abro la app y ya sé qué comer, con la proteína calculada. <strong className="text-[#F3EFE7]">En 8 semanas bajé 7 kilos sin pasar hambre — y por primera vez no volví a empezar de cero el lunes.</strong>"
               </p>
               <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">VM</div>
+                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">MJ</div>
                 <div>
-                  <p className="text-xs font-bold text-[#F3EFE7]">Valentina M.</p>
-                  <p className="text-[10px] text-[#7E7A6E]">Monterrey, México · Ozempic 1mg</p>
+                  <p className="text-xs font-bold text-[#F3EFE7]">María José G.</p>
+                  <p className="text-[10px] text-[#7E7A6E]">Guadalajara, México · Perder peso</p>
                 </div>
               </div>
             </div>
@@ -816,13 +751,13 @@ export default function App() {
                 <Star className="h-4 w-4 text-[#C4BEB0] fill-current" />
               </div>
               <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5 italic flex-1">
-                "Me sentía sin energía todo el día — pensé que era el medicamento. En realidad era que comía muy poco y sin los nutrientes correctos. Con las recetas del kit empecé a comer bien aunque no tuviera hambre. <strong className="text-[#F3EFE7]">En 6 semanas recuperé la energía y perdí 7 kg de grasa.</strong> Le doy 4 estrellas porque me hubiera gustado más recetas de desayuno, pero el resto es excelente."
+                "Entreno 4 veces por semana pero no lograba definir — comía proteína al azar, sin medida. Con el plan ajustado a ganar músculo por fin veo resultados. <strong className="text-[#F3EFE7]">En 6 semanas gané fuerza y bajé grasa.</strong> Le doy 4 estrellas porque me gustaría más variedad de desayunos, pero el resto es excelente."
               </p>
               <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">DR</div>
+                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">AP</div>
                 <div>
-                  <p className="text-xs font-bold text-[#F3EFE7]">Daniela R.</p>
-                  <p className="text-[10px] text-[#7E7A6E]">Santiago, Chile · Mounjaro</p>
+                  <p className="text-xs font-bold text-[#F3EFE7]">Andrés P.</p>
+                  <p className="text-[10px] text-[#7E7A6E]">Bogotá, Colombia · Ganar músculo</p>
                 </div>
               </div>
             </div>
@@ -856,7 +791,7 @@ export default function App() {
               Tú pones el esfuerzo.<br className="hidden md:block" /> Este método pone el plan.
             </h2>
             <p className="text-[#B7B1A3] text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-              Inviertes en gimnasio, suplementos — o hasta $1,200 al mes si usas GLP-1. Sin el plan correcto sigues adivinando qué comer, perdiendo músculo y volviendo a empezar cada lunes. El Método Proteína Primero completa la ecuación que nadie te dio.
+              Ya inviertes tiempo, esfuerzo y dinero en verte mejor. Sin el plan correcto sigues adivinando qué comer, perdiendo músculo y volviendo a empezar cada lunes. El Método Proteína Primero completa la ecuación que nadie te dio.
             </p>
           </div>
 
@@ -892,11 +827,11 @@ export default function App() {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Guía Médica de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>
+                  <span>Guía de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Recetario Anti-Náusea de Alta Proteína <span className="text-white/50 font-medium">(Valor $14.90)</span></span>
+                  <span>Recetario de Alta Proteína <span className="text-white/50 font-medium">(Valor $14.90)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
@@ -904,7 +839,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Diario de Síntomas y Progreso GLP-1 <span className="text-white/50 font-medium">(Valor $5.20)</span></span>
+                  <span>Diario de Progreso y Hábitos <span className="text-white/50 font-medium">(Valor $5.20)</span></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <Check className="h-4 w-4 text-brand-gold shrink-0" />
