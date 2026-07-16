@@ -323,7 +323,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
                 Desbloquear mi plan completo — US$ 9.90 <ArrowRight className="h-5 w-5" />
               </a>
               <p className="text-[11px] text-[#7E7A6E] mt-2.5 flex items-center justify-center gap-3 flex-wrap">
-                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3 text-brand-gold" /> Acceso inmediato</span>
+                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3 text-brand-gold" /> Pago único, sin suscripción</span>
                 <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3 text-brand-gold" /> 7 días de garantía</span>
               </p>
             </div>
@@ -457,7 +457,7 @@ export default function App() {
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💪 Ganar músculo</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">❤️ Comer más saludable</span>
                 <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💉 Modo GLP-1</span>
-                <span className="bg-brand-gold/15 border border-brand-gold/40 text-brand-gold rounded-full px-3 py-1.5">Precio de lanzamiento</span>
+                <span className="bg-brand-gold/15 border border-brand-gold/40 text-brand-gold rounded-full px-3 py-1.5">Un solo pago · sin suscripción</span>
               </div>
 
               <div className="w-full sm:max-w-md">
@@ -699,7 +699,7 @@ export default function App() {
               Tu Reto de 21 días vive en una app
             </h2>
             <p className="text-[#B7B1A3] text-lg leading-relaxed max-w-2xl mx-auto">
-              Es tu nutricionista digital de bolsillo: genera tu menú con calorías, proteína y macros ya calculados, se adapta a tu objetivo —perder, ganar músculo o mantener— y avanzas día a día.
+              Es tu nutricionista digital de bolsillo: genera tu menú con calorías, proteína y macros ya calculados, se adapta a tu objetivo —perder, ganar músculo o mantener— y avanzas día a día, por un pago único.
             </p>
           </div>
 
@@ -732,7 +732,7 @@ export default function App() {
               <div className="mt-6 flex items-start gap-2 bg-[#141416] border border-[#33333A]/60 rounded-xl p-4">
                 <Award className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
                 <p className="text-sm text-[#F3EFE7] leading-relaxed">
-                  <strong>Empieza hoy mismo.</strong> En 2 minutos instalas la app en tu celular y ya estás en el Día 1 de tu reto — sin esperas ni envíos.
+                  <strong>Sin mensualidad.</strong> Apps como BetterMe cobran cada mes. Aquí pagas <strong>una sola vez</strong> y el Reto es tuyo para siempre.
                 </p>
               </div>
             </div>
@@ -922,9 +922,9 @@ export default function App() {
                     9.90
                   </span>
                 </div>
-                <span className="text-sm font-semibold text-white/70 mt-1">Acceso completo</span>
+                <span className="text-sm font-semibold text-white/70 mt-1">Un pago único</span>
                 <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mt-2 bg-white/5 border border-brand-gold/20 px-3 py-1 rounded-full">
-                  Precio especial de lanzamiento
+                  Sin mensualidades ni cobros ocultos
                 </span>
               </div>
 
@@ -1231,7 +1231,7 @@ export default function App() {
               <ShoppingCart className="h-5 w-5" />
               <span>Empezar mi protocolo — US$ 9.90</span>
             </a>
-            <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía de 7 días · Empieza hoy</p>
+            <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
 
         </div>
