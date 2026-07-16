@@ -11,6 +11,8 @@
     <meta property="og:image" content="/og-image.jpg" />
     <meta property="og:locale" content="es_LA" />
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- Variante A/B de color: ?tema=verde activa CTAs verdes -->
+    <script>try{if(new URLSearchParams(location.search).get('tema')==='verde')document.documentElement.setAttribute('data-tema','verde');}catch(e){}</script>
     <!-- Preconnect and Google Fonts for Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -27,6 +27,23 @@
   }
 }
 
+/* ===== Variante A/B "verde" — activada con ?tema=verde =====
+   CTAs de compra en verde vibrante (nicho salud + alto contraste),
+   decoración dorada intacta. La versión por defecto NO cambia. */
+:root[data-tema="verde"] {
+  --color-brand-green-vibrant: #17A34A;
+  --color-brand-green-vibrant-hover: #128A3E;
+}
+:root[data-tema="verde"] [class*="bg-brand-green-vibrant"] { color: #ffffff !important; }
+:root[data-tema="verde"] .cta-buy {
+  background-image: none !important;
+  background-color: #17A34A !important;
+  border-color: #17A34A !important;
+  color: #ffffff !important;
+}
+:root[data-tema="verde"] .cta-buy:hover { background-color: #128A3E !important; }
+:root[data-tema="verde"] .cta-buy svg { color: #ffffff !important; }
+
 .font-poppins-bold {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;

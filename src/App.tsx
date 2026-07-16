@@ -413,7 +413,7 @@ export default function App() {
             <a
               href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
               onClick={triggerCheckout}
-              className="text-[#1A1712] bg-brand-gold hover:bg-[#c9a233] text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-black/30 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold"
+              className="cta-buy text-[#1A1712] bg-brand-gold hover:bg-[#c9a233] text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-black/30 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold"
             >
               Comprar Ahora
             </a>
@@ -479,7 +479,7 @@ export default function App() {
                   <a
                     href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
                     onClick={triggerCheckout}
-                    className="group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60"
+                    className="cta-buy group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60"
                   >
                     Empezar mi protocolo — US$ 9.90
                     <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
@@ -1206,7 +1206,7 @@ export default function App() {
         <a
           href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
           onClick={triggerCheckout}
-          className="w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113] focus-visible:ring-brand-gold"
+          className="cta-buy w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113] focus-visible:ring-brand-gold"
         >
           <ShoppingCart className="h-4 w-4" />
           <span>Empezar mi protocolo — US$ 9.90</span>
