@@ -1,5 +1,5 @@
-/* Service Worker — Guía GLP-1 App (scope /app/) */
-const VERSION = 'glp1-app-v5';
+/* Service Worker — Método Proteína Primero App (scope /app/) */
+const VERSION = 'proteina-app-v6';
 const APP_SHELL = ['/app/'];
 
 self.addEventListener('install', (event) => {

@@ -1,7 +1,7 @@
 {
-  "name": "Guía GLP-1 Inteligente",
-  "short_name": "Guía GLP-1",
-  "description": "Tu acompañamiento diario del tratamiento GLP-1: registro, recetas, protocolo del día de inyección y progreso.",
+  "name": "Método Proteína Primero",
+  "short_name": "Proteína Primero",
+  "description": "Tu plan de alimentación diario: menú por calorías y proteína, recetas, macros y seguimiento de tu progreso hacia tu objetivo.",
   "start_url": "/app/",
   "scope": "/app/",
   "display": "standalone",

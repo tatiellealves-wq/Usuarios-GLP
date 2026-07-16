@@ -242,10 +242,10 @@ function Activacion({ onOk }: { onOk: (codigo: string) => void }) {
             <EmblemaBotanico className="mx-auto h-24 w-24 mb-1" />
             <p className="anim-fade-up d1 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[.28em] mb-2">Te damos la bienvenida a tu kit digital</p>
             <h1 className="anim-fade-up d2 text-white font-bold text-3xl leading-tight mb-2">
-              Guía GLP-1 <span className="text-[#D4AF37]">Inteligente</span>
+              Método <span className="text-[#D4AF37]">Proteína Primero</span>
             </h1>
             <p className="anim-fade-up d3 text-green-100/60 text-sm mb-2 leading-relaxed">
-              El acompañamiento premium de tu tratamiento —<br />cada día, en tu bolsillo.
+              Tu plan de alimentación premium —<br />cada día, en tu bolsillo.
             </p>
             <p className="anim-fade-up d3 text-white/30 text-[10px] uppercase tracking-[.18em] mb-8">
               45 recetas ✦ Diario ✦ Plan de salida ✦ 100% offline
@@ -1673,7 +1673,7 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
         <button onClick={() => window.print()} className="btn3d text-sm px-4 py-2.5 rounded-2xl flex items-center gap-2"><Printer className="h-4 w-4" /> Imprimir / PDF</button>
       </div>
       <div className="card">
-        <p className="text-[#C9A035] font-bold text-[10px] uppercase tracking-widest">Guía GLP-1 Inteligente</p>
+        <p className="text-[#C9A035] font-bold text-[10px] uppercase tracking-widest">Método Proteína Primero</p>
         <h1 className="text-xl font-bold mb-1">Informe para consulta médica</h1>
         <p className="text-xs text-gray-500 mb-4">
           {perfil.nombre}
@@ -1719,7 +1719,7 @@ function Informe({ estado, onCerrar }: { estado: ReturnType<typeof useEstado>[0]
             ))}</tbody>
           </table>
         </>)}
-        <p className="text-[10px] text-gray-400">Registro personal del o de la paciente vía app Guía GLP-1 Inteligente. No constituye historial clínico.</p>
+        <p className="text-[10px] text-gray-400">Registro personal del o de la paciente vía app Método Proteína Primero. No constituye historial clínico.</p>
       </div>
     </div>
   );
