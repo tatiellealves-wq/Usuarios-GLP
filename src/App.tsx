@@ -3,9 +3,7 @@ import {
   ShieldCheck,
   Check,
   Star,
-  Award,
   Activity,
-  ShieldAlert,
   Lock,
   Sparkles,
   ShoppingCart,
@@ -13,16 +11,19 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Clock,
   CheckCircle2,
   X,
   Globe,
-  Thermometer,
-  TrendingDown,
-  RotateCcw,
-  Smartphone
+  Smartphone,
+  Award,
+  UtensilsCrossed,
+  ChefHat,
+  LineChart,
+  Syringe
 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
+
+const CHECKOUT_URL = 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
 
 function FadeIn({
   children,
@@ -52,44 +53,19 @@ function FadeIn({
   );
 }
 
-/* Eyebrow editorial: rótulo entre finas reglas doradas — la firma visual de la página */
-function Eyebrow({ children, tone = 'green', className = '' }: {
-  children: React.ReactNode; tone?: 'green' | 'gold' | 'dark'; className?: string;
-}) {
-  const text = tone === 'green' ? 'text-brand-gold' : 'text-brand-gold';
-  const rule = tone === 'dark' ? 'bg-brand-gold/50' : 'bg-brand-gold/70';
+/* Eyebrow editorial: rótulo entre finas reglas verdes — la firma visual de la página */
+function Eyebrow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <span className={`inline-flex items-center gap-3 mb-5 ${className}`}>
-      <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
-      <span className={`text-[11px] font-bold uppercase tracking-[0.24em] ${text}`}>{children}</span>
-      <span className={`h-px w-7 ${rule}`} aria-hidden="true" />
+      <span className="h-px w-7 bg-brand-green-vibrant/50" aria-hidden="true" />
+      <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-green">{children}</span>
+      <span className="h-px w-7 bg-brand-green-vibrant/50" aria-hidden="true" />
     </span>
   );
 }
 
-/* Sello insignia "App Completa" — el elemento de firma de la página: certifica que el producto es la app, no solo PDFs */
-function AppSeal({ size = 88, rotate = -7, className = '' }: { size?: number; rotate?: number; className?: string }) {
-  return (
-    <div
-      className={`relative shrink-0 select-none ${className}`}
-      style={{ width: size, height: size, transform: `rotate(${rotate}deg)` }}
-      aria-hidden="true"
-    >
-      <div className="absolute inset-0 rounded-full border border-brand-gold/50" />
-      <div className="absolute inset-[5px] rounded-full border border-dashed border-brand-gold/35 seal-shine" />
-      <div className="absolute inset-[9px] rounded-full bg-gradient-to-b from-[#232227] to-[#0E0D0B] shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center text-center px-1.5 ring-1 ring-black/20">
-        <Smartphone className="h-4 w-4 text-brand-gold mb-1" strokeWidth={2.25} />
-        <span className="text-[7.5px] font-black uppercase tracking-[0.1em] text-brand-gold leading-[1.15]">
-          App<br />Completa
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* Mockup multi-dispositivo: notebook + tablet + teléfono con las pantallas reales de la app */
-// Teléfono fotorrealista con la pantalla real del app compuesta sobre la pantalla. Reutilizable.
-function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 'La app del Método Proteína Primero en el teléfono', shadow = 'drop-shadow(0 24px 32px rgba(0,0,0,0.42))' }: {
+/* Teléfono fotorrealista con la pantalla real del app compuesta sobre la pantalla. */
+function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 'La app del Método Proteína Primero en el teléfono', shadow = 'drop-shadow(0 24px 32px rgba(11,90,52,0.22))' }: {
   className?: string; screen?: string; alt?: string; shadow?: string;
 }) {
   return (
@@ -110,20 +86,16 @@ function TelefonoReal({ className = '', screen = '/hero/screen-hoy.webp', alt = 
   );
 }
 
-function MockupDispositivos() {
-  return <TelefonoReal className="mx-auto w-full max-w-[290px]" alt="La app del Método Proteína Primero abierta en el teléfono" />;
-}
-
 /* Navegación de pasos numéricos del quiz */
 function QuizNav({ onBack, onNext, nextDisabled }: { onBack: () => void; onNext: () => void; nextDisabled?: boolean }) {
   return (
     <div className="flex items-center gap-3 pt-1">
-      <button type="button" onClick={onBack} className="text-sm font-semibold text-[#9E998C] hover:text-[#F3EFE7] px-3 py-2">Atrás</button>
+      <button type="button" onClick={onBack} className="text-sm font-semibold text-[#7A8378] hover:text-[#22312A] px-3 py-2">Atrás</button>
       <button
         type="button"
         onClick={onNext}
         disabled={nextDisabled}
-        className="flex-1 bg-brand-green hover:bg-brand-green-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+        className="flex-1 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
       >
         Continuar <ArrowRight className="h-4 w-4" />
       </button>
@@ -131,8 +103,8 @@ function QuizNav({ onBack, onNext, nextDisabled }: { onBack: () => void; onNext:
   );
 }
 
-/* Quiz de plan personalizado — el funnel del competidor, pero termina en la oferta.
-   Calcula calorías y proteína (Mifflin-St Jeor) con los datos del visitante y lo lleva al checkout. */
+/* Quiz de plan personalizado — calcula calorías y proteína (Mifflin-St Jeor)
+   con los datos del visitante y lo lleva al checkout. */
 function PlanQuiz({ open, onClose, onCheckout }: {
   open: boolean;
   onClose: () => void;
@@ -185,85 +157,85 @@ function PlanQuiz({ open, onClose, onCheckout }: {
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-left rounded-xl border px-4 py-3.5 transition-colors ${active ? 'border-brand-green bg-brand-green/5 ring-1 ring-brand-green' : 'border-[#2E2E33] hover:border-brand-green/60 hover:bg-brand-green/[0.03]'}`}
+      className={`w-full text-left rounded-xl border px-4 py-3.5 transition-colors ${active ? 'border-brand-green-vibrant bg-brand-green-vibrant/5 ring-1 ring-brand-green-vibrant' : 'border-[#E3DED2] hover:border-brand-green-vibrant/60 hover:bg-brand-green-vibrant/[0.04]'}`}
     >
-      <span className="font-semibold text-[#F3EFE7] text-[15px]">{label}</span>
-      {sub && <span className="block text-xs text-[#9E998C] mt-0.5">{sub}</span>}
+      <span className="font-semibold text-[#22312A] text-[15px]">{label}</span>
+      {sub && <span className="block text-xs text-[#7A8378] mt-0.5">{sub}</span>}
     </button>
   );
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
-      <div className="absolute inset-0 bg-neutral-dark/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#22312A]/45 backdrop-blur-sm" onClick={onClose} />
       <motion.div
-        className="relative w-full sm:max-w-md bg-[#1A1A1C] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
         initial={reduce ? false : { y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-[#242428] shrink-0">
+        <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-[#EFEBE0] shrink-0">
           <div className="flex items-center gap-2">
-            <div className="bg-brand-green text-white p-1 rounded-md"><Activity className="h-4 w-4 text-brand-gold" /></div>
-            <span className="font-bold text-sm text-[#F3EFE7]">Tu protocolo personalizado</span>
+            <div className="bg-brand-green-vibrant text-white p-1 rounded-md"><Activity className="h-4 w-4" /></div>
+            <span className="font-bold text-sm text-[#22312A]">Tu plan personalizado</span>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="text-[#7E7A6E] hover:text-[#D8D2C4] p-1"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Cerrar" className="text-[#9AA39B] hover:text-[#22312A] p-1"><X className="h-5 w-5" /></button>
         </div>
 
         {step < TOTAL && (
-          <div className="h-1 bg-[#1E1E22] shrink-0">
-            <div className="h-full bg-brand-green transition-all duration-300" style={{ width: `${((step + 1) / TOTAL) * 100}%` }} />
+          <div className="h-1 bg-[#F0EDE4] shrink-0">
+            <div className="h-full bg-brand-green-vibrant transition-all duration-300" style={{ width: `${((step + 1) / TOTAL) * 100}%` }} />
           </div>
         )}
 
         <div className="p-5 overflow-y-auto">
           {step === 0 && (
             <div className="space-y-3">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">Empecemos. ¿Cuál es tu sexo biológico?</h3>
-              <p className="text-sm text-[#9E998C] !mt-1 mb-1">Lo usamos para calcular tus calorías y proteína con precisión.</p>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">Empecemos. ¿Cuál es tu sexo biológico?</h3>
+              <p className="text-sm text-[#7A8378] !mt-1 mb-1">Lo usamos para calcular tus calorías y proteína con precisión.</p>
               <Opt label="Mujer" active={d.sexo === 'mujer'} onClick={() => pick({ sexo: 'mujer' })} />
               <Opt label="Hombre" active={d.sexo === 'hombre'} onClick={() => pick({ sexo: 'hombre' })} />
             </div>
           )}
           {step === 1 && (
             <div className="space-y-4">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Qué edad tienes?</h3>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">¿Qué edad tienes?</h3>
               <input
                 type="number" inputMode="numeric" placeholder="Ej. 42" value={d.edad ?? ''}
                 onChange={(e) => set({ edad: e.target.value === '' ? undefined : Number(e.target.value) })}
-                className="w-full rounded-xl border border-[#2E2E33] px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+                className="w-full rounded-xl border border-[#E3DED2] bg-white px-4 py-3 text-lg text-[#22312A] focus:border-brand-green-vibrant focus:ring-1 focus:ring-brand-green-vibrant outline-none"
               />
               <QuizNav onBack={back} onNext={next} nextDisabled={!numOk(d.edad, 16, 90)} />
             </div>
           )}
           {step === 2 && (
             <div className="space-y-4">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">Tu peso y estatura actuales</h3>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">Tu peso y estatura actuales</h3>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-[#B7B1A3]">Unidad de peso:</span>
+                <span className="text-sm font-medium text-[#5C665E]">Unidad de peso:</span>
                 {(['kg', 'lb'] as const).map((u) => (
                   <button
                     key={u}
                     type="button"
                     onClick={() => setUnidadPeso(u)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-colors ${unidadPeso === u ? 'border-brand-gold bg-brand-gold/15 text-brand-gold' : 'border-[#2E2E33] text-[#9E998C] hover:border-brand-gold/50'}`}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-bold border transition-colors ${unidadPeso === u ? 'border-brand-green-vibrant bg-brand-green-vibrant/10 text-brand-green' : 'border-[#E3DED2] text-[#7A8378] hover:border-brand-green-vibrant/50'}`}
                   >
                     {u}
                   </button>
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <label className="text-sm font-medium text-[#B7B1A3] block">Peso ({unidadPeso})
+                <label className="text-sm font-medium text-[#5C665E] block">Peso ({unidadPeso})
                   <input
                     type="number" inputMode="numeric" placeholder={unidadPeso === 'kg' ? '80' : '176'} value={d.peso ?? ''}
                     onChange={(e) => set({ peso: e.target.value === '' ? undefined : Number(e.target.value) })}
-                    className="mt-1 w-full rounded-xl border border-[#2E2E33] px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+                    className="mt-1 w-full rounded-xl border border-[#E3DED2] bg-white px-4 py-3 text-lg text-[#22312A] focus:border-brand-green-vibrant focus:ring-1 focus:ring-brand-green-vibrant outline-none"
                   />
                 </label>
-                <label className="text-sm font-medium text-[#B7B1A3] block">Estatura (cm)
+                <label className="text-sm font-medium text-[#5C665E] block">Estatura (cm)
                   <input
                     type="number" inputMode="numeric" placeholder="165" value={d.altura ?? ''}
                     onChange={(e) => set({ altura: e.target.value === '' ? undefined : Number(e.target.value) })}
-                    className="mt-1 w-full rounded-xl border border-[#2E2E33] px-4 py-3 text-lg focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none"
+                    className="mt-1 w-full rounded-xl border border-[#E3DED2] bg-white px-4 py-3 text-lg text-[#22312A] focus:border-brand-green-vibrant focus:ring-1 focus:ring-brand-green-vibrant outline-none"
                   />
                 </label>
               </div>
@@ -272,8 +244,8 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           )}
           {step === 3 && (
             <div className="space-y-3">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Usas algún medicamento GLP-1?</h3>
-              <p className="text-sm text-[#9E998C] !mt-1 mb-1">Si usas uno, la app activa el modo GLP-1 y adapta tu plan.</p>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">¿Usas algún medicamento GLP-1?</h3>
+              <p className="text-sm text-[#7A8378] !mt-1 mb-1">Si usas uno, la app activa el modo GLP-1 y adapta tu plan.</p>
               <div className="grid grid-cols-2 gap-2.5">
                 {['Ozempic', 'Mounjaro', 'Wegovy', 'Rybelsus', 'Zepbound', 'No uso medicación'].map((m) => (
                   <Opt key={m} label={m} active={d.med === m} onClick={() => pick({ med: m })} />
@@ -283,7 +255,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           )}
           {step === 4 && (
             <div className="space-y-3">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Cuál es tu objetivo principal?</h3>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">¿Cuál es tu objetivo principal?</h3>
               <Opt label="Perder grasa" sub="Bajar de peso de forma sostenida" active={d.objetivo === 'perder'} onClick={() => pick({ objetivo: 'perder' })} />
               <Opt label="Ganar músculo" sub="Subir masa o proteger tu tono al adelgazar" active={d.objetivo === 'muscular'} onClick={() => pick({ objetivo: 'muscular' })} />
               <Opt label="Mantener y comer mejor" sub="Estabilizar tu peso con hábitos reales" active={d.objetivo === 'mantener'} onClick={() => pick({ objetivo: 'mantener' })} />
@@ -291,7 +263,7 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           )}
           {step === 5 && (
             <div className="space-y-3">
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7]">¿Qué es lo que más te cuesta hoy?</h3>
+              <h3 className="font-display text-2xl font-bold text-[#22312A]">¿Qué es lo que más te cuesta hoy?</h3>
               <Opt label="No sé qué comer" active={d.problema === 'comer'} onClick={() => pick({ problema: 'comer' })} />
               <Opt label="Miedo a perder músculo" active={d.problema === 'musculo'} onClick={() => pick({ problema: 'musculo' })} />
               <Opt label="Miedo al efecto rebote" active={d.problema === 'rebote'} onClick={() => pick({ problema: 'rebote' })} />
@@ -300,31 +272,31 @@ function PlanQuiz({ open, onClose, onCheckout }: {
           )}
           {step === 6 && (
             <div className="text-center">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-gold bg-brand-gold/10 rounded-full px-3 py-1 mb-3"><CheckCircle2 className="h-3.5 w-3.5" /> Plan listo</span>
-              <h3 className="font-display text-2xl font-bold text-[#F3EFE7] mb-1">Tu protocolo está listo</h3>
-              <p className="text-sm text-[#9E998C] mb-4">Calculado con tus datos{d.med && d.med !== 'No uso medicación' ? ` y tu tratamiento con ${d.med}` : ' y tu objetivo'}.</p>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-green bg-brand-green-vibrant/10 rounded-full px-3 py-1 mb-3"><CheckCircle2 className="h-3.5 w-3.5" /> Plan listo</span>
+              <h3 className="font-display text-2xl font-bold text-[#22312A] mb-1">Tu plan está listo</h3>
+              <p className="text-sm text-[#7A8378] mb-4">Calculado con tus datos{d.med && d.med !== 'No uso medicación' ? ` y tu tratamiento con ${d.med}` : ' y tu objetivo'}.</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
-                  <div className="text-3xl font-black text-brand-gold tabular-nums">{kcal}</div>
-                  <div className="text-[11px] font-semibold text-[#9E998C] uppercase tracking-wide">kcal / día</div>
+                <div className="rounded-2xl bg-brand-green-vibrant/5 border border-brand-green-vibrant/20 p-4">
+                  <div className="text-3xl font-black text-brand-green tabular-nums">{kcal}</div>
+                  <div className="text-[11px] font-semibold text-[#7A8378] uppercase tracking-wide">kcal / día</div>
                 </div>
-                <div className="rounded-2xl bg-brand-green/5 border border-brand-green/15 p-4">
-                  <div className="text-3xl font-black text-brand-gold tabular-nums">{prot} g</div>
-                  <div className="text-[11px] font-semibold text-[#9E998C] uppercase tracking-wide">proteína / día</div>
+                <div className="rounded-2xl bg-brand-green-vibrant/5 border border-brand-green-vibrant/20 p-4">
+                  <div className="text-3xl font-black text-brand-green tabular-nums">{prot} g</div>
+                  <div className="text-[11px] font-semibold text-[#7A8378] uppercase tracking-wide">proteína / día</div>
                 </div>
               </div>
-              {d.problema && <p className="text-sm text-[#B7B1A3] leading-relaxed mb-1">{problemaLinea[d.problema]}</p>}
-              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5">Dentro de la app tienes tu menú día a día con estos números, <strong className="text-[#F3EFE7]">35 recetas altas en proteína</strong>{d.med && d.med !== 'No uso medicación' ? ' y la guía de tu medicamento' : ' y tus macros de cada día'}.</p>
+              {d.problema && <p className="text-sm text-[#5C665E] leading-relaxed mb-1">{problemaLinea[d.problema]}</p>}
+              <p className="text-sm text-[#5C665E] leading-relaxed mb-5">Dentro de la app tienes tu menú día a día con estos números, <strong className="text-[#22312A]">35 recetas altas en proteína</strong>{d.med && d.med !== 'No uso medicación' ? ' y la guía de tu medicamento' : ' y tus macros de cada día'}.</p>
               <a
-                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+                href={CHECKOUT_URL}
                 onClick={onCheckout}
-                className="animate-pulse-green w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold text-center text-base py-4 px-6 rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
+                className="cta-buy animate-pulse-green w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-center text-base py-4 px-6 rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
               >
                 Desbloquear mi plan completo — US$ 9.90 <ArrowRight className="h-5 w-5" />
               </a>
-              <p className="text-[11px] text-[#7E7A6E] mt-2.5 flex items-center justify-center gap-3 flex-wrap">
-                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3 text-brand-gold" /> Pago único, sin suscripción</span>
-                <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3 text-brand-gold" /> 7 días de garantía</span>
+              <p className="text-[11px] text-[#7A8378] mt-2.5 flex items-center justify-center gap-3 flex-wrap">
+                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3 text-brand-green" /> Pago único, sin suscripción</span>
+                <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3 text-brand-green" /> 7 días de garantía</span>
               </p>
             </div>
           )}
@@ -355,8 +327,8 @@ export default function App() {
 
   const triggerCheckout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    let targetUrl = e.currentTarget.href || 'https://pay.hotmart.com/O106207568V?checkoutMode=10';
-    
+    let targetUrl = e.currentTarget.href || CHECKOUT_URL;
+
     if (typeof window !== 'undefined' && window.location.search) {
       const currentSearchParams = new URLSearchParams(window.location.search);
       if (currentSearchParams.toString()) {
@@ -385,134 +357,108 @@ export default function App() {
     window.location.href = targetUrl;
   };
 
+  const faqs: [string, string][] = [
+    [
+      'No uso Ozempic ni ningún medicamento. ¿Sirve para mí?',
+      'Sí. El corazón del método es tu menú diario con calorías y proteína calculadas para tu objetivo — perder grasa, ganar músculo o comer mejor. El modo GLP-1 es una función opcional: si no usas esos medicamentos, nunca lo verás.',
+    ],
+    [
+      '¿Cuándo recibo el acceso?',
+      'Inmediatamente. Al confirmarse el pago, Hotmart te envía un correo con tu acceso. La app se abre desde el navegador y se instala en tu pantalla de inicio en 2 minutos — sin tiendas de aplicaciones. Incluimos la guía paso a paso.',
+    ],
+    [
+      'El precio está en dólares. ¿Puedo pagar en mi moneda?',
+      'Sí. El checkout detecta tu país y te muestra el monto exacto en tu moneda local antes de confirmar. Puedes pagar con tarjeta y, según tu país, con métodos locales como Mercado Pago.',
+    ],
+    [
+      '¿Y si no es para mí?',
+      'Tienes 7 días de garantía total. Prueba la app y el plan; si no sientes diferencia, escribe un correo y te devolvemos el 100% — sin preguntas ni formularios.',
+    ],
+  ];
+
   return (
-    <div className="min-h-screen bg-premium-wellness text-[#F3EFE7] font-sans selection:bg-brand-gold/10 selection:text-brand-gold overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-premium-wellness text-neutral-dark font-sans selection:bg-brand-green-vibrant/15 selection:text-brand-green overflow-x-hidden antialiased">
 
       <PlanQuiz open={quizOpen} onClose={() => setQuizOpen(false)} onCheckout={triggerCheckout} />
 
-      <div className="bg-[#0E0E10] text-[#F3EFE7] text-xs font-semibold tracking-wider text-center py-2 px-4 border-b border-brand-gold/15 flex items-center justify-center gap-2">
-        <ShieldCheck className="h-4 w-4 text-brand-gold" />
-        <span className="uppercase font-sans tracking-[0.14em] text-[10px] md:text-xs whitespace-nowrap">
-          Dieta · Gym · Usuarios GLP-1 (Ozempic, Wegovy…)
-        </span>
-      </div>
-
-      <header className="border-b border-white/10 py-4 px-6 sticky top-0 bg-[#141416]/95 backdrop-blur-md z-40">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+      {/* Header */}
+      <header className="border-b border-[#ECE7DB] py-3.5 px-6 sticky top-0 bg-[#FDFBF7]/92 backdrop-blur-md z-40">
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="bg-[#1E1E22] ring-1 ring-brand-gold/30 p-1.5 rounded-lg flex items-center justify-center">
-              <Activity className="h-5 w-5 text-brand-gold" />
+            <div className="bg-brand-green-vibrant p-1.5 rounded-lg flex items-center justify-center">
+              <Activity className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="font-bold tracking-tight text-lg text-[#F3EFE7]">Método Proteína Primero</span>
-              <span className="text-xs text-brand-gold font-semibold block -mt-1">Nutrición inteligente · 21 días</span>
+              <span className="font-bold tracking-tight text-lg text-[#1B2620]">Método Proteína Primero</span>
+              <span className="text-[11px] text-brand-green font-semibold block -mt-1">Tu plan de comidas · 21 días</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-              onClick={triggerCheckout}
-              className="cta-buy text-[#1A1712] bg-brand-gold hover:bg-[#c9a233] text-sm font-bold px-4 min-h-[44px] rounded-lg transition-all duration-200 hover:scale-105 shadow-sm shadow-black/30 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gold"
-            >
-              Comprar Ahora
-            </a>
-          </div>
+          <a
+            href={CHECKOUT_URL}
+            onClick={triggerCheckout}
+            className="cta-buy bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-sm font-bold px-4 min-h-[42px] rounded-xl transition-all duration-200 hover:scale-[1.03] shadow-sm flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+          >
+            Comprar — US$ 9.90
+          </a>
         </div>
       </header>
 
-      <section className="relative pt-0 pb-20 px-6 overflow-hidden bg-gradient-to-br from-[#0B0B0C] via-[#141416] to-[#1A1712]">
-        
-        <div className="bg-black/15 border-b border-brand-gold/20 py-2.5 px-4 mb-6 -mx-6 text-center">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs md:text-sm">
-            <span className="h-px w-6 bg-brand-gold/50 hidden sm:block" aria-hidden="true" />
-            <span className="select-none flex items-center gap-2.5 flex-wrap justify-center text-[#E7E1D3]/85 font-medium tracking-wide">
-              <span className="uppercase text-[10px] md:text-xs tracking-[0.22em] text-brand-gold/90 font-semibold">Precio de lanzamiento</span>
-              <span className="text-brand-gold tabular-nums text-sm md:text-base font-semibold">
-                US$&nbsp;9.90 <span className="text-white/45 line-through ml-1 font-normal">US$&nbsp;19.90</span>
-              </span>
-            </span>
-            <span className="h-px w-6 bg-brand-gold/50 hidden sm:block" aria-hidden="true" />
-          </div>
-        </div>
-
-        <div className="max-w-6xl mx-auto">
+      {/* Hero */}
+      <section className="relative pt-14 md:pt-20 pb-16 px-6 overflow-hidden">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <p className="text-base md:text-lg text-[#C4BEB0]/80 mb-4 font-medium tracking-wide italic max-w-2xl">
-                Mientras otros adivinan qué comer y abandonan en la primera semana…
-              </p>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-white tracking-tight leading-[1.12] mb-6">
-                Sabes <span className="text-brand-gold">exactamente qué comer</span> cada día para lograr tu objetivo.
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+              <Eyebrow>Método Proteína Primero</Eyebrow>
+
+              <h1 className="text-4xl md:text-5xl lg:text-[3.4rem] font-bold font-display text-[#1B2620] tracking-tight leading-[1.1] mb-5">
+                Sabes exactamente <span className="text-brand-green">qué comer</span>, cada día.
               </h1>
 
-              <p className="text-lg md:text-xl text-[#F3EFE7] font-normal leading-relaxed mb-6 max-w-2xl">
-                No es una dieta más. Es un <strong className="text-brand-gold">protocolo de 21 días</strong> con tu menú diario —calorías, proteína y macros calculados para ti— para perder grasa sin perder músculo, ganar masa o simplemente comer mejor. ¿Usas Ozempic, Wegovy o Mounjaro? La app incluye un <strong className="text-brand-gold">modo GLP-1</strong> que se adapta a tu tratamiento.
+              <p className="text-lg md:text-xl text-[#4A554D] leading-relaxed mb-8 max-w-xl">
+                Una app con tu plan de 21 días: menú diario, calorías y proteína calculadas para <strong className="text-[#1B2620]">perder grasa, ganar músculo o comer mejor</strong>. ¿Usas Ozempic o similar? Modo GLP-1 incluido.
               </p>
 
-              <div className="mb-6 flex items-center gap-2 flex-wrap justify-center lg:justify-start text-xs text-[#E7E1D3] font-semibold">
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">🔥 Perder peso</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💪 Ganar músculo</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">❤️ Comer más saludable</span>
-                <span className="bg-white/10 border border-white/15 rounded-full px-3 py-1.5">💉 Modo GLP-1</span>
-                <span className="bg-brand-gold/15 border border-brand-gold/40 text-brand-gold rounded-full px-3 py-1.5">Un solo pago · sin suscripción</span>
-              </div>
-
               <div className="w-full sm:max-w-md">
-                <button
+                <a
                   id="hero-cta-btn"
+                  href={CHECKOUT_URL}
+                  onClick={triggerCheckout}
+                  className="cta-buy group w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-center text-lg py-5 px-8 rounded-2xl animate-pulse-green transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/40"
+                >
+                  Empezar mi plan — US$ 9.90
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </a>
+
+                <button
                   type="button"
                   onClick={() => setQuizOpen(true)}
-                  className="group w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold text-center text-lg md:text-xl py-5 px-8 rounded-2xl shadow-[0_10px_30px_-8px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/50"
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 text-sm font-semibold text-brand-green hover:text-brand-green-hover underline underline-offset-4 decoration-brand-green-vibrant/40 py-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant/60 rounded"
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <Sparkles className="h-5 w-5 shrink-0" />
-                    Descubre tu protocolo — gratis
-                    <ArrowRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform shrink-0" />
-                  </span>
+                  <Sparkles className="h-4 w-4 shrink-0" />
+                  o descubre tu plan gratis en 60 segundos
                 </button>
-                <p className="text-center text-[11px] text-[#C4BEB0]/80 mt-2">6 preguntas · 60 segundos · sin tarjeta · resultado al instante</p>
 
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <a
-                    href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-                    onClick={triggerCheckout}
-                    className="cta-buy group w-full flex items-center justify-center gap-2.5 rounded-2xl border-2 border-brand-gold/60 bg-brand-gold/10 hover:bg-brand-gold/20 text-white font-bold text-base md:text-lg py-4 px-6 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60"
-                  >
-                    Empezar mi protocolo — US$ 9.90
-                    <ArrowRight className="h-5 w-5 text-brand-gold group-hover:translate-x-0.5 transition-transform shrink-0" />
-                  </a>
-                </div>
-
-                <div className="flex items-center justify-center gap-6 mt-3 text-xs text-[#C4BEB0] font-medium">
+                <div className="flex items-center justify-center gap-5 mt-4 text-xs text-[#5C665E] font-medium flex-wrap">
                   <span className="flex items-center gap-1">
-                    <Check className="h-4 w-4 text-brand-gold stroke-[3px]" /> Acceso inmediato
+                    <Check className="h-4 w-4 text-brand-green-vibrant stroke-[3px]" /> Acceso inmediato
                   </span>
                   <span className="flex items-center gap-1">
-                    <Lock className="h-3.5 w-3.5 text-brand-gold" /> Pago 100% seguro
+                    <Lock className="h-3.5 w-3.5 text-brand-green-vibrant" /> Pago único
                   </span>
                   <span className="flex items-center gap-1">
-                    <ShieldCheck className="h-4 w-4 text-brand-gold" /> 7 Días de Garantía
+                    <ShieldCheck className="h-4 w-4 text-brand-green-vibrant" /> Garantía 7 días
                   </span>
                 </div>
               </div>
-
             </div>
 
             <div className="lg:col-span-5 flex flex-col justify-center">
-              <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-gold/20 to-brand-gold/5 blur-3xl opacity-70 -z-10 scale-90" />
-
-                <MockupDispositivos />
-
-                <div className="mt-6 text-center">
-                  <span className="text-[10px] uppercase font-semibold tracking-widest text-brand-gold bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-brand-gold/30">
-                    <Check className="h-3 w-3" /> App completa + Biblioteca de 4 Guías
-                  </span>
-                  <p className="text-xs text-[#E7E1D3]/70 font-medium mt-2">Tu plan del día, siempre en tu bolsillo</p>
-                </div>
+              <div className="relative mx-auto w-full max-w-[290px]">
+                <div className="absolute inset-0 rounded-full bg-brand-green-vibrant/10 blur-3xl -z-10 scale-90" />
+                <TelefonoReal className="mx-auto w-full" alt="La app del Método Proteína Primero abierta en el teléfono" />
+                <p className="text-xs text-[#7A8378] font-medium mt-4 text-center">Tu plan del día, siempre en tu bolsillo</p>
               </div>
             </div>
 
@@ -520,715 +466,276 @@ export default function App() {
         </div>
       </section>
 
+      {/* Lo que recibes */}
       <FadeIn>
-      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <Eyebrow tone="dark">El problema que nadie te contó</Eyebrow>
-            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold font-display text-white tracking-tight leading-[1.1] mb-4">
-              El esfuerzo lo pones tú.<br className="hidden md:block" /> Estos 3 problemas los resuelve un método — o nadie.
-            </h2>
-            <p className="text-[#C4BEB0]/70 text-base max-w-xl mx-auto">
-              No es falta de disciplina. Es que te dijeron cuánto bajar — pero nadie te enseñó cómo comer.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <Thermometer className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">No sabes qué comer — y adivinar agota</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Mil dietas que se contradicen, apps que solo cuentan calorías y ningún plan concreto. "Come menos" no es un método. Y si usas GLP-1, comer lo incorrecto además significa náuseas, reflujo y días perdidos.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <TrendingDown className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">Pérdida de músculo silenciosa</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Al comer menos —por dieta o porque el medicamento apaga tu apetito— la proteína es lo primero que falta. Bajas de peso en la báscula, pero pierdes el músculo que te mantiene firme, fuerte y con energía.
-              </p>
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-red-400/30 hover:bg-red-950/20 transition-all duration-200">
-              <div className="h-10 w-10 mb-4 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-800/30">
-                <RotateCcw className="h-5 w-5 text-red-400" />
-              </div>
-              <h3 className="font-bold text-white text-base mb-2">El efecto rebote que borra tu progreso</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                El 80% de las personas que bajan de peso —con dieta o al dejar el GLP-1— lo recuperan en menos de 12 meses. Sin hábitos reales y un metabolismo protegido, el rebote no es una posibilidad: es casi una certeza.
-              </p>
-            </div>
-
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-white/80 text-base font-semibold mb-2">
-              Estos 3 problemas tienen una causa en común:
-            </p>
-            <p className="text-brand-gold font-bold text-xl md:text-2xl font-display mb-4">
-              Nadie te dijo exactamente qué comer para tu objetivo.
-            </p>
-            <p className="text-white/70 text-sm max-w-xl mx-auto mb-8">
-              Inviertes en gimnasio, suplementos — o hasta <strong className="text-white">US$ 1,200 al mes</strong> si usas GLP-1. Este sistema cuesta <strong className="text-brand-gold">menos del 1% de eso</strong> — y es la parte que hace que todo lo demás funcione.
-            </p>
-
-            <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-              onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-3.5 px-8 rounded-xl transition-all duration-200 cursor-pointer text-sm shadow-lg shadow-brand-green-vibrant/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-            >
-              <span>Empezar mi protocolo — US$ 9.90</span>
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-
-        </div>
-      </section>
-      </FadeIn>
-
-      {/* Lo que recibes hoy — respuesta inmediata a "¿qué estoy comprando?" */}
-      <FadeIn>
-      <section className="py-16 px-6 bg-[#141416] border-b border-[#2A2A2E]/70">
+      <section className="py-16 px-6 bg-gray-soft border-y border-[#ECE7DB]">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <Eyebrow>Acceso inmediato tras la compra</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-2">
+          <div className="text-center mb-10">
+            <Eyebrow>Acceso inmediato</Eyebrow>
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#1B2620] mb-2">
               Esto es lo que recibes hoy
             </h2>
-            <p className="text-[#9E998C]">Todo junto, en un solo acceso — sin esperas y sin envíos.</p>
           </div>
 
-          {/* Producto principal: la app, presentada como el héroe del entregable */}
-          <div className="relative overflow-hidden rounded-3xl p-5 md:p-6 bg-gradient-to-br from-[#1E1B15] via-brand-green to-[#1A1712] ring-1 ring-brand-gold/30 shadow-[0_20px_50px_-24px_rgba(13,51,32,0.7)]">
-            <div className="absolute -top-12 -right-12 h-44 w-44 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none" aria-hidden="true" />
-            <div className="relative flex items-center gap-4 md:gap-6">
-              {/* teléfono fotorrealista con la pantalla real */}
-              <TelefonoReal className="shrink-0 w-[88px] md:w-[112px]" shadow="drop-shadow(0 12px 18px rgba(0,0,0,0.45))" alt="Pantalla Hoy de la app del Reto de 21 días" />
-              <div className="min-w-0 flex-1">
-                <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold bg-white/10 border border-brand-gold/30 rounded-full px-2.5 py-1 mb-2">
-                  <Smartphone className="h-3 w-3" /> Producto principal · App
-                </span>
-                <h3 className="text-white font-bold font-display text-xl md:text-2xl leading-tight">App del Reto de 21 días</h3>
-                <p className="text-[#E7E1D3]/90 text-sm md:text-base leading-snug mt-1">
-                  Tu plan día a día con menús inteligentes por calorías, proteína y macros, IMC y estadísticas de tu progreso — con modo GLP-1 y guía de medicamentos si los usas.
-                </p>
-              </div>
-              <AppSeal size={72} rotate={-6} className="hidden md:block -mr-1" />
-            </div>
-          </div>
-
-          {/* Lo que la app hace por ti — lista única (fusión de las dos secciones anteriores) */}
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-gold/80 mt-8 mb-4 text-center">
-            Y esto es lo que la app hace por ti
-          </p>
-          <ul className="space-y-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[
-              ['Plan alimentario inteligente', 'Con tu peso, altura y objetivo genera tu día completo — calorías, proteína, carbohidratos y grasas ya calculados. Cambias cualquier plato con un toque.'],
-              ['El menú de hoy y 35 recetas a un toque', 'Sabes exactamente qué comer, con la proteína de cada plato lista — sin pensarlo ni pesar nada.'],
-              ['Elige tu objetivo y la app se ajusta', 'Perder peso, ganar músculo, mantener o comer más saludable — tus metas de proteína y calorías se recalculan solas.'],
-              ['Estadísticas de todo tu progreso', 'Peso, IMC, cintura, agua, proteína, macros y energía — en gráficos claros que puedes llevar a tu médico o nutricionista.'],
-              ['Lista de compras inteligente', 'Qué sí llevar y qué evitar en el súper, lista para cada semana.'],
-              ['Modo GLP-1 (si lo usas)', '¿Ozempic, Wegovy, Mounjaro, Zepbound o Rybelsus? Actívalo y tienes la guía de tu medicamento, tu día de dosis y registro de síntomas.'],
-              ['Plan de salida anti-rebote de 12 semanas', 'Consolida tu resultado y evita recuperar el peso al terminar el reto.'],
-              ['Funciona sin conexión y se instala en tu pantalla de inicio', 'Como una app normal — pero sin descargarla de ninguna tienda.'],
-            ].map(([t, d]) => (
-              <li key={t} className="flex gap-4">
-                <div className="h-9 w-9 shrink-0 rounded-xl bg-brand-green-vibrant/15 flex items-center justify-center">
-                  <CheckCircle2 className="h-5 w-5 text-brand-gold" />
+              [UtensilsCrossed, 'Tu menú de cada día', 'Calorías, proteína y macros ya calculados según tu peso y objetivo. Cambias cualquier plato con un toque.'],
+              [ChefHat, '35 recetas altas en proteína', 'Con la proteína de cada plato lista — sin pesar nada ni pensarlo.'],
+              [LineChart, 'Tu progreso en gráficos', 'Peso, IMC y medidas, listos para enseñar a tu médico o nutricionista.'],
+              [Syringe, 'Modo GLP-1 opcional', '¿Ozempic, Wegovy o Mounjaro? Actívalo y la app se adapta a tu tratamiento.'],
+            ].map(([Icon, t, d]: any) => (
+              <div key={t} className="bg-white rounded-2xl border border-[#ECE7DB] p-6 shadow-luxe">
+                <div className="h-10 w-10 mb-4 rounded-xl bg-brand-green-vibrant/10 flex items-center justify-center">
+                  <Icon className="h-5 w-5 text-brand-green-vibrant" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-[#F3EFE7] text-base">{t}</h3>
-                  <p className="text-sm text-[#B7B1A3] leading-relaxed">{d}</p>
-                </div>
-              </li>
+                <h3 className="font-bold text-[#1B2620] text-base mb-1.5">{t}</h3>
+                <p className="text-sm text-[#5C665E] leading-relaxed">{d}</p>
+              </div>
             ))}
-          </ul>
+          </div>
 
-          <div className="mt-6 max-w-2xl mx-auto flex items-start gap-2 bg-[#141416] border border-[#33333A]/60 rounded-xl p-4">
+          <div className="mt-6 flex items-start gap-2.5 bg-white border border-[#ECE7DB] rounded-2xl p-4 max-w-2xl mx-auto">
             <Award className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
-            <p className="text-sm text-[#F3EFE7] leading-relaxed">
-              <strong>Sin mensualidad.</strong> Apps como BetterMe cobran cada mes. Aquí pagas <strong>una sola vez</strong> y el método es tuyo para siempre.
+            <p className="text-sm text-[#4A554D] leading-relaxed">
+              Incluye además el <strong className="text-[#1B2620]">plan anti-rebote de 12 semanas</strong> y 4 guías en PDF. <strong className="text-[#1B2620]">Sin mensualidad</strong> — pagas una sola vez y es tuyo para siempre.
             </p>
           </div>
-
-          <p className="text-center text-xs text-[#9E998C] mt-5 flex items-center justify-center gap-1.5">
-            <FileText className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-            Incluye además 4 guías completas en PDF y una guía para instalar la app en tu celular en 2 minutos.
-          </p>
 
           <div className="mt-8 text-center">
             <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+              href={CHECKOUT_URL}
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold text-lg py-4 px-8 rounded-2xl shadow-lg shadow-brand-green-vibrant/20 transition-all duration-300 hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/30"
+              className="cta-buy inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-lg py-4 px-8 rounded-2xl animate-pulse-green transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/30"
             >
-              Empezar mi protocolo — US$ 9.90 <ArrowRight className="h-5 w-5" />
+              Empezar mi plan — US$ 9.90 <ArrowRight className="h-5 w-5" />
             </a>
-            <p className="text-xs text-[#7E7A6E] mt-3 flex items-center justify-center gap-4">
-              <span className="inline-flex items-center gap-1"><Lock className="h-3.5 w-3.5 text-brand-gold" /> Pago 100% seguro</span>
-              <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3.5 w-3.5 text-brand-gold" /> 7 días de garantía</span>
-            </p>
           </div>
         </div>
       </section>
       </FadeIn>
 
+      {/* Testimonios */}
       <FadeIn>
-      <div className="border-y border-[#2A2A2E] bg-[#141416] py-6 px-6">
-        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-8 divide-x divide-[#242428]">
-          <div className="text-center px-2 md:px-6">
-            <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">4</p>
-            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">módulos completos<br className="hidden md:block" /> con acceso inmediato</p>
-          </div>
-          <div className="text-center px-2 md:px-6">
-            <p className="text-2xl md:text-3xl font-extrabold text-[#F3EFE7] tabular-nums">35</p>
-            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">recetas altas en proteína<br className="hidden md:block" /> con macros calculados</p>
-          </div>
-          <div className="text-center px-2 md:px-6">
-            <p className="text-2xl md:text-3xl font-extrabold text-brand-gold tabular-nums">12</p>
-            <p className="text-xs text-[#B7B1A3] mt-1 leading-snug">semanas de plan anti-rebote<br className="hidden md:block" /> para mantener tu resultado</p>
-          </div>
-        </div>
-      </div>
-      </FadeIn>
-
-      <FadeIn>
-      <section className="py-14 px-6 bg-[#141416]/40 border-t border-[#2A2A2E]/60">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+      <section className="py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
             <Eyebrow>Resultados reales</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Lo que dicen nuestras usuarias
+            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#1B2620]">
+              Lo que dicen quienes ya lo usan
             </h2>
-            <p className="text-[#B7B1A3] text-sm leading-relaxed max-w-lg mx-auto">
-              Personas reales que ya siguen el Método Proteína Primero para perder grasa, ganar músculo o comer mejor.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            <div className="bg-[#1A1A1C] rounded-2xl p-6 border border-[#2E2E33] shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col">
-              <div className="flex items-center gap-0.5 mb-4">
-                {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
-              </div>
-              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5 italic flex-1">
-                "Probé todas las dietas y siempre las dejaba porque no sabía qué cocinar. Ahora abro la app y ya sé qué comer, con la proteína calculada. <strong className="text-[#F3EFE7]">En 8 semanas bajé 7 kilos sin pasar hambre — y por primera vez no volví a empezar de cero el lunes.</strong>"
-              </p>
-              <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">MJ</div>
-                <div>
-                  <p className="text-xs font-bold text-[#F3EFE7]">María José G.</p>
-                  <p className="text-[10px] text-[#7E7A6E]">Guadalajara, México · Perder peso</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              ['MJ', 'María José G.', 'Guadalajara, México · Perder peso', 5, 'Abro la app y ya sé qué comer, con la proteína calculada. En 8 semanas bajé 7 kilos sin pasar hambre.'],
+              ['CB', 'Carolina B.', 'Buenos Aires, Argentina · Wegovy', 5, 'Mi médica me recetó Wegovy y solo me dijo "come menos". Con el método entendí exactamente qué poner en mi plato. Bajé 11 kg en 2 meses.'],
+              ['AP', 'Andrés P.', 'Bogotá, Colombia · Ganar músculo', 4, 'Con el plan ajustado a ganar músculo por fin veo resultados: más fuerza y menos grasa en 6 semanas.'],
+            ].map(([ini, nombre, lugar, stars, quote]: any) => (
+              <div key={nombre} className="bg-white rounded-2xl p-6 border border-[#ECE7DB] shadow-luxe flex flex-col">
+                <div className="flex items-center gap-0.5 mb-3" aria-label={`${stars} de 5 estrellas`}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`h-4 w-4 fill-current ${i < stars ? 'text-amber-500' : 'text-[#DBD5C7]'}`} />
+                  ))}
+                </div>
+                <p className="text-sm text-[#4A554D] leading-relaxed mb-5 italic flex-1">"{quote}"</p>
+                <div className="flex items-center gap-3 border-t border-[#F0EDE4] pt-4 mt-auto">
+                  <div className="h-10 w-10 rounded-full bg-brand-green-vibrant/10 border-2 border-brand-green-vibrant/30 flex items-center justify-center text-[11px] font-bold text-brand-green">{ini}</div>
+                  <div>
+                    <p className="text-xs font-bold text-[#1B2620]">{nombre}</p>
+                    <p className="text-[10px] text-[#7A8378]">{lugar}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="bg-[#1A1A1C] rounded-2xl p-6 border border-[#2E2E33] shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col">
-              <div className="flex items-center gap-0.5 mb-4">
-                {[...Array(5)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
-              </div>
-              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5 italic flex-1">
-                "Mi médica me recetó Wegovy y me dijo 'come menos'. Eso fue todo. No saber qué comer me generaba una ansiedad enorme. Con la guía de alimentación entendí la estructura exacta de mi plato. <strong className="text-[#F3EFE7]">Sin adivinar. Sin ansiedad. En 2 meses bajé 11 kg y mi piel sigue firme.</strong>"
-              </p>
-              <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">CB</div>
-                <div>
-                  <p className="text-xs font-bold text-[#F3EFE7]">Carolina B.</p>
-                  <p className="text-[10px] text-[#7E7A6E]">Buenos Aires, Argentina · Wegovy</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#1A1A1C] rounded-2xl p-6 border border-[#2E2E33] shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col">
-              <div className="flex items-center gap-0.5 mb-4">
-                {[...Array(4)].map((_, i) => (<Star key={i} className="h-4 w-4 text-amber-400 fill-current" />))}
-                <Star className="h-4 w-4 text-[#C4BEB0] fill-current" />
-              </div>
-              <p className="text-sm text-[#B7B1A3] leading-relaxed mb-5 italic flex-1">
-                "Entreno 4 veces por semana pero no lograba definir — comía proteína al azar, sin medida. Con el plan ajustado a ganar músculo por fin veo resultados. <strong className="text-[#F3EFE7]">En 6 semanas gané fuerza y bajé grasa.</strong> Le doy 4 estrellas porque me gustaría más variedad de desayunos, pero el resto es excelente."
-              </p>
-              <div className="flex items-center gap-3 border-t border-[#242428] pt-4 mt-auto">
-                <div className="h-10 w-10 rounded-full bg-[#2A2416] border-2 border-brand-gold/40 flex items-center justify-center text-[11px] font-bold text-brand-gold">AP</div>
-                <div>
-                  <p className="text-xs font-bold text-[#F3EFE7]">Andrés P.</p>
-                  <p className="text-[10px] text-[#7E7A6E]">Bogotá, Colombia · Ganar músculo</p>
-                </div>
-              </div>
-            </div>
-
+            ))}
           </div>
-
-          <div className="text-center mt-12">
-            <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
-              onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span>Quiero los mismos resultados — US$ 9.90</span>
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <p className="text-xs text-[#9E998C] mt-3">4 módulos · 35 recetas · Garantía 7 días · Acceso inmediato</p>
-          </div>
-
         </div>
       </section>
       </FadeIn>
 
+      {/* Oferta */}
       <FadeIn>
-      <section className="py-14 px-6 bg-[#141416]/30">
-        <div className="max-w-4xl mx-auto">
-
-          <div className="text-center mb-12">
-            <Eyebrow>Oferta especial de lanzamiento</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-[#F3EFE7] mb-4">
-              Tú pones el esfuerzo.<br className="hidden md:block" /> Este método pone el plan.
-            </h2>
-            <p className="text-[#B7B1A3] text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-              Ya inviertes tiempo, esfuerzo y dinero en verte mejor. Sin el plan correcto sigues adivinando qué comer, perdiendo músculo y volviendo a empezar cada lunes. El Método Proteína Primero completa la ecuación que nadie te dio.
-            </p>
-          </div>
-
-          <div className="frame-certificate rounded-2xl shadow-xl relative overflow-hidden max-w-lg mx-auto text-white bg-gradient-to-b from-[#242222] via-brand-green to-[#141210]">
-            <div className="absolute -top-10 -right-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative bg-black/15 border-b border-brand-gold/20 text-center py-3.5 px-4 flex items-center justify-center gap-3">
-              <span className="h-px w-6 bg-brand-gold/50" aria-hidden="true" />
-              <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-brand-gold/90 flex items-center gap-2">
-                <Smartphone className="h-3.5 w-3.5" /> Pack digital · Acceso inmediato
+      <section className="py-16 px-6 bg-gray-mint border-y border-[#E2EFE6]">
+        <div className="max-w-lg mx-auto">
+          <div className="frame-certificate rounded-3xl bg-white shadow-luxe overflow-hidden">
+            <div className="bg-brand-green text-center py-3 px-4">
+              <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-white/90 flex items-center justify-center gap-2">
+                <Smartphone className="h-3.5 w-3.5" /> Acceso completo · Pago único
               </span>
-              <span className="h-px w-6 bg-brand-gold/50" aria-hidden="true" />
             </div>
 
-            <div className="relative p-8 md:p-10 text-center">
-              <div className="flex flex-col items-center mb-2">
-                <AppSeal size={64} rotate={0} className="mb-3" />
-                <h3 className="font-extrabold text-brand-gold text-base uppercase tracking-widest">
-                  Método Proteína Primero — Acceso Completo
-                </h3>
-              </div>
+            <div className="p-8 md:p-10 text-center">
+              <h2 className="font-bold font-display text-[#1B2620] text-2xl mb-6">
+                Método Proteína Primero
+              </h2>
 
-              <div className="space-y-3 mt-4 mb-6 text-left border-b border-white/10 pb-6 text-white/90">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Tu app principal</p>
-                <div className="flex items-center gap-3 text-xs bg-white/10 border border-brand-gold/30 rounded-xl px-3 py-3">
-                  <span className="h-8 w-8 shrink-0 rounded-lg bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
-                    <Smartphone className="h-4 w-4 text-brand-gold" />
-                  </span>
-                  <span><strong className="text-white">App del Reto de 21 días</strong> — plan inteligente por calorías, proteína y macros, IMC, estadísticas y modo GLP-1 incluido <span className="text-white/50 font-medium">(Valor $39.90)</span></span>
-                </div>
+              <ul className="space-y-3 mb-7 text-left text-sm text-[#4A554D]">
+                {[
+                  'App del plan de 21 días — menú, calorías, proteína y progreso',
+                  '35 recetas altas en proteína + lista de compras',
+                  'Plan anti-rebote de 12 semanas',
+                  '4 guías completas en PDF de regalo',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="h-5 w-5 text-brand-green-vibrant shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
 
-                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-gold pt-2">+ 4 Bonos gratis, dentro de la app</p>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Guía de Estructuración de Platos <span className="text-white/50 font-medium">(Valor $19.90)</span></span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Recetario de Alta Proteína <span className="text-white/50 font-medium">(Valor $14.90)</span></span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Lista de Supermercado Inteligente <span className="text-white/50 font-medium">(Valor $9.90)</span></span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Diario de Progreso y Hábitos <span className="text-white/50 font-medium">(Valor $5.20)</span></span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span>Guía de instalación del app paso a paso <span className="text-brand-gold/80 font-medium">(Gratis)</span></span>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center justify-center mb-6">
-                <span className="text-xs text-white/50 line-through tracking-wide">
-                  Valor Total: US$ 89.90
-                </span>
+              <div className="flex flex-col items-center mb-6">
+                <span className="text-xs text-[#9AA39B] line-through tracking-wide">Valor total: US$ 89.90</span>
                 <div className="flex items-baseline justify-center gap-1.5 mt-1">
-                  <span className="text-3xl text-brand-gold font-bold align-super">US$</span>
-                  <span className="text-6xl md:text-7xl font-black text-white tracking-tight glow-gold tabular-nums">
-                    9.90
-                  </span>
+                  <span className="text-2xl text-brand-green font-bold">US$</span>
+                  <span className="text-6xl font-black text-[#1B2620] tracking-tight tabular-nums">9.90</span>
                 </div>
-                <span className="text-sm font-semibold text-white/70 mt-1">Un pago único</span>
-                <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mt-2 bg-white/5 border border-brand-gold/20 px-3 py-1 rounded-full">
-                  Sin mensualidades ni cobros ocultos
+                <span className="text-[11px] font-bold text-brand-green uppercase tracking-widest mt-2 bg-brand-green-vibrant/10 px-3 py-1 rounded-full">
+                  Un solo pago · sin mensualidades
                 </span>
               </div>
 
               <a
                 id="oferta-cta-purchase-trigger"
-                href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+                href={CHECKOUT_URL}
                 onClick={triggerCheckout}
-                className="w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] text-center font-bold py-5 px-6 rounded-2xl text-lg md:text-xl shadow-xl shadow-brand-green-vibrant/40 transition-all duration-300 transform hover:-translate-y-1 animate-pulse-green mb-4 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60"
+                className="cta-buy w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-center font-bold py-5 px-6 rounded-2xl text-lg animate-pulse-green transition-all duration-300 mb-5 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/40"
               >
-                <ShoppingCart className="h-5 w-5 text-white shrink-0" />
-                <span>Quiero el protocolo completo</span>
+                <ShoppingCart className="h-5 w-5 shrink-0" />
+                <span>Quiero mi acceso ahora</span>
               </a>
 
-              <p className="text-xs text-[#E7E1D3]/80 leading-relaxed font-medium mb-6 flex items-center justify-center gap-1.5 max-w-sm mx-auto">
-                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-brand-gold" />
-                Empieza hoy y llega a tu próxima comida con un plan exacto — desde el primer día.
-              </p>
-
-              <div className="border-t border-white/10 pt-6">
-                <div className="flex items-center justify-center gap-2 mb-4 bg-white/5 border border-brand-gold/30 rounded-xl px-4 py-3 max-w-md mx-auto">
-                  <Globe className="h-4 w-4 text-brand-gold shrink-0" />
-                  <span className="text-[11px] md:text-xs font-semibold text-white/90 leading-snug text-left">
-                    Paga en <strong className="text-brand-gold">tu moneda local</strong> — la conversión es automática en el checkout.
-                  </span>
-                </div>
-                <div className="flex flex-wrap justify-center items-center gap-2">
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-white/40 mr-1"><Lock className="h-3 w-3" /> Pago seguro</span>
-                  {['VISA', 'MASTERCARD', 'AMEX', 'PAYPAL'].map((bandeira) => (
-                    <span key={bandeira} className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-[10px] font-bold text-white/75">{bandeira}</span>
-                  ))}
-                </div>
+              <div className="flex items-start gap-2.5 bg-gray-soft border border-[#ECE7DB] rounded-2xl p-4 text-left mb-4">
+                <Award className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
+                <p className="text-xs text-[#4A554D] leading-relaxed">
+                  <strong className="text-[#1B2620]">Garantía de 7 días.</strong> Si no sientes diferencia, te devolvemos el 100% — sin preguntas.
+                </p>
               </div>
 
+              <p className="text-[11px] text-[#7A8378] flex items-center justify-center gap-1.5">
+                <Globe className="h-3.5 w-3.5 text-brand-green shrink-0" />
+                Pagas en tu moneda local · Pago seguro (VISA, Mastercard, AMEX, PayPal)
+              </p>
             </div>
           </div>
-
         </div>
       </section>
       </FadeIn>
 
+      {/* FAQ */}
       <FadeIn>
-      <section className="py-16 px-6 bg-[#141416]/40 border-t border-[#2A2A2E]/50">
-        <div className="max-w-4xl mx-auto bg-[#1A1A1C] border border-[#33333A]/40 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center shadow-sm relative overflow-hidden">
-          
-          <div className="absolute right-0 top-0 h-40 w-40 bg-brand-gold/10 rounded-full blur-3xl -z-10" />
-
-          <div className="shrink-0 relative group">
-            <div className="absolute inset-x-0 h-28 w-28 bg-brand-gold/30 rounded-full blur-xl group-hover:bg-brand-gold/40 transition duration-300" />
-            <div className="h-28 w-28 rounded-full border-4 border-brand-gold bg-[#1A1A1C] relative z-10 flex flex-col items-center justify-center text-center p-2 shadow-xl animate-pulse-gold">
-              <Award className="h-10 w-10 text-brand-gold mb-1" />
-              <span className="text-[10px] font-black leading-none text-brand-gold-dark tracking-wide uppercase">100% GARANTIZADO</span>
-            </div>
-          </div>
-
-          <div className="text-center md:text-left">
-            <h3 className="font-bold font-display text-[#F3EFE7] text-xl md:text-2xl mb-3">
-              Garantía "Léelo Todo" — 7 días, sin preguntas.
-            </h3>
-            <p className="text-sm text-[#B7B1A3] leading-relaxed">
-              Descarga los 4 módulos, prueba 3 recetas y sigue el protocolo durante una semana. Si al final de los 7 días no sientes diferencia, escribe un correo y te devolvemos el 100% — sin preguntas, sin formularios, sin esperas. Todo el riesgo lo tomamos nosotros.
-            </p>
-          </div>
-
-        </div>
-      </section>
-      </FadeIn>
-
-      <FadeIn>
-      <section className="py-14 px-6 bg-[#0E0E10] border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-
-          <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-full mb-3 inline-block">
-              ¿Tienes Dudas?
-            </span>
-            <h2 className="text-3xl font-bold font-display tracking-tight text-white mb-4">
-              Preguntas Frecuentes
+      <section className="py-16 px-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <Eyebrow>¿Dudas?</Eyebrow>
+            <h2 className="text-3xl font-bold font-display tracking-tight text-[#1B2620]">
+              Preguntas frecuentes
             </h2>
-            <p className="text-[#C4BEB0]/70 text-sm leading-relaxed max-w-lg mx-auto">
-              Todo lo que necesitas saber antes de asegurar tu acceso al Método Proteína Primero.
-            </p>
           </div>
 
-          <div className="space-y-4">
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(6)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  No uso Ozempic ni ningún medicamento. ¿El método sirve para mí?
-                </span>
-                {activeFaq === 6 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-
-              <AnimatePresence>
-                {activeFaq === 6 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
-                      <p>
-                        Sí, completamente. El corazón del método es la nutrición proteína-primero: tu menú diario con calorías, proteína y macros calculados para tu objetivo — perder grasa, ganar músculo, mantener tu peso o simplemente comer más saludable. En la app eliges tu objetivo y todo se ajusta a ti. El modo GLP-1 es solo una función opcional para quienes usan esos medicamentos; si no los usas, nunca lo verás.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(1)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  Tengo muchas náuseas con el medicamento. ¿Esta guía puede ayudarme a reducirlas?
-                </span>
-                {activeFaq === 1 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-              
-              <AnimatePresence>
-                {activeFaq === 1 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed space-y-2">
-                      <p>
-                        Sí — y es uno de los problemas más frecuentes que resuelve el método. La mayoría de las náuseas con GLP-1 no son inevitables: son el resultado de comer los alimentos incorrectos en el momento incorrecto. El recetario anti-náuseas del método incluye qué comer antes de la inyección, qué evitar las primeras 24 horas y qué texturas tolera mejor el estómago durante el tratamiento. Las usuarias que aplican este protocolo reportan una reducción notable del malestar en los primeros 7-10 días.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(2)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  Pagué, ¿y ahora qué? ¿Cuánto tiempo hasta que puedo usarlo?
-                </span>
-                {activeFaq === 2 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-
-              <AnimatePresence>
-                {activeFaq === 2 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
-                      <p>
-                        Inmediatamente. En el momento en que se confirma tu pago, Hotmart te envía un correo con el acceso al app del Reto y a los 4 PDFs. El app no se descarga de ninguna tienda: se abre desde tu navegador y se instala en la pantalla de inicio en 2 minutos — incluimos una guía paso a paso para hacerlo. En menos de 3 minutos ya estás en el Día 1 del Reto.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(3)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  No sé absolutamente nada de nutrición. ¿Este método es para mí o necesito conocimientos previos?
-                </span>
-                {activeFaq === 3 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-
-              <AnimatePresence>
-                {activeFaq === 3 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
-                      <p>
-                        Es exactamente para ti. El método fue diseñado asumiendo que nadie te explicó nada — porque eso es lo que le pasa a la gran mayoría de las personas que intentan cambiar su alimentación. La Guía de Alimentación usa lenguaje claro, con ejemplos visuales de platos y porciones, y la app calcula las calorías y los macros por ti. Solo instrucciones concretas: qué comer, cuánto, cuándo. Si sabes agarrar un tenedor, puedes aplicar este protocolo desde el primer día.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(5)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  ¿Esto no lo encuentro gratis en Google?
-                </span>
-                {activeFaq === 5 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-
-              <AnimatePresence>
-                {activeFaq === 5 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
-                      <p>
-                        La información suelta, sí. Lo que no encontrarás gratis es el sistema: tu menú exacto según tu objetivo, 35 recetas con la proteína ya calculada, la lista de compras inteligente, el plan de 12 semanas para mantener el resultado — y si usas GLP-1, qué comer exactamente el día de la inyección. Todo organizado, verificado y en un solo lugar. Pagas por no tener que armar el rompecabezas tú misma, con tu salud, entre miles de artículos que se contradicen.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-200">
-              <button
-                type="button"
-                onClick={() => toggleFaq(4)}
-                className="w-full text-left p-5 md:p-6 flex justify-between items-center bg-transparent hover:bg-white/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold transition-colors duration-150"
-              >
-                <span className="font-bold text-white text-sm md:text-base pr-4">
-                  El precio está en dólares. ¿Puedo pagar en la moneda de mi país?
-                </span>
-                {activeFaq === 4 ? (
-                  <ChevronUp className="h-5 w-5 text-brand-gold shrink-0" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-white/40 shrink-0" />
-                )}
-              </button>
-
-              <AnimatePresence>
-                {activeFaq === 4 && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-white/10"
-                  >
-                    <div className="p-5 md:p-6 bg-white/5 text-xs md:text-sm text-white/70 leading-relaxed">
-                      <p>
-                        Sí. Aunque el valor se muestra en dólares (US$) para mantener un precio único en todos los países, el checkout detecta automáticamente tu ubicación y te permite pagar en tu moneda local con la conversión del día. Puedes usar tarjeta de crédito o débito, y según tu país también aparecen métodos locales como Mercado Pago, transferencia bancaria o pago en efectivo. No necesitas hacer ninguna conversión manual: el sistema te muestra el monto exacto a pagar en tu moneda antes de confirmar.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
+          <div className="space-y-3.5">
+            {faqs.map(([q, a], i) => (
+              <div key={q} className="border border-[#ECE7DB] rounded-2xl bg-white overflow-hidden shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(i)}
+                  className="w-full text-left p-5 flex justify-between items-center hover:bg-gray-soft/60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-green-vibrant transition-colors duration-150"
+                >
+                  <span className="font-bold text-[#1B2620] text-sm md:text-base pr-4">{q}</span>
+                  {activeFaq === i ? (
+                    <ChevronUp className="h-5 w-5 text-brand-green shrink-0" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-[#9AA39B] shrink-0" />
+                  )}
+                </button>
+                <AnimatePresence>
+                  {activeFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden border-t border-[#F0EDE4]"
+                    >
+                      <div className="p-5 bg-gray-soft/50 text-sm text-[#4A554D] leading-relaxed">
+                        <p>{a}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-10">
             <a
-              href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+              href={CHECKOUT_URL}
               onClick={triggerCheckout}
-              className="inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-[#17140C] font-bold py-4 px-10 rounded-2xl shadow-xl shadow-brand-green-vibrant/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+              className="cta-buy inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold py-4 px-10 rounded-2xl animate-pulse-green transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
             >
               <ShoppingCart className="h-5 w-5" />
-              <span>Empezar mi protocolo — US$ 9.90</span>
+              <span>Empezar mi plan — US$ 9.90</span>
             </a>
-            <p className="text-xs text-white/40 mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
+            <p className="text-xs text-[#7A8378] mt-3">Acceso inmediato · Garantía 7 días · Pago único sin mensualidades</p>
           </div>
-
         </div>
       </section>
       </FadeIn>
 
-      <footer className="bg-[#0E0E10] text-white/70 py-16 pb-32 md:pb-16 px-6 text-center border-t border-white/5">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="flex flex-col items-center justify-center gap-2">
+      {/* Footer */}
+      <footer className="bg-gray-soft text-[#5C665E] py-14 pb-32 md:pb-14 px-6 text-center border-t border-[#ECE7DB]">
+        <div className="max-w-4xl mx-auto space-y-7">
+          <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-2">
-              <Activity className="h-6 w-6 text-brand-gold" />
-              <span className="font-bold tracking-tight text-xl text-white">Método Proteína Primero</span>
+              <Activity className="h-5 w-5 text-brand-green-vibrant" />
+              <span className="font-bold tracking-tight text-lg text-[#1B2620]">Método Proteína Primero</span>
             </div>
-            <p className="text-xs text-white/70">Nutrición clínica para un cambio real y duradero.</p>
           </div>
 
           <div className="flex justify-center flex-wrap gap-6 text-xs font-semibold">
-            <button onClick={() => setActiveModal('terms')} className="text-white/70 hover:text-white hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Términos de Uso</button>
-            <span className="text-white/30" aria-hidden="true">|</span>
-            <button onClick={() => setActiveModal('privacy')} className="text-white/70 hover:text-white hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Políticas de Privacidad</button>
-            <span className="text-white/30" aria-hidden="true">|</span>
-            <a href="mailto:soporte@guiaglp1.com" className="text-white/70 hover:text-white hover:underline transition-colors duration-150 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Contacto Soporte</a>
+            <button onClick={() => setActiveModal('terms')} className="text-[#5C665E] hover:text-[#1B2620] hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant">Términos de Uso</button>
+            <span className="text-[#C9C3B4]" aria-hidden="true">|</span>
+            <button onClick={() => setActiveModal('privacy')} className="text-[#5C665E] hover:text-[#1B2620] hover:underline transition-colors duration-150 cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant">Políticas de Privacidad</button>
+            <span className="text-[#C9C3B4]" aria-hidden="true">|</span>
+            <a href="mailto:soporte@guiaglp1.com" className="text-[#5C665E] hover:text-[#1B2620] hover:underline transition-colors duration-150 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant">Contacto Soporte</a>
           </div>
 
-          <div className="text-xs text-white/60 border-t border-white/10 pt-8">
+          <div className="text-xs text-[#7A8378] border-t border-[#E3DED2] pt-7">
             <p>© 2026 Método Proteína Primero. Todos los derechos reservados.</p>
           </div>
 
-          <div className="max-w-4xl mx-auto text-xs leading-relaxed text-white/75 bg-white/5 p-5 rounded-2xl border border-white/10 text-left">
-            <strong className="text-white">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no sustituye de ninguna manera el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
+          <div className="max-w-3xl mx-auto text-[11px] leading-relaxed text-[#6B756D] bg-white p-5 rounded-2xl border border-[#ECE7DB] text-left">
+            <strong className="text-[#4A554D]">Aviso de Exención de Responsabilidad Médica Obligatoria:</strong> Este producto no sustituye de ninguna manera el consejo, diagnóstico o tratamiento médico profesional del paciente. Siempre asesórese de forma presencial con su médico de cabecera especializado en endocrinología o medicina metabólica antes de iniciar cambios nutricionales drásticos o ajustes de dosis en fármacos inyectables como Ozempic®, Wegovy®, Mounjaro® u otros análogos. No retarde ni descuide el acompañamiento integral de su nutricionista clínico por la lectura de material digital complementario. Las marcas registradas mencionadas son propiedad de sus respectivos dueños exclusivos y se utilizan con meros fines de identificación orientadores.
           </div>
         </div>
       </footer>
 
       {/* Botón fijo mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#111113]/92 backdrop-blur-md border-t border-brand-gold/25 px-3 pt-3 pb-2 shadow-[0_-12px_32px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-md border-t border-[#ECE7DB] px-3 pt-3 pb-2 shadow-[0_-12px_32px_rgba(11,90,52,0.12)]">
         <a
-          href="https://pay.hotmart.com/O106207568V?checkoutMode=10"
+          href={CHECKOUT_URL}
           onClick={triggerCheckout}
-          className="cta-buy w-full bg-gradient-to-b from-[#E4C35A] to-[#C9A233] hover:to-[#b8922c] text-[#17140C] font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113] focus-visible:ring-brand-gold"
+          className="cta-buy w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
         >
           <ShoppingCart className="h-4 w-4" />
-          <span>Empezar mi protocolo — US$ 9.90</span>
-          <Lock className="h-3.5 w-3.5 opacity-70" />
+          <span>Empezar mi plan — US$ 9.90</span>
         </a>
-        <p className="text-center text-[10px] text-[#C4BEB0] font-medium mt-1.5 flex items-center justify-center gap-1">
-          <Globe className="h-3 w-3 text-brand-gold shrink-0" aria-hidden="true" />
+        <p className="text-center text-[10px] text-[#7A8378] font-medium mt-1.5 flex items-center justify-center gap-1">
+          <Globe className="h-3 w-3 text-brand-green shrink-0" aria-hidden="true" />
           Pagas en tu moneda local · Garantía de 7 días
         </p>
       </div>
 
+      {/* Modales legales */}
       <AnimatePresence>
         {activeModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <motion.div initial={{ scale: 0.95, y: 15 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 15 }} className="bg-[#1A1A1C] rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative block overflow-y-auto max-h-[85vh] border border-[#242428]">
-              <button onClick={() => setActiveModal(null)} aria-label="Cerrar ventana" className="absolute top-4 right-4 bg-[#1E1E22] rounded-full p-1.5 hover:bg-[#26262A] text-[#9E998C] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-[#22312A]/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div initial={{ scale: 0.95, y: 15 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 15 }} className="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl relative block overflow-y-auto max-h-[85vh] border border-[#ECE7DB]">
+              <button onClick={() => setActiveModal(null)} aria-label="Cerrar ventana" className="absolute top-4 right-4 bg-gray-soft rounded-full p-1.5 hover:bg-[#EDE9DE] text-[#7A8378] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant">
                 <XCloseIcon className="h-5 w-5" />
               </button>
               {activeModal === 'terms' ? (
                 <div>
-                  <h3 className="text-xl font-bold text-[#F3EFE7] mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-brand-gold" /> Terminos y Condiciones de Uso</h3>
-                  <div className="space-y-4 text-xs text-[#B7B1A3] leading-relaxed text-justify">
+                  <h3 className="text-xl font-bold text-[#1B2620] mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-brand-green" /> Terminos y Condiciones de Uso</h3>
+                  <div className="space-y-4 text-xs text-[#5C665E] leading-relaxed text-justify">
                     <p>Bienvenido a Método Proteína Primero, comercializado con fines divulgativos de estilo de vida saludable.</p>
                     <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el producto está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa o redistribución no autorizada.</p>
                     <p><strong>2. Uso del Contenido:</strong> El material se vende como material educativo suplementario y no constituye un canal terapéutico presencial.</p>
@@ -1237,8 +744,8 @@ export default function App() {
                 </div>
               ) : (
                 <div>
-                  <h3 className="text-xl font-bold text-[#F3EFE7] mb-4 flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-brand-gold" /> Políticas de Privacidad y Consentimiento</h3>
-                  <div className="space-y-4 text-xs text-[#B7B1A3] leading-relaxed text-justify">
+                  <h3 className="text-xl font-bold text-[#1B2620] mb-4 flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-brand-green" /> Políticas de Privacidad y Consentimiento</h3>
+                  <div className="space-y-4 text-xs text-[#5C665E] leading-relaxed text-justify">
                     <p>Su privacidad es nuestra máxima prioridad.</p>
                     <p><strong>1. Recopilación de Datos:</strong> Solo recopilamos su correo y nombre para el despacho del producto digital.</p>
                     <p><strong>2. Seguridad:</strong> No almacenamos números de tarjetas. Todas las operaciones pasan por gateways PCI-DSS.</p>
@@ -1246,7 +753,7 @@ export default function App() {
                   </div>
                 </div>
               )}
-              <button onClick={() => setActiveModal(null)} className="w-full mt-6 bg-brand-green hover:bg-brand-green-hover text-white py-3 rounded-xl font-bold text-sm transition">Entendido, Cerrar Ventana</button>
+              <button onClick={() => setActiveModal(null)} className="w-full mt-6 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-white py-3 rounded-xl font-bold text-sm transition">Entendido, Cerrar Ventana</button>
             </motion.div>
           </motion.div>
         )}

@@ -4,16 +4,17 @@
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Spectral", Georgia, "Times New Roman", serif;
-  /* Tema dark luxury: carbón + oro champagne */
-  --color-brand-green: #1A1A1C;          /* superficie oscura (antes verde sólido) */
-  --color-brand-green-hover: #26262A;
-  --color-brand-green-vibrant: #17A34A;  /* CTA verde vibrante (alto contraste) */
+  /* Tema claro "wellness editorial": crema cálida + verde profundo.
+     Misma identidad que la app (crema #FBF9F5 · verde #16A34A). */
+  --color-brand-green: #0B5A34;          /* verde bosque: titulares y acentos */
+  --color-brand-green-hover: #094A2B;
+  --color-brand-green-vibrant: #16A34A;  /* CTA — idéntico al verde de la app */
   --color-brand-green-vibrant-hover: #128A3E;
-  --color-brand-gold: #D4AF37;
-  --color-brand-gold-dark: #A8860D;
-  --color-neutral-dark: #0C0C0D;         /* fondo/base más oscuro */
-  --color-gray-soft: #16151A;
-  --color-gray-mint: #141416;
+  --color-brand-gold: #A8860D;           /* dorado oscuro, legible sobre crema */
+  --color-brand-gold-dark: #8A6D0B;
+  --color-neutral-dark: #22312A;         /* tinta: texto principal */
+  --color-gray-soft: #F6F3EC;            /* sección alterna crema */
+  --color-gray-mint: #EDF7F0;            /* tinte menta suave */
 }
 
 @layer base {
@@ -22,18 +23,17 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
-    color: #F3EFE7;
-    background-color: #0C0C0D;
+    color: #22312A;
+    background-color: #FDFBF7;
   }
 }
 
-/* ===== CTAs de compra en verde vibrante (nicho salud + alto contraste) =====
-   Decoración dorada premium intacta. Los botones de compra saltan en verde. */
+/* ===== CTAs de compra en verde vibrante (mismo verde de la app) ===== */
 a[class*="bg-brand-green-vibrant"], button[class*="bg-brand-green-vibrant"] { color: #ffffff !important; }
 .cta-buy {
   background-image: none !important;
-  background-color: #17A34A !important;
-  border-color: #17A34A !important;
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
   color: #ffffff !important;
 }
 .cta-buy:hover { background-color: #128A3E !important; }
@@ -65,41 +65,40 @@ h3.font-display {
   font-variant-numeric: tabular-nums;
 }
 
-/* Botón principal: presencia por elevación y sombra refinada, no por parpadeo.
-   La marca pide "confianza calmada" — nada de pulsos de urgencia. */
+/* Botón principal: presencia por elevación, sombra verde suave. */
 .animate-pulse-green {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 12px 28px -10px rgba(212, 175, 55, 0.4);
+    0 1px 2px rgba(11, 90, 52, 0.12),
+    0 12px 28px -10px rgba(22, 163, 74, 0.45);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .animate-pulse-green:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.35),
-    0 22px 42px -12px rgba(212, 175, 55, 0.5);
+    0 2px 4px rgba(11, 90, 52, 0.15),
+    0 22px 42px -12px rgba(22, 163, 74, 0.5);
 }
 
-/* Sello de garantía: quieto y sólido, como un timbre grabado. */
+/* Sello de garantía: quieto y sólido. */
 .animate-pulse-gold {
-  box-shadow: 0 10px 30px -12px rgba(168, 134, 13, 0.5);
+  box-shadow: 0 10px 30px -12px rgba(168, 134, 13, 0.35);
 }
 
 .glow-gold {
-  text-shadow: 0 0 10px rgba(217, 119, 6, 0.25);
+  text-shadow: none;
 }
 
-/* Sombra premium reutilizable: doble capa, corta y difusa, para tarjetas héroe. */
+/* Sombra premium reutilizable para tarjetas héroe sobre fondo claro. */
 .shadow-luxe {
   box-shadow:
-    0 1px 2px rgba(13, 51, 32, 0.06),
-    0 24px 56px -28px rgba(13, 51, 32, 0.5);
+    0 1px 2px rgba(11, 90, 52, 0.05),
+    0 24px 56px -28px rgba(11, 90, 52, 0.25);
 }
 
-/* Doble marco tipo certificado, usado en tarjetas insignia (sello, oferta) */
+/* Doble marco tipo certificado, usado en la tarjeta de oferta */
 .frame-certificate {
-  border: 1px solid rgba(212, 175, 55, 0.55);
-  outline: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid rgba(22, 163, 74, 0.35);
+  outline: 1px solid rgba(22, 163, 74, 0.14);
   outline-offset: 4px;
 }
 
@@ -118,10 +117,10 @@ h3.font-display {
 }
 
 .bg-premium-wellness {
-  background-color: #0C0C0D;
+  background-color: #FDFBF7;
   background-image:
-    radial-gradient(circle at 12% 10%, rgba(212, 175, 55, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 90% 4%, rgba(212, 175, 55, 0.04) 0%, transparent 36%);
+    radial-gradient(circle at 12% 10%, rgba(22, 163, 74, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 4%, rgba(168, 134, 13, 0.04) 0%, transparent 36%);
 }
 
 @media (prefers-reduced-motion: reduce) {
