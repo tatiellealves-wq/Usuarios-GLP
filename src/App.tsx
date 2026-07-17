@@ -5,7 +5,6 @@ import {
   Star,
   Activity,
   Lock,
-  Sparkles,
   ShoppingCart,
   FileText,
   ArrowRight,
@@ -310,6 +309,23 @@ export default function App() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [activeModal, setActiveModal] = useState<'terms' | 'privacy' | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
+  // La barra fija móvil solo aparece tras pasar el CTA del hero — así la primera
+  // pantalla tiene un único botón de compra.
+  const [showSticky, setShowSticky] = useState(false);
+
+  useEffect(() => {
+    const heroCta = document.getElementById('hero-cta-btn');
+    if (!heroCta || typeof IntersectionObserver === 'undefined') {
+      setShowSticky(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => setShowSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+      { threshold: 0 }
+    );
+    obs.observe(heroCta);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -389,15 +405,16 @@ export default function App() {
               <Activity className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="font-bold tracking-tight text-lg text-[#1B2620]">Método Proteína Primero</span>
-              <span className="text-[11px] text-brand-green font-semibold block -mt-1">Tu plan de comidas · 21 días</span>
+              <span className="font-bold tracking-tight text-base md:text-lg text-[#1B2620] whitespace-nowrap">Método Proteína Primero</span>
+              <span className="text-[11px] text-brand-green font-semibold hidden sm:block -mt-1">Tu plan de comidas · 21 días</span>
             </div>
           </div>
 
+          {/* Solo en desktop: en móvil el hero y la barra fija ya cubren la compra */}
           <a
             href={CHECKOUT_URL}
             onClick={triggerCheckout}
-            className="cta-buy bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-sm font-bold px-4 min-h-[42px] rounded-xl transition-all duration-200 hover:scale-[1.03] shadow-sm flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
+            className="cta-buy hidden md:flex bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover text-sm font-bold px-4 min-h-[42px] rounded-xl transition-all duration-200 hover:scale-[1.03] shadow-sm items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-green-vibrant"
           >
             Comprar — US$ 9.90
           </a>
@@ -425,7 +442,7 @@ export default function App() {
                   id="hero-cta-btn"
                   href={CHECKOUT_URL}
                   onClick={triggerCheckout}
-                  className="cta-buy group w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-center text-lg py-5 px-8 rounded-2xl animate-pulse-green transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/40"
+                  className="cta-buy group w-full bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-center text-[17px] sm:text-lg whitespace-nowrap py-5 px-6 rounded-2xl animate-pulse-green transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/40"
                 >
                   Empezar mi plan — US$ 9.90
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform shrink-0" />
@@ -434,9 +451,8 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setQuizOpen(true)}
-                  className="mt-3 w-full flex items-center justify-center gap-1.5 text-sm font-semibold text-brand-green hover:text-brand-green-hover underline underline-offset-4 decoration-brand-green-vibrant/40 py-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant/60 rounded"
+                  className="mt-3 w-full text-center text-sm font-semibold text-brand-green hover:text-brand-green-hover underline underline-offset-4 decoration-brand-green-vibrant/40 py-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green-vibrant/60 rounded"
                 >
-                  <Sparkles className="h-4 w-4 shrink-0" />
                   o descubre tu plan gratis en 60 segundos
                 </button>
 
@@ -501,15 +517,6 @@ export default function App() {
             </p>
           </div>
 
-          <div className="mt-8 text-center">
-            <a
-              href={CHECKOUT_URL}
-              onClick={triggerCheckout}
-              className="cta-buy inline-flex items-center justify-center gap-2 bg-brand-green-vibrant hover:bg-brand-green-vibrant-hover font-bold text-lg py-4 px-8 rounded-2xl animate-pulse-green transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-green-vibrant/30"
-            >
-              Empezar mi plan — US$ 9.90 <ArrowRight className="h-5 w-5" />
-            </a>
-          </div>
         </div>
       </section>
       </FadeIn>
@@ -708,8 +715,8 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Botón fijo mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-md border-t border-[#ECE7DB] px-3 pt-3 pb-2 shadow-[0_-12px_32px_rgba(11,90,52,0.12)]">
+      {/* Botón fijo mobile — solo tras pasar el CTA del hero */}
+      <div className={`fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-md border-t border-[#ECE7DB] px-3 pt-3 pb-2 shadow-[0_-12px_32px_rgba(11,90,52,0.12)] transition-all duration-300 ${showSticky ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}`}>
         <a
           href={CHECKOUT_URL}
           onClick={triggerCheckout}
@@ -734,7 +741,7 @@ export default function App() {
               </button>
               {activeModal === 'terms' ? (
                 <div>
-                  <h3 className="text-xl font-bold text-[#1B2620] mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-brand-green" /> Terminos y Condiciones de Uso</h3>
+                  <h3 className="text-xl font-bold text-[#1B2620] mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-brand-green" /> Términos y Condiciones de Uso</h3>
                   <div className="space-y-4 text-xs text-[#5C665E] leading-relaxed text-justify">
                     <p>Bienvenido a Método Proteína Primero, comercializado con fines divulgativos de estilo de vida saludable.</p>
                     <p><strong>1. Propiedad Intelectual:</strong> Todo el material contenido en el producto está protegido por leyes de derechos de autor. Queda terminantemente prohibida su comercialización, reventa o redistribución no autorizada.</p>
